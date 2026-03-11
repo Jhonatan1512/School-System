@@ -14,3 +14,4 @@ namespace SchoolSystem.Domain.Entities
         public Curso? Curso { get; set; }
     }
 }
+ 

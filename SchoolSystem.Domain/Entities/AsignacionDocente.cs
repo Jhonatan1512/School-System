@@ -13,10 +13,10 @@ namespace SchoolSystem.Domain.Entities
         public Docente? Docente { get; set; }
         public int CursoId { get; set; }
         public Curso? Curso { get; set; }
-        public int SeccionId { get; set; }
+        public int SeccionId { get; set; } 
         public Seccion? Seccion { get; set; }
         public int PeriodoAcademicoId { get; set; }
         public PeriodoAcademico? PeriodoAcademico { get; set; }
-        public ICollection<Horario> Horarios { get; set; } = new List<Horario>();
+        public ICollection<Horario> Horarios { get; set; } = new List<Horario>(); 
     }
 }

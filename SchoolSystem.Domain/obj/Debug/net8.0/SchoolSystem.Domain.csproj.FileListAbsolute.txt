@@ -10,3 +10,4 @@ D:\.NET-API\School-System\SchoolSystem.Domain\obj\Debug\net8.0\refint\SchoolSyst
 D:\.NET-API\School-System\SchoolSystem.Domain\obj\Debug\net8.0\SchoolSystem.Domain.pdb
 D:\.NET-API\School-System\SchoolSystem.Domain\obj\Debug\net8.0\ref\SchoolSystem.Domain.dll
 D:\.NET-API\School-System\SchoolSystem.Domain\obj\Debug\net8.0\SchoolSystem.Domain.csproj.AssemblyReference.cache
+D:\.NET-API\School-System\SchoolSystem.Domain\obj\Debug\net8.0\SchoolSystem.Domain.sourcelink.json

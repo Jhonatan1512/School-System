@@ -13,5 +13,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task<Curso?> ObtenerPorIdAsync(int id);
         Task<IEnumerable<Curso>> ObtenerCursosAsync();
         Task ActualizarCursoAsync(Curso curso);
+        Task<List<Curso>> ObtenerPorGrado(int gradoId);
     }
 }

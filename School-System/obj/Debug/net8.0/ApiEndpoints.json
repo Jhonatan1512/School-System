@@ -327,6 +327,90 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "School_System.Controllers.MatriculaController",
+    "Method": "AgregarMatricula",
+    "RelativePath": "api/Matricula",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.MatriculaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.MatriculaController",
+    "Method": "ActualizarMatricula",
+    "RelativePath": "api/Matricula/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarMatriculaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.MatriculaController",
+    "Method": "ObtenerPorAula",
+    "RelativePath": "api/Matricula/grado/{gradoId}/seccion/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "CrearPeriodo",
+    "RelativePath": "api/PeriodoAcademico",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.PeriodoAcademicoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "ObtenerPeriodos",
+    "RelativePath": "api/PeriodoAcademico",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "School_System.Controllers.SeccionController",
     "Method": "AgregarSeccion",
     "RelativePath": "api/Seccion",

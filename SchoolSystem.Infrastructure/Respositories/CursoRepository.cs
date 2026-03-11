@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SchoolSystem.Infrastructure.Respositories
 {
     public class CursoRepository : ICursoRepository
-    {
+    { 
         private readonly ApplicationDbContext _context;
         public CursoRepository(ApplicationDbContext context)
         {
@@ -33,6 +33,11 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task<IEnumerable<Curso>> ObtenerCursosAsync()
         {
             return await _context.Cursos.Include(c => c.Competencias).ToListAsync();
+        }
+
+        public async Task<List<Curso>> ObtenerPorGrado(int gradoId)
+        {
+            return await _context.Cursos.Where(c => c.GradoId == gradoId).ToListAsync();
         }
 
         public async Task<Curso?> ObtenerPorIdAsync(int id)

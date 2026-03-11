@@ -16,7 +16,7 @@ namespace SchoolSystem.Domain.Entities
         public int GradoId { get; set; }
         public Grado? Grado { get; set; }
         public int SeccionId {  get; set; }
-        public Seccion? Seccion { get; set; }
-        public ICollection<DetalleMatricula> DetallesMatriculas { get; set; } = new List<DetalleMatricula>();
+        public Seccion? Seccion { get; set; } 
+        public ICollection<DetalleMatricula> DetallesMatriculas { get; set; } = new List<DetalleMatricula>(); 
     }
 }

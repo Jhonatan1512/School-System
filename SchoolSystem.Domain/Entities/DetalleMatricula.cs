@@ -13,6 +13,7 @@ namespace SchoolSystem.Domain.Entities
         public Matricula? Matricula { get; set; }
         public int CursoId { get; set; }
         public Curso? Curso { get; set; }
-        public ICollection<Calificacion> Calificaciones { get; set; } = new List<Calificacion>();
+        public ICollection<Calificacion> Calificaciones { get; set; } = new List<Calificacion>(); 
     }
 }
+ 

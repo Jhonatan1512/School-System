@@ -13,6 +13,6 @@ namespace SchoolSystem.Domain.Entities
         public int GradoId { get; set; }
         public Grado? Grado { get; set; }
         public ICollection<Competencia> Competencias { get; set; } = new List<Competencia>(); 
-    } 
+    }  
 }
  

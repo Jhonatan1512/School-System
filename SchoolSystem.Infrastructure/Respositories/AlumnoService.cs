@@ -2,6 +2,7 @@
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Domain.Entities;
+using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
@@ -15,7 +16,6 @@ namespace SchoolSystem.Infrastructure.Respositories
     public class AlumnoService : IAlumnoService
     {
         private readonly ApplicationDbContext _context;
-
         public AlumnoService(ApplicationDbContext context)
         {
             _context = context;

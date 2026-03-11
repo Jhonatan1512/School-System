@@ -14,7 +14,7 @@ namespace SchoolSystem.Domain.Entities
         public string Dni {  get; set; } = string.Empty;
         public bool EsActivo { get; set; } = true;
         public string UsuarioId { get; set; } 
-        public ICollection<AsignacionDocente> Asignaciones { get; set; } = new List<AsignacionDocente>();
+        public ICollection<AsignacionDocente> Asignaciones { get; set; } = new List<AsignacionDocente>(); 
 
     }
 }

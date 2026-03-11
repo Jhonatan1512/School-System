@@ -145,3 +145,4 @@ D:\.NET-API\School-System\School-System\bin\Debug\net8.0\runtimes\win\lib\net6.0
 D:\.NET-API\School-System\School-System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 D:\.NET-API\School-System\School-System\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 D:\.NET-API\School-System\School-System\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\.NET-API\School-System\School-System\obj\Debug\net8.0\SchoolSystem.Api.sourcelink.json

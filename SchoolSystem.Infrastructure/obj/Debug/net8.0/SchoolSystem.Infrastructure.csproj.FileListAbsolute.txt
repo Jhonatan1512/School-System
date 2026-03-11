@@ -17,3 +17,4 @@ D:\.NET-API\School-System\SchoolSystem.Infrastructure\obj\Debug\net8.0\SchoolSys
 D:\.NET-API\School-System\SchoolSystem.Infrastructure\obj\Debug\net8.0\ref\SchoolSystem.Infrastructure.dll
 D:\.NET-API\School-System\SchoolSystem.Infrastructure\bin\Debug\net8.0\SchoolSystem.Infrastructure.runtimeconfig.json
 D:\.NET-API\School-System\SchoolSystem.Infrastructure\obj\Debug\net8.0\SchoolSystem.Infrastructure.genruntimeconfig.cache
+D:\.NET-API\School-System\SchoolSystem.Infrastructure\obj\Debug\net8.0\SchoolSystem.Infrastructure.sourcelink.json

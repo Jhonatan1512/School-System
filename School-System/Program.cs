@@ -23,6 +23,11 @@ builder.Services.AddScoped<IGradoRepository, GradoRepository>();
 builder.Services.AddScoped<ICursoRepository, CursoRepository>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<ISeccionRepository, SeccionRepository>();
+builder.Services.AddScoped<IPeriodoAcademicoRepository, PeriodoAcademicoRepository>();
+builder.Services.AddScoped<IPeriodoAcademicoService, PeriodoAcademicoService>();
+builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
+builder.Services.AddScoped<IMatriculaService, MatriculaService>();
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
