@@ -9,16 +9,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.EntityFrameworkCore;
 
 namespace SchoolSystem.Infrastructure.Respositories
 {
     public class AlumnoService : IAlumnoService
     {
         private readonly ApplicationDbContext _context;
-        public AlumnoService(ApplicationDbContext context)
+        public readonly IAlumnoRespository _alumnoRepository;
+        private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        private readonly IMatriculaRepository _matriculaRepository;
+        private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
+        public AlumnoService(
+            ApplicationDbContext context,
+            IAlumnoRespository alumnoRepository, 
+            IPeriodoAcademicoRepository periodoAcademicoRepository, 
+            IMatriculaRepository matriculaRepository, 
+            IAsignacionDocenteRepository signacionDocenteRepository)
         {
-            _context = context;
+            _context = context; 
+            _alumnoRepository = alumnoRepository;
+            _periodoAcademicoRepository = periodoAcademicoRepository;
+            _matriculaRepository = matriculaRepository;
+            _signacionDocenteRepository = signacionDocenteRepository;
         }
         public async Task<IEnumerable<AlumnoDto>> GetAll()
         {
@@ -77,6 +90,44 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Email = usuario.Email!
                         };
             return await datos.FirstOrDefaultAsync();
+        }
+
+        public async Task<List<DashboardAlumnoDto>> ObtenerMisCursos(string usuarioId)
+        {
+            var alumno = await _alumnoRepository.ObtenerPorUsuarioAsync(usuarioId);
+            if (alumno == null) throw new Exception("Perfil de Alumno no encontrado");
+
+            var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+            if (periodoActivo == null) throw new Exception("No hay Periodo activo");
+
+            var matricula = await _matriculaRepository.ObtenerPorAlumnoPeriodoAsync(alumno.Id, periodoActivo.Id);
+
+            if (matricula == null || !matricula.DetallesMatriculas.Any())
+                return new List<DashboardAlumnoDto>();
+            
+            var seccionId = matricula.SeccionId;
+
+            var asignaciones = await _signacionDocenteRepository.ObtenerPorSeccionPeriodoAsync(seccionId, periodoActivo.Id);
+
+            var dashboard = matricula.DetallesMatriculas.Select(d =>
+            {
+                var asignacionDocente = asignaciones.FirstOrDefault(a => a.CursoId == d.CursoId);
+
+                return new DashboardAlumnoDto
+                {
+                    cursoId = d.CursoId,
+                    NombreCurso = d.Curso!.Nombre,
+                    NombreDocente = asignacionDocente?.Docente != null
+                        ? $"{asignacionDocente.Docente.Nombres}{asignacionDocente.Docente.Apellidos}" : "Si Docente asignado",
+
+                    Competencias = d.Curso.Competencias.Select(c => new CompetenciasDto
+                    {
+                        Id = c.Id,
+                        Nombre = c.Nombre
+                    }).ToList()
+                };
+            }).ToList();
+            return dashboard;
         }
     }
 }

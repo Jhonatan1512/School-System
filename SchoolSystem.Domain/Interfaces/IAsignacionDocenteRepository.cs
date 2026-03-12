@@ -9,6 +9,10 @@ namespace SchoolSystem.Domain.Interfaces
 {
     public interface IAsignacionDocenteRepository
     {
-        Task<List<AsignacionDocente>> ObtenerPorSessionPeriodoAsync(int seccionId, int periodoId);
+        Task<List<AsignacionDocente>> ObtenerPorSeccionPeriodoAsync(int seccionId, int periodoId);
+        Task<List<AsignacionDocente>> ObtenerAsignacionCompletaDocenteAsync(int docenteId, int periodoId);
+        Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto);
+        Task<bool> ExisteAsignacionAsync(int docenteId, int cursoId, int seccionId, int periodoId);
+
     }
 }

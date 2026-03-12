@@ -9,6 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Application.Services;
+using SchoolSystem.Api.BackgroundService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,15 @@ builder.Services.AddScoped<IPeriodoAcademicoService, PeriodoAcademicoService>();
 builder.Services.AddScoped<IMatriculaRepository, MatriculaRepository>();
 builder.Services.AddScoped<IMatriculaService, MatriculaService>();
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IAsignacionDocenteRepository, AsignacionDocenteRepository>();
+builder.Services.AddScoped<ITrimestreRepository, TrimestreRepository>();
+builder.Services.AddScoped<ITrimestreService, TrimestreService>();
+builder.Services.AddHostedService<CierreTrimestreService>();
+builder.Services.AddScoped<IAsignacionDocenteRepository, AsignacionDocenteRepository>();
+builder.Services.AddScoped<IAsignacionDocenteService, AsignacionDocenteService>();
+builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
+builder.Services.AddScoped<ICalificacionService,  CalificacionService>();
+builder.Services.AddScoped<IDetalleMatriculaRepository, DetalleMatriculaRepository>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

@@ -24,7 +24,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context.Alumnos.Update(alumno);
             await _context.SaveChangesAsync();
-        }
+        } 
 
         public async Task<Alumno> AgregarAlumnoAsync(Alumno alumno)
         {
@@ -36,6 +36,11 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task<Alumno?> ObtenerPorDni(string dni)
         {
             return await _context.Alumnos.FirstOrDefaultAsync(a => a.Dni == dni);
+        }
+
+        public async Task<Alumno?> ObtenerPorUsuarioAsync(string usuarioId)
+        {
+            return await _context.Alumnos.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId);
         }
     }
 }

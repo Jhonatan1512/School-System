@@ -11,8 +11,10 @@ namespace SchoolSystem.Domain.Entities
         public int Id { get; set; }
         public int DocenteId { get; set; }
         public Docente? Docente { get; set; }
-        public int CursoId { get; set; }
+        public int CursoId { get; set; } 
         public Curso? Curso { get; set; }
+        public int GradoId { get; set; }
+        public Grado? Grado { get; set; }
         public int SeccionId { get; set; } 
         public Seccion? Seccion { get; set; }
         public int PeriodoAcademicoId { get; set; }

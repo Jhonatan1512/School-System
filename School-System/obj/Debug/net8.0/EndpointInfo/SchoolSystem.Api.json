@@ -202,6 +202,49 @@
         }
       }
     },
+    "/api/Alumno/mis-cursos": {
+      "get": {
+        "tags": [
+          "Alumno"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/AsignacionDocente": {
+      "post": {
+        "tags": [
+          "AsignacionDocente"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionDocenteCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionDocenteCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsignacionDocenteCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/registrar": {
       "post": {
         "tags": [
@@ -521,6 +564,49 @@
         }
       }
     },
+    "/api/Docente/dashboard": {
+      "get": {
+        "tags": [
+          "Docente"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docente/notas": {
+      "post": {
+        "tags": [
+          "Docente"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalificacionCreateDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalificacionCreateDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CalificacionCreateDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Grado/{id}": {
       "get": {
         "tags": [
@@ -824,6 +910,102 @@
           }
         }
       }
+    },
+    "/api/Trimestre": {
+      "post": {
+        "tags": [
+          "Trimestre"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreCreadoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreCreadoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreCreadoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trimestre/periodo/{periodoId}": {
+      "get": {
+        "tags": [
+          "Trimestre"
+        ],
+        "parameters": [
+          {
+            "name": "periodoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Trimestre/{id}/extender": {
+      "put": {
+        "tags": [
+          "Trimestre"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreExtensionDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreExtensionDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrimestreExtensionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -890,6 +1072,54 @@
           "usuarioId": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AsignacionDocenteCreateDto": {
+        "type": "object",
+        "properties": {
+          "docenteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cursoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gradoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "seccionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoAcademicoId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CalificacionCreateDto": {
+        "type": "object",
+        "properties": {
+          "nota": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestreId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "competenciaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "detalleMatriculaId": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -1123,6 +1353,41 @@
           "nombre": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TrimestreCreadoDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaCierre": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "periodoAcademicoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estadoActivo": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TrimestreExtensionDto": {
+        "type": "object",
+        "properties": {
+          "nuevaFechaCierre": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

@@ -31,6 +31,7 @@ namespace SchoolSystem.Infrastructure.Data
         public DbSet<DetalleMatricula> DetalleMatriculas => Set<DetalleMatricula>();
 
         public DbSet<Horario> Horario => Set<Horario>();    
+        public DbSet<Trimestre> Trimestres => Set<Trimestre>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

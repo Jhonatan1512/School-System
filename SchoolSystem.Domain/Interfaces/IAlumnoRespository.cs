@@ -12,5 +12,7 @@ namespace SchoolSystem.Domain.Interfaces
         Task<Alumno> AgregarAlumnoAsync(Alumno alumno);
         Task ActualizarAlumnoAsync(Alumno alumno);
         Task<Alumno?> ObtenerPorDni(string dni);
+        Task<Alumno?> ObtenerPorUsuarioAsync(string usuarioId);
+
     }
 }

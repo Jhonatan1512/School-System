@@ -15,16 +15,18 @@ namespace School_System.Controllers
     [ApiController]
     [Authorize]
     public class DocenteController : ControllerBase
-    {
+    { 
         private readonly IDocenteRepository _docenteRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDocenteService _docenteService;
+        private readonly ICalificacionService _calificacionService;
 
-        public DocenteController(IDocenteRepository docenteRepository, UserManager<ApplicationUser> userManager, IDocenteService docenteService)
+        public DocenteController(IDocenteRepository docenteRepository, UserManager<ApplicationUser> userManager, IDocenteService docenteService, ICalificacionService calificacionService)
         {
             _docenteRepository = docenteRepository;
             _userManager = userManager;
             _docenteService = docenteService;
+            _calificacionService = calificacionService;
         }
 
         //POST :api/docente
@@ -121,10 +123,10 @@ namespace School_System.Controllers
         //PUT :api/doncente/password
         [HttpPut("password")]
         [Authorize]
-        public async Task<IActionResult> ResetPasswordDocente([FromBody] UserResetPasswordDto userResetPassword) 
+        public async Task<IActionResult> ResetPasswordDocente([FromBody] UserResetPasswordDto userResetPassword)
         {
             var usuarioLogueado = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if(usuarioLogueado == null) return Unauthorized("Token invalido o no esta autenticado");
+            if (usuarioLogueado == null) return Unauthorized("Token invalido o no esta autenticado");
 
             var usuarioExiste = await _userManager.FindByIdAsync(usuarioLogueado);
             if (usuarioExiste == null) return NotFound(new { mensaje = "Usuario no encontrado" });
@@ -152,7 +154,7 @@ namespace School_System.Controllers
         public async Task<IActionResult> ModificarDocente(string dni, [FromBody] DocenteDto dto)
         {
             var docente = await _docenteRepository.ObtenerPorDniAsync(dni);
-            if(docente == null) return NotFound(new { mensaje = "Docente no encontrado"});
+            if (docente == null) return NotFound(new { mensaje = "Docente no encontrado" });
 
             var partesApellidos = dto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
@@ -185,7 +187,7 @@ namespace School_System.Controllers
             await _docenteRepository.ActualizarDoncenteAsync(docente);
 
             var AlumnoActualizadoCompleto = await _docenteService.GetByDniAsync(docente.Dni);
-             
+
             return Ok(new
             {
                 mensaje = "Datos del docente Actualizados",
@@ -196,6 +198,62 @@ namespace School_System.Controllers
                 },
                 Docente = AlumnoActualizadoCompleto
             });
+        }
+
+        [HttpGet("dashboard")]
+        public async Task<IActionResult> ObtenerMiDashboard()
+        {
+            try
+            {
+                var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(usuarioId)) return Unauthorized();
+
+                var dashboard = await _docenteService.ObtenerMiDashboardAsync(usuarioId);
+
+                if (!dashboard.Any())
+                {
+                    return Ok(new
+                    {
+                        mensaje = "Sin Cursos Asignados en el Periodo Actual",
+                        data = dashboard
+                    });
+                }
+                return Ok(new
+                {
+                    mensaje = "Cursos Asignados",
+                    data = dashboard
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("notas")]
+        public async Task<IActionResult> LlenarNotas([FromBody] CalificacionCreateDto dto)
+        {
+            try
+            {
+                var docenteIdClaims = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                if (string.IsNullOrEmpty(docenteIdClaims)) return Unauthorized("No se pudo identificar al docente en el token");
+
+                var docente = await _docenteRepository.ObtenerPorUsuarioAsync(docenteIdClaims);
+                if (docente == null) return Forbid("El usuario actual no tiene un perfil de docente asignado o esta inactivo");
+
+                //int docenteId = int.Parse(docenteIdClaims);
+
+                var resultado = await _calificacionService.CreateAsync(docente.Id, dto);
+                return Ok(new
+                {
+                    mesanje = "Nota agrega",
+                    data = resultado
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

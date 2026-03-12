@@ -36,5 +36,10 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Docentes.FirstOrDefaultAsync(d => d.Dni == dni);
         }
+         
+        public async Task<Docente?> ObtenerPorUsuarioAsync(string usuarioId)
+        {
+            return await _context.Docentes.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId && u.EsActivo);
+        }
     }
 }

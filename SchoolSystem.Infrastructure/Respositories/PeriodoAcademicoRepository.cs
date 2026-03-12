@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Infrastructure.Respositories
 {
-    public class PeriodoAcademicoRepository : IPeriodoAcademicoRepository
+    public class PeriodoAcademicoRepository : IPeriodoAcademicoRepository 
     {
         private readonly ApplicationDbContext _context;
         public PeriodoAcademicoRepository(ApplicationDbContext context)

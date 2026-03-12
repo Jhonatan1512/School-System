@@ -11,6 +11,7 @@ namespace SchoolSystem.Domain.Interfaces
     {
         Task<Docente> CrearDocenteAsync(Docente docente);
         Task<Docente?> ObtenerPorDniAsync(string dni);
-        Task ActualizarDoncenteAsync(Docente docente);
+        Task ActualizarDoncenteAsync(Docente docente); 
+        Task<Docente?> ObtenerPorUsuarioAsync(string usuarioId);
     }
 }

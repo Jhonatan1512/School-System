@@ -19,7 +19,7 @@ namespace School_System.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAlumnoService _alumnoService;
 
-        public AlumnoController(IAlumnoRespository alumnoRespository, UserManager<ApplicationUser> userManager, IAlumnoService alumnoService)  
+        public AlumnoController(IAlumnoRespository alumnoRespository, UserManager<ApplicationUser> userManager, IAlumnoService alumnoService)
         {
             _alumnoRespository = alumnoRespository;
             _userManager = userManager;
@@ -47,7 +47,7 @@ namespace School_System.Controllers
             var passwordGenerada = $"{char.ToUpper(inicial1)}{char.ToLower(inicial2)}{alumnoDto.Dni}*";
 
 
-            var usuarioNuevo = new ApplicationUser          
+            var usuarioNuevo = new ApplicationUser
             {
                 UserName = emailGenerado,
                 Email = emailGenerado,
@@ -73,10 +73,10 @@ namespace School_System.Controllers
 
             var alumnoCreado = await _alumnoRespository.AgregarAlumnoAsync(nuevoAlumno);
 
-            return Ok(new 
+            return Ok(new
             {
-                mensaje = "Alumno Creado", 
-                Credenciales = new 
+                mensaje = "Alumno Creado",
+                Credenciales = new
                 {
                     Email = emailGenerado,
                     Passoword = passwordGenerada,
@@ -90,7 +90,7 @@ namespace School_System.Controllers
         {
             var alumno = await _alumnoService.GetByIdAsync(id);
 
-            if (alumno == null) 
+            if (alumno == null)
             {
                 return NotFound(new { mensaje = "Alumno no encontrado" });
             }
@@ -126,18 +126,19 @@ namespace School_System.Controllers
 
             var usuario = await _userManager.FindByIdAsync(alumnoExiste.UsuarioId);
 
-            if(usuario != null)
+            if (usuario != null)
             {
                 usuario.UserName = emailNuevo;
                 usuario.Email = emailNuevo;
 
                 await _userManager.UpdateAsync(usuario);
-                
+
                 var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
                 var resultadoPassword = await _userManager.ResetPasswordAsync(usuario, token, passwordNueva);
 
                 if (!resultadoPassword.Succeeded) return BadRequest(resultadoPassword.Errors);
-            };
+            }
+            ;
 
             alumnoExiste.Nombre = alumnoDto.Nombre;
             alumnoExiste.Apellidos = alumnoDto.Apellidos;
@@ -165,13 +166,13 @@ namespace School_System.Controllers
         public async Task<IActionResult> ResetearPasswordAdmin(string dni, [FromBody] AdminResetPassword adminResetPassword)
         {
             var alumnoExistente = await _alumnoRespository.ObtenerPorDni(dni);
-            if(alumnoExistente == null) return NotFound(new { mensaje = "Alumno no encontrado" });
+            if (alumnoExistente == null) return NotFound(new { mensaje = "Alumno no encontrado" });
 
             var usuario = await _userManager.FindByIdAsync(alumnoExistente.UsuarioId);
             if (usuario == null) return NotFound(new { mensaje = "Usuario no encontrado" });
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
-            
+
             var resultado = await _userManager.ResetPasswordAsync(usuario, token, adminResetPassword.NuevaPassword);
             if (resultado == null) return BadRequest(resultado.Errors);
 
@@ -200,7 +201,7 @@ namespace School_System.Controllers
             if (!resultado.Succeeded)
             {
                 var errorPassword = resultado.Errors.FirstOrDefault(e => e.Code == "PasswordMismatch");
-                if(errorPassword != null)
+                if (errorPassword != null)
                 {
                     return BadRequest(new { mensaje = "La contraseña actual es incorrecta" });
                 }
@@ -212,6 +213,25 @@ namespace School_System.Controllers
             }
 
             return Ok(new { mensaje = "Contraseña actualizada correctamente" });
+        }
+
+        [HttpGet("mis-cursos")]
+        public async Task<IActionResult> ObtenrMisCursos()
+        {
+            try
+            {
+                var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(usuarioId)) return Unauthorized(new { mensaje = "Token Invalido o Usuario no Autenticado" });
+
+                var dashboard = await _alumnoService.ObtenerMisCursos(usuarioId);
+
+                return Ok(dashboard);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

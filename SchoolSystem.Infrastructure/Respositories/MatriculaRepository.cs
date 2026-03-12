@@ -26,7 +26,21 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task AgregaratriculaAsync(Matricula matricula)
         {
             await _context.Matriculas.AddAsync(matricula);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
+        }
+
+        public async Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionId, int periodoId)
+        {
+            return await _context.Matriculas.Include(m => m.Alumno)
+                .Include(m => m.DetallesMatriculas)
+                .Where(m => seccionId.Contains(m.SeccionId) && m.PeriodoAcademicoId == periodoId)
+                .ToListAsync();
+        }
+
+        public async Task<List<DetalleMatricula>> ObtenerCursosDelAlumnoPoPeriodoAsync(int alumnoId, int periodoId)
+        {
+            return await _context.DetalleMatriculas.Include(d => d.Matricula).Include(d => d.Curso).ThenInclude(c => c.Competencias)
+                .Where(d => d.Matricula!.AlumnoId == alumnoId && d.Matricula.PeriodoAcademicoId == periodoId).ToListAsync();
         }
 
         public async Task<Matricula?> ObtenerDetallerId(int id)
@@ -36,7 +50,11 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<Matricula?> ObtenerPorAlumnoPeriodoAsync(int alumnoId, int periodoId)
         {
-            return await _context.Matriculas.FirstOrDefaultAsync(m => m.AlumnoId == alumnoId && m.PeriodoAcademicoId == periodoId);
+            return await _context.Matriculas
+                .Include(m => m.DetallesMatriculas)
+                .ThenInclude(d => d.Curso)
+                .ThenInclude(c => c.Competencias)
+                .FirstOrDefaultAsync(m => m.AlumnoId == alumnoId && m.PeriodoAcademicoId == periodoId);
         }
 
         public async Task<List<Matricula>> ObtenerPorAulaAsync(int gradoId, int seccionId, int periodoId)

@@ -101,6 +101,16 @@
   },
   {
     "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "ObtenrMisCursos",
+    "RelativePath": "api/Alumno/mis-cursos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AlumnoController",
     "Method": "CambiarMiPassword",
     "RelativePath": "api/Alumno/passowrd",
     "HttpMethod": "PUT",
@@ -110,6 +120,22 @@
       {
         "Name": "alumnoResetPasswordDto",
         "Type": "SchoolSystem.Application.DTOs.UserResetPasswordDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "AsignarCurso",
+    "RelativePath": "api/AsignacionDocente",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.AsignacionDocenteCreateDto",
         "IsRequired": true
       }
     ],
@@ -264,6 +290,16 @@
   },
   {
     "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "ObtenerMiDashboard",
+    "RelativePath": "api/Docente/dashboard",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
     "Method": "ObtenerPorDni",
     "RelativePath": "api/Docente/dni/{dni}",
     "HttpMethod": "GET",
@@ -273,6 +309,22 @@
       {
         "Name": "dni",
         "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "LlenarNotas",
+    "RelativePath": "api/Docente/notas",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CalificacionCreateDto",
         "IsRequired": true
       }
     ],
@@ -468,6 +520,59 @@
       {
         "Name": "seccionDto",
         "Type": "SchoolSystem.Application.DTOs.Secci\u00F3nDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.TrimestreController",
+    "Method": "CrearTrimestre",
+    "RelativePath": "api/Trimestre",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.TrimestreCreadoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.TrimestreController",
+    "Method": "ExtenderTrimestre",
+    "RelativePath": "api/Trimestre/{id}/extender",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.TrimestreExtensionDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.TrimestreController",
+    "Method": "ObtenerPoPeriodo",
+    "RelativePath": "api/Trimestre/periodo/{periodoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "periodoId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

@@ -12,11 +12,11 @@ namespace SchoolSystem.Application.DTOs
         public int cursoId {  get; set; }
         public string NombreCurso { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;
-        public List<Competencia> Competencias { get; set; } = new List<Competencia>();
+        public List<CompetenciasDto> Competencias { get; set; } = new List<CompetenciasDto>();
     }
     public class CompetenciasDto
     {
         public int Id { get; set; }
-        public string Nombre {  get; set; } = string.Empty;
+        public string Nombre {  get; set; } = string.Empty; 
     }
 }

@@ -213,6 +213,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("DocenteId")
                         .HasColumnType("int");
 
+                    b.Property<int>("GradoId")
+                        .HasColumnType("int");
+
                     b.Property<int>("PeriodoAcademicoId")
                         .HasColumnType("int");
 
@@ -224,6 +227,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("CursoId");
 
                     b.HasIndex("DocenteId");
+
+                    b.HasIndex("GradoId");
 
                     b.HasIndex("PeriodoAcademicoId");
 
@@ -251,7 +256,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasMaxLength(2)
                         .HasColumnType("nvarchar(2)");
 
-                    b.Property<int>("Trimestre")
+                    b.Property<int>("TrimestreId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -259,6 +264,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("CompetenciaId");
 
                     b.HasIndex("DetalleMatriculaId");
+
+                    b.HasIndex("TrimestreId");
 
                     b.ToTable("Calificaciones");
                 });
@@ -482,6 +489,37 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.ToTable("Secciones");
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("EstadoActivo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaCierre")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PeriodoAcademicoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeriodoAcademicoId");
+
+                    b.ToTable("Trimestres");
+                });
+
             modelBuilder.Entity("SchoolSystem.Infrastructure.Identity.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -624,6 +662,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SchoolSystem.Domain.Entities.Grado", "Grado")
+                        .WithMany()
+                        .HasForeignKey("GradoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
                         .WithMany()
                         .HasForeignKey("PeriodoAcademicoId")
@@ -639,6 +683,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Navigation("Curso");
 
                     b.Navigation("Docente");
+
+                    b.Navigation("Grado");
 
                     b.Navigation("PeriodoAcademico");
 
@@ -659,9 +705,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SchoolSystem.Domain.Entities.Trimestre", "Trimestre")
+                        .WithMany("Calificaciones")
+                        .HasForeignKey("TrimestreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Competencia");
 
                     b.Navigation("DetalleMatricula");
+
+                    b.Navigation("Trimestre");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Competencia", b =>
@@ -760,6 +814,17 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Navigation("Seccion");
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>
+                {
+                    b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
+                        .WithMany()
+                        .HasForeignKey("PeriodoAcademicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PeriodoAcademico");
+                });
+
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Alumno", b =>
                 {
                     b.Navigation("Matriculas");
@@ -793,6 +858,11 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Matricula", b =>
                 {
                     b.Navigation("DetallesMatriculas");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>
+                {
+                    b.Navigation("Calificaciones");
                 });
 #pragma warning restore 612, 618
         }

@@ -11,5 +11,7 @@ namespace SchoolSystem.Application.Interfaces
     {
         Task<DocenteDto?> GetByDniAsync(string dni);
         Task<IEnumerable<DocenteDto>> GetAllsync();
+        Task<List<DashboardDocenteDto>> ObtenerMiDashboardAsync(string usuarioId);
+        
     }
 }
