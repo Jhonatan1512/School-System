@@ -16,17 +16,23 @@ namespace School_System.Controllers
     [Authorize]
     public class DocenteController : ControllerBase
     { 
-        private readonly IDocenteRepository _docenteRepository;
+        private readonly IDocenteRepository _docenteRepository; 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDocenteService _docenteService;
         private readonly ICalificacionService _calificacionService;
-
-        public DocenteController(IDocenteRepository docenteRepository, UserManager<ApplicationUser> userManager, IDocenteService docenteService, ICalificacionService calificacionService)
+        private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        public DocenteController(
+            IDocenteRepository docenteRepository, 
+            UserManager<ApplicationUser> userManager, 
+            IDocenteService docenteService, 
+            ICalificacionService calificacionService,
+            IPeriodoAcademicoRepository periodoAcademicoRepository)
         {
             _docenteRepository = docenteRepository;
             _userManager = userManager;
             _docenteService = docenteService;
             _calificacionService = calificacionService;
+            _periodoAcademicoRepository = periodoAcademicoRepository;
         }
 
         //POST :api/docente
@@ -222,7 +228,7 @@ namespace School_System.Controllers
                 {
                     mensaje = "Cursos Asignados",
                     data = dashboard
-                });
+                }); 
             }
             catch (Exception ex)
             {
@@ -251,6 +257,31 @@ namespace School_System.Controllers
                 });
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("curso/{cursoId}/seccion/{seccionId}/detalle")]
+        public async Task<IActionResult> ObtenerDetallesCurso(int cursoId, int seccionId)
+        {
+            try
+            {
+                var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(usuarioId))
+                    return Unauthorized("No se encontro el token del usuario");
+
+                var docente = await _docenteRepository.ObtenerPorUsuarioAsync(usuarioId);
+                if (docente == null) return BadRequest("El perfil del docente no existe");
+
+                var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+                if (periodoActivo == null) return BadRequest("El periodo académico no esta activo actualmente");
+
+                var detalleCurso = await _docenteService.ObtenerDetalleCursoAsync(docente.Id, cursoId, seccionId, periodoActivo.Id);    
+
+                return Ok(detalleCurso);
+
+            }catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

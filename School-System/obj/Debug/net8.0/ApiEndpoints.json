@@ -111,6 +111,22 @@
   },
   {
     "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "ObtenerDetalleCursos",
+    "RelativePath": "api/Alumno/mis-cursos/{cursoId}/detalle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cursoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AlumnoController",
     "Method": "CambiarMiPassword",
     "RelativePath": "api/Alumno/passowrd",
     "HttpMethod": "PUT",
@@ -283,6 +299,27 @@
       {
         "Name": "dto",
         "Type": "SchoolSystem.Application.DTOs.DocenteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "ObtenerDetallesCurso",
+    "RelativePath": "api/Docente/curso/{cursoId}/seccion/{seccionId}/detalle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "cursoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

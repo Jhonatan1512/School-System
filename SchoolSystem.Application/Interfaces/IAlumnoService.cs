@@ -14,5 +14,6 @@ namespace SchoolSystem.Application.Interfaces
         Task<AlumnoDto?> GetByIdAsync(int id);
         Task<AlumnoDto?> GetByDniAsync(string dni);
         Task<List<DashboardAlumnoDto>> ObtenerMisCursos(string usuarioId);
+        Task<DetalleCursoAlumnoDto> ObtenerDetalleCursoAsync(int lumnoId, int cursoId, int periodoId);
     }
 }

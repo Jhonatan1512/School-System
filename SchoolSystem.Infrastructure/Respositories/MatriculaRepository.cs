@@ -29,11 +29,12 @@ namespace SchoolSystem.Infrastructure.Respositories
             await _context.SaveChangesAsync(); 
         }
 
-        public async Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionId, int periodoId)
+        public async Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionIds, int periodoId)
         {
-            return await _context.Matriculas.Include(m => m.Alumno)
+            return await _context.Matriculas
+                .Include(m => m.Alumno)
                 .Include(m => m.DetallesMatriculas)
-                .Where(m => seccionId.Contains(m.SeccionId) && m.PeriodoAcademicoId == periodoId)
+                .Where(m => seccionIds.Contains(m.SeccionId) && m.PeriodoAcademicoId == periodoId)
                 .ToListAsync();
         }
 
@@ -42,7 +43,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             return await _context.DetalleMatriculas.Include(d => d.Matricula).Include(d => d.Curso).ThenInclude(c => c.Competencias)
                 .Where(d => d.Matricula!.AlumnoId == alumnoId && d.Matricula.PeriodoAcademicoId == periodoId).ToListAsync();
         }
-
+         
         public async Task<Matricula?> ObtenerDetallerId(int id)
         {
             return await _context.Matriculas.Include(m => m.DetallesMatriculas).FirstOrDefaultAsync(m => m.Id == id);
@@ -57,7 +58,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .FirstOrDefaultAsync(m => m.AlumnoId == alumnoId && m.PeriodoAcademicoId == periodoId);
         }
 
-        public async Task<List<Matricula>> ObtenerPorAulaAsync(int gradoId, int seccionId, int periodoId)
+        public async Task<List<Matricula>> ObtenerPorAulaAsync(int gradoId, int seccionId, int periodoId) 
         {
             return await _context.Matriculas.Include(m => m.Alumno).Include(m => m.Grado).Include(m => m.Seccion)
                 .Where(m => m.GradoId == gradoId && m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId).ToListAsync();

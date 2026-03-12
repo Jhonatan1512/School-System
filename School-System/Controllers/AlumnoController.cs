@@ -18,12 +18,18 @@ namespace School_System.Controllers
         private readonly IAlumnoRespository _alumnoRespository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAlumnoService _alumnoService;
+        private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
 
-        public AlumnoController(IAlumnoRespository alumnoRespository, UserManager<ApplicationUser> userManager, IAlumnoService alumnoService)
+        public AlumnoController(
+            IAlumnoRespository alumnoRespository, 
+            UserManager<ApplicationUser> userManager, 
+            IAlumnoService alumnoService,
+            IPeriodoAcademicoRepository periodoAcademicoRepository)
         {
             _alumnoRespository = alumnoRespository;
             _userManager = userManager;
             _alumnoService = alumnoService;
+            _periodoAcademicoRepository = periodoAcademicoRepository;
         }
 
         //GET :api/alumno
@@ -229,6 +235,26 @@ namespace School_System.Controllers
                 return Ok(dashboard);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("mis-cursos/{cursoId}/detalle")]
+        public async Task<IActionResult> ObtenerDetalleCursos(int cursoId)
+        {
+            try
+            {
+                var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var alumno = await _alumnoRespository.ObtenerPorUsuarioAsync(usuarioId);
+                if (alumno == null) return Unauthorized("Perfil de Alumno no encontrado");
+
+                var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+                if (periodoActivo == null) return BadRequest("No existe periodo académico activo");
+
+                var detalle = await _alumnoService.ObtenerDetalleCursoAsync(alumno.Id, cursoId, periodoActivo.Id);
+                return Ok(detalle);
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

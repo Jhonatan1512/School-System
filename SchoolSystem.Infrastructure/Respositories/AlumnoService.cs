@@ -35,7 +35,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         }
         public async Task<IEnumerable<AlumnoDto>> GetAll()
         {
-            var query = from alumno in _context.Alumnos
+            var query = from alumno in _context.Alumnos 
                         join usuario in _context.Users
                         on alumno.UsuarioId equals usuario.Id
                         select new AlumnoDto
@@ -119,15 +119,49 @@ namespace SchoolSystem.Infrastructure.Respositories
                     NombreCurso = d.Curso!.Nombre,
                     NombreDocente = asignacionDocente?.Docente != null
                         ? $"{asignacionDocente.Docente.Nombres}{asignacionDocente.Docente.Apellidos}" : "Si Docente asignado",
-
-                    Competencias = d.Curso.Competencias.Select(c => new CompetenciasDto
-                    {
-                        Id = c.Id,
-                        Nombre = c.Nombre
-                    }).ToList()
                 };
             }).ToList();
             return dashboard;
+        }
+
+        public async Task<DetalleCursoAlumnoDto> ObtenerDetalleCursoAsync(int lumnoId, int cursoId, int periodoId)
+        {
+            var matriculas = await _context.Matriculas
+                .Include(m => m.DetallesMatriculas)
+                .ThenInclude(d => d.Calificaciones)
+                .FirstOrDefaultAsync(m => m.AlumnoId == lumnoId && m.PeriodoAcademicoId == periodoId);
+            if (matriculas == null) throw new Exception("El alumno no está matriculado en este periodo");
+
+            var detalleCurso = matriculas.DetallesMatriculas.FirstOrDefault(d => d.CursoId == cursoId);
+            if (detalleCurso == null) throw new Exception("El alumno no esta matriculado en este curso");
+
+            var curso = await _context.Cursos
+                .Include(c => c.Competencias)
+                .FirstOrDefaultAsync(c => c.Id == cursoId);
+
+            var asignacion = await _context.AsignacionDocentes
+                .Include(a => a.Docente)
+                .FirstOrDefaultAsync(a => a.CursoId == cursoId && a.SeccionId == matriculas.SeccionId && a.PeriodoAcademicoId == periodoId);
+
+            var competencias = curso!.Competencias.Select(comp =>
+            {
+                var calificaciones = detalleCurso.Calificaciones.FirstOrDefault(c => c.CompetenciaId == comp.Id);
+
+                return new CompetenciasNotaDto
+                {
+                    CompetenciaId = comp.Id,
+                    NombreCompetencia = comp.Nombre,
+                    Nota = calificaciones?.Nota ?? "Sin Calificar"
+                };
+            }).ToList();
+
+            return new DetalleCursoAlumnoDto
+            {
+                NombreCurso = curso.Nombre,
+                NombreDocente = asignacion != null ? $"{asignacion.Docente.Nombres} {asignacion.Docente.Apellidos}" : "Sin Docente Asignado",
+                Competencias = competencias,
+            };
+
         }
     }
 }

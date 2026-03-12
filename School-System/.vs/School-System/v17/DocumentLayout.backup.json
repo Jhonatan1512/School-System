@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "D:\\.NET-API\\School-System\\School-System\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\services\\calificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|d:\\.net-api\\school-system\\school-system\\controllers\\alumnocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|solutionrelative:controllers\\alumnocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\interfaces\\icalificacionservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\interfaces\\ialumnoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|d:\\.net-api\\school-system\\school-system\\controllers\\docentecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|solutionrelative:controllers\\docentecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\alumnoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\dtos\\calificacioncreatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\dtos\\dashboardalumnodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{631D54F1-B712-42C2-8790-BE7ACA562737}|..\\SchoolSystem.Domain\\SchoolSystem.Domain.csproj|d:\\.net-api\\school-system\\schoolsystem.domain\\interfaces\\iasignaciondocenterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\matricularepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,68 +26,72 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DocenteController.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\School-System\\Controllers\\DocenteController.cs",
-              "RelativeDocumentMoniker": "Controllers\\DocenteController.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\School-System\\Controllers\\DocenteController.cs",
-              "RelativeToolTip": "Controllers\\DocenteController.cs",
-              "ViewState": "AgIAAN8AAAAAAAAAAADwv/MAAAASAAAAAAAAAA==",
+              "DocumentIndex": 0,
+              "Title": "AlumnoController.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\School-System\\Controllers\\AlumnoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\AlumnoController.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\School-System\\Controllers\\AlumnoController.cs",
+              "RelativeToolTip": "Controllers\\AlumnoController.cs",
+              "ViewState": "AgIAAOAAAAAAAAAAAAA1wP8AAAAjAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-12T00:38:00.762Z"
+              "WhenOpened": "2026-03-12T15:51:13.208Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "ICalificacionService.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\ICalificacionService.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Interfaces\\ICalificacionService.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\ICalificacionService.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\ICalificacionService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA5AAAAAAAAAA==",
+              "Title": "IAlumnoService.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IAlumnoService.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Interfaces\\IAlumnoService.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IAlumnoService.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\IAlumnoService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAABmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-12T00:36:31.511Z"
+              "WhenOpened": "2026-03-12T15:39:52.769Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CalificacionService.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Services\\CalificacionService.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Services\\CalificacionService.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Services\\CalificacionService.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\Services\\CalificacionService.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAYwEwAAAAAAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "AlumnoService.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\AlumnoService.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\AlumnoService.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\AlumnoService.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\AlumnoService.cs",
+              "ViewState": "AgIAAH4AAAAAAAAAAAAAAKIAAAAOAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-12T00:27:16.131Z",
+              "WhenOpened": "2026-03-12T15:36:14.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "DashboardAlumnoDto.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\DashboardAlumnoDto.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\DTOs\\DashboardAlumnoDto.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\DashboardAlumnoDto.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\DashboardAlumnoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAABfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-12T15:32:52.687Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "IAsignacionDocenteRepository.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IAsignacionDocenteRepository.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Domain\\Interfaces\\IAsignacionDocenteRepository.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IAsignacionDocenteRepository.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Domain\\Interfaces\\IAsignacionDocenteRepository.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Title": "MatriculaRepository.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\MatriculaRepository.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\MatriculaRepository.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\MatriculaRepository.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\MatriculaRepository.cs",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACMAAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T23:22:21.162Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "CalificacionCreateDto.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\CalificacionCreateDto.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\DTOs\\CalificacionCreateDto.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\CalificacionCreateDto.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\CalificacionCreateDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAKAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-11T23:20:03.625Z"
+              "WhenOpened": "2026-03-12T14:32:01.398Z",
+              "EditorCaption": ""
             }
           ]
         }

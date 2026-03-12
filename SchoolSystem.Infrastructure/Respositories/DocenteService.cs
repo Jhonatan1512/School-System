@@ -18,19 +18,22 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IDocenteRepository _docenteRepository;
         private readonly IMatriculaRepository _matriculaRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        private readonly ICursoRepository _cursoRepository;
 
         public DocenteService(
             ApplicationDbContext context, 
             IMatriculaRepository matriculaRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,
             IAsignacionDocenteRepository asignacionDocenteRepository,
-            IDocenteRepository docenteRepository)
+            IDocenteRepository docenteRepository,
+            ICursoRepository cursoRepository) 
         {
             _context = context;
             _matriculaRepository = matriculaRepository;
             _periodoAcademicoRepository = periodoAcademicoRepository;
             _docenteRepository = docenteRepository;
             _asignacionDocenteRepository = asignacionDocenteRepository;
+            _cursoRepository = cursoRepository;
         }
 
         public async Task<IEnumerable<DocenteDto>> GetAllsync()
@@ -67,6 +70,50 @@ namespace SchoolSystem.Infrastructure.Respositories
             return await datos.FirstOrDefaultAsync();
         }
 
+        public async Task<DetalleCursoDto> ObtenerDetalleCursoAsync(int docenteId, int cursoId, int seccionId, int periodoId)
+        {
+            bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(docenteId, cursoId, seccionId, periodoId);
+            if (!esSuProfesor) throw new Exception("Acceso Denegado a Esta Sección");
+
+            var curso = await _cursoRepository.ObtenerPorIdAsync(cursoId);
+            var competencias = curso.Competencias.Select(c => new CompetenciaDto
+            {
+                Id = c.Id,
+                Nombre = c.Nombre,
+            }).ToList();
+
+            var matriculas = await _context.Matriculas
+                .Include(m => m.Alumno)
+                .Include(m => m.DetallesMatriculas)
+                .ThenInclude(d => d.Calificaciones)
+                .Where(m => m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId)
+                .ToListAsync();
+
+            var alumnosDto = matriculas
+                .Where(m => m.DetallesMatriculas.Any(d => d.CursoId == cursoId))
+                .Select(m =>
+                {
+                    var detalle = m.DetallesMatriculas.First(d => d.CursoId == cursoId);
+                    return new AlumnoNotaDto
+                    {
+                        AlumnoId = m.Alumno!.Id,
+                        NombreCompleto = $"{m.Alumno.Nombre} {m.Alumno.Apellidos}",
+                        DetalleMatriculaId = detalle.Id,
+                        NotasRegistradas = detalle.Calificaciones.Select(c => new NotasRegistradasDto
+                        {
+                            copetenciaId = c.Id,
+                            Nota = c.Nota,
+                        }).ToList()
+                    };
+                }).ToList();
+
+            return new DetalleCursoDto
+            {
+                Competencias = competencias,
+                Alumnos = alumnosDto,
+            };
+        }
+
         public async Task<List<DashboardDocenteDto>> ObtenerMiDashboardAsync(string usuarioId)
         {
             var docente = await _docenteRepository.ObtenerPorUsuarioAsync(usuarioId);
@@ -86,10 +133,16 @@ namespace SchoolSystem.Infrastructure.Respositories
             {
                 var alumnosCurso = matriculas.Where(m => m.SeccionId == asignacion.SeccionId &&
                 m.DetallesMatriculas.Any(d => d.CursoId == asignacion.CursoId))
-                .Select(m => new AlumnoBasicoDto
+                .Select(m =>
                 {
-                    AlumnoId = m.Alumno!.Id,
-                    NombreCompelto = $"{m.Alumno.Nombre} {m.Alumno.Apellidos}"
+                    var detallesCurso = m.DetallesMatriculas.First(d => d.CursoId == asignacion.CursoId);
+
+                    return new AlumnoBasicoDto
+                    {
+                        AlumnoId = m.Alumno!.Id,
+                        NombreCompelto = $"{m.Alumno.Nombre} {m.Alumno.Apellidos}",
+                        DetalleMatriculaId = detallesCurso.Id,
+                    };
                 }).ToList();
                 return new DashboardDocenteDto
                 {

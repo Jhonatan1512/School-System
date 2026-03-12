@@ -12,3 +12,4 @@ namespace SchoolSystem.Application.Interfaces
         Task<CalificacionDto> CreateAsync(int docenteId, CalificacionCreateDto dto); 
     }
 }
+ 

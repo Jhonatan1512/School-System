@@ -9,14 +9,21 @@ namespace SchoolSystem.Application.DTOs
 {
     public class DashboardAlumnoDto
     {
-        public int cursoId {  get; set; }
+        public int cursoId { get; set; }
         public string NombreCurso { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;
-        public List<CompetenciasDto> Competencias { get; set; } = new List<CompetenciasDto>();
     }
-    public class CompetenciasDto
+    public class CompetenciasNotaDto
     {
-        public int Id { get; set; }
-        public string Nombre {  get; set; } = string.Empty; 
+        public int CompetenciaId { get; set; }
+        public string NombreCompetencia { get; set; } = string.Empty;
+        public string Nota {  get; set; } = string.Empty;
+    }
+
+    public class DetalleCursoAlumnoDto
+    {
+        public string NombreCurso { get; set; } = string.Empty;
+        public string NombreDocente { get; set; } = string.Empty;
+        public List<CompetenciasNotaDto> Competencias { get; set; } = new List<CompetenciasNotaDto>();
     }
 }

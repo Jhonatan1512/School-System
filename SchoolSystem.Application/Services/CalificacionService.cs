@@ -17,7 +17,7 @@ namespace SchoolSystem.Application.Services
         private readonly IAsignacionDocenteRepository _asignacionDocenteRepository;
         private readonly IDetalleMatriculaRepository _detalleMatriculaRepository;
         public CalificacionService(
-            ICalificacionRepository calificacionRepository, 
+            ICalificacionRepository calificacionRepository,  
             ITrimestreRepository trimestreRepository, 
             IAsignacionDocenteRepository asignacionDocenteRepository,
             IDetalleMatriculaRepository detalleMatriculaRepository)
@@ -36,13 +36,6 @@ namespace SchoolSystem.Application.Services
 
             var detalle = await _detalleMatriculaRepository.ObtenerDetallePorId(dto.DetalleMatriculaId);
             if (detalle == null) throw new Exception("El detalle de matricula no existe");
-
-            Console.WriteLine("\n=== MODO DETECTIVE ACTIVADO ===");
-            Console.WriteLine($"1. DocenteId enviado desde Postman: {docenteId}");
-            Console.WriteLine($"2. CursoId sacado del Detalle: {detalle.CursoId}");
-            Console.WriteLine($"3. SeccionId sacado de la Matricula: {detalle.Matricula.SeccionId}");
-            Console.WriteLine($"4. PeriodoId sacado de la Matricula: {detalle.Matricula.PeriodoAcademicoId}");
-            Console.WriteLine("===============================\n");
 
             bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(
                 docenteId,
