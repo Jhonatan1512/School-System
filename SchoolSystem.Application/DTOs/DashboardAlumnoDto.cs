@@ -13,14 +13,15 @@ namespace SchoolSystem.Application.DTOs
         public string NombreCurso { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;
     }
-    public class CompetenciasNotaDto
+    public class CompetenciasNotaDto 
     {
         public int CompetenciaId { get; set; }
         public string NombreCompetencia { get; set; } = string.Empty;
+        public string NombreTrimestre {  get; set; } = string.Empty;
         public string Nota {  get; set; } = string.Empty;
     }
 
-    public class DetalleCursoAlumnoDto
+    public class DetalleCursoAlumnoDto 
     {
         public string NombreCurso { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;

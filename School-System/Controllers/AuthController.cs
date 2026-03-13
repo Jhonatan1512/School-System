@@ -7,6 +7,8 @@ using System.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using SchoolSystem.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace School_System.Controllers
 {
@@ -15,12 +17,16 @@ namespace School_System.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
+        private ApplicationDbContext _context;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration)
+        public AuthController(UserManager<ApplicationUser> userManager, IConfiguration configuration, ApplicationDbContext context, RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
             _configuration = configuration;
+            _context = context;
+            _roleManager = roleManager;
         }
 
         [HttpPost("registrar")]
@@ -37,7 +43,14 @@ namespace School_System.Controllers
 
             if (resultado.Succeeded)
             {
-                return Ok(new { mensaje = "Usuario Creado" });
+                var rolExiste = await _roleManager.RoleExistsAsync(modelo.Rol);
+                if (!await _roleManager.RoleExistsAsync(modelo.Rol))
+                {
+                    await _roleManager.CreateAsync(new IdentityRole(modelo.Rol));
+                }
+
+                await _userManager.AddToRoleAsync(nuevoUsuario, modelo.Rol);
+                return Ok(new { mensaje = "Usuario Creado y Rol Asignado" });
             }
 
             return BadRequest(resultado.Errors);
@@ -60,12 +73,43 @@ namespace School_System.Controllers
                 return Unauthorized(new { mensaje = "La contraseña es incorrecta" });
             }
 
-            var claims = new[]
+            var roles = await _userManager.GetRolesAsync(usuario);
+            string nombreToke = "Usuario";
+
+            if (roles.Contains("Admin"))
+            {
+                nombreToke = "Administrador del Sistema";
+            } else
+            {
+                var alumno = await _context.Alumnos.FirstOrDefaultAsync(a => a.UsuarioId== usuario.Id);
+                if(alumno != null)
+                {
+                    nombreToke = $"{alumno.Nombre} {alumno.Apellidos}";
+                }
+                else
+                {
+                    var docente = await _context.Docentes.FirstOrDefaultAsync(d => d.UsuarioId == usuario.Id);
+                    if(docente != null)
+                    {
+                        nombreToke = $"{docente.Nombres} {docente.Apellidos}";
+                    }
+                }
+            }
+
+
+            
+            var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.Id),
                 new Claim(JwtRegisteredClaimNames.Email, usuario.Email!),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())   
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("nombre", nombreToke)
             };
+
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

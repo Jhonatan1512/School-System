@@ -17,19 +17,22 @@ namespace School_System.Controllers
     {
         private readonly IAlumnoRespository _alumnoRespository;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IAlumnoService _alumnoService;
+        private readonly IAlumnoService _alumnoService; 
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        private readonly RoleManager<IdentityRole> _roleManager;
 
         public AlumnoController(
             IAlumnoRespository alumnoRespository, 
             UserManager<ApplicationUser> userManager, 
             IAlumnoService alumnoService,
-            IPeriodoAcademicoRepository periodoAcademicoRepository)
+            IPeriodoAcademicoRepository periodoAcademicoRepository,
+            RoleManager<IdentityRole> roleManager)
         {
             _alumnoRespository = alumnoRespository;
             _userManager = userManager;
             _alumnoService = alumnoService;
             _periodoAcademicoRepository = periodoAcademicoRepository;
+            _roleManager = roleManager;
         }
 
         //GET :api/alumno
@@ -53,7 +56,7 @@ namespace School_System.Controllers
             var passwordGenerada = $"{char.ToUpper(inicial1)}{char.ToLower(inicial2)}{alumnoDto.Dni}*";
 
 
-            var usuarioNuevo = new ApplicationUser
+            var usuarioNuevo = new ApplicationUser 
             {
                 UserName = emailGenerado,
                 Email = emailGenerado,
@@ -66,6 +69,14 @@ namespace School_System.Controllers
             {
                 return BadRequest(resultadoIdentity.Errors);
             }
+
+            const string rolAlumno = "Alumno";
+            if(!await _roleManager.RoleExistsAsync(rolAlumno))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(rolAlumno));
+            }
+
+            await _userManager.AddToRoleAsync(usuarioNuevo, rolAlumno);
 
             var nuevoAlumno = new Alumno
             {
@@ -85,7 +96,7 @@ namespace School_System.Controllers
                 Credenciales = new
                 {
                     Email = emailGenerado,
-                    Passoword = passwordGenerada,
+                    Password = passwordGenerada,
                 },
                 Alumno = alumnoCreado
             });

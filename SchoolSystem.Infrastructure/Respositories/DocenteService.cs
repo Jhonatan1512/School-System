@@ -19,7 +19,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly ICursoRepository _cursoRepository;
-
+         
         public DocenteService(
             ApplicationDbContext context, 
             IMatriculaRepository matriculaRepository, 
@@ -75,41 +75,53 @@ namespace SchoolSystem.Infrastructure.Respositories
             bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(docenteId, cursoId, seccionId, periodoId);
             if (!esSuProfesor) throw new Exception("Acceso Denegado a Esta Sección");
 
-            var curso = await _cursoRepository.ObtenerPorIdAsync(cursoId);
-            var competencias = curso.Competencias.Select(c => new CompetenciaDto
-            {
-                Id = c.Id,
-                Nombre = c.Nombre,
-            }).ToList();
+            var curso = await _context.Cursos
+                .Include(c => c.Competencias)
+                .FirstOrDefaultAsync(c => c.Id == cursoId);
+
+            if (curso == null) throw new Exception("Curso no encontrado");
 
             var matriculas = await _context.Matriculas
                 .Include(m => m.Alumno)
+                .Include(m => m.Grado)
+                .Include(m => m.Seccion)
                 .Include(m => m.DetallesMatriculas)
-                .ThenInclude(d => d.Calificaciones)
+                    .ThenInclude(d => d.Calificaciones)
                 .Where(m => m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId)
                 .ToListAsync();
+
+            var trimestre = await _context.Trimestres.FirstOrDefaultAsync(t => t.EstadoActivo);
+            string nombreTrimestreActivo = trimestre?.Nombre ?? "Trimestre no definido";
 
             var alumnosDto = matriculas
                 .Where(m => m.DetallesMatriculas.Any(d => d.CursoId == cursoId))
                 .Select(m =>
                 {
                     var detalle = m.DetallesMatriculas.First(d => d.CursoId == cursoId);
+
                     return new AlumnoNotaDto
                     {
+                        NombreCurso = curso.Nombre,
+                        Aula = $"{(m.Grado != null ? m.Grado.Nombre : "")} {(m.Seccion != null ? m.Seccion.Nombre : "")}".Trim(),
                         AlumnoId = m.Alumno!.Id,
                         NombreCompleto = $"{m.Alumno.Nombre} {m.Alumno.Apellidos}",
                         DetalleMatriculaId = detalle.Id,
                         NotasRegistradas = detalle.Calificaciones.Select(c => new NotasRegistradasDto
                         {
-                            copetenciaId = c.Id,
+                            copetenciaId = c.CompetenciaId,
                             Nota = c.Nota,
-                        }).ToList()
+                        }).ToList(),
+                        Trimestre = nombreTrimestreActivo
                     };
                 }).ToList();
 
             return new DetalleCursoDto
             {
-                Competencias = competencias,
+                Competencias = curso.Competencias.Select(c => new CompetenciaDto
+                {
+                    Id = c.Id,
+                    Nombre = c.Nombre
+                }).ToList(),
                 Alumnos = alumnosDto,
             };
         }
@@ -148,6 +160,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 {
                     CursoId = asignacion.CursoId,
                     NombreCurso = asignacion.Curso!.Nombre,
+                    SeccionId = asignacion.SeccionId,
                     Aula = $"{asignacion.Curso.Grado?.Nombre ?? "Sin Grado"}{asignacion.Seccion?.Nombre ?? "Sin Sección"}",
                     PeriodoTrimestre = periodActivo.Nombre,
                     Competencias = asignacion.Curso.Competencias.Select(c => new CompetenciaDto

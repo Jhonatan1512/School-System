@@ -21,18 +21,21 @@ namespace School_System.Controllers
         private readonly IDocenteService _docenteService;
         private readonly ICalificacionService _calificacionService;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        private readonly RoleManager<IdentityRole> _roleManager;
         public DocenteController(
             IDocenteRepository docenteRepository, 
             UserManager<ApplicationUser> userManager, 
             IDocenteService docenteService, 
             ICalificacionService calificacionService,
-            IPeriodoAcademicoRepository periodoAcademicoRepository)
+            IPeriodoAcademicoRepository periodoAcademicoRepository,
+            RoleManager<IdentityRole> roleManager)
         {
             _docenteRepository = docenteRepository;
             _userManager = userManager;
             _docenteService = docenteService;
             _calificacionService = calificacionService;
             _periodoAcademicoRepository = periodoAcademicoRepository;
+            _roleManager = roleManager;
         }
 
         //POST :api/docente
@@ -55,6 +58,14 @@ namespace School_System.Controllers
             };
 
             var resultadoIdentity = await _userManager.CreateAsync(usuarioNuevo, passwordGenerada);
+
+            const string rolAlumno = "Docente";
+            if (!await _roleManager.RoleExistsAsync(rolAlumno))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(rolAlumno));
+            }
+
+            await _userManager.AddToRoleAsync(usuarioNuevo, rolAlumno);
 
             if (!resultadoIdentity.Succeeded)
             {

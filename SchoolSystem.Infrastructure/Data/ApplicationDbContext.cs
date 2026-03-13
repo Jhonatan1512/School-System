@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SchoolSystem.Domain.Entities;
 using SchoolSystem.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 
 
 
@@ -36,6 +37,31 @@ namespace SchoolSystem.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            string roleAdminId = "1";
+            string roleDocenteId = "2";
+            string roleAlumnoId = "3";
+
+            builder.Entity<IdentityRole>().HasData(
+                new IdentityRole
+                {
+                    Id = roleAdminId,
+                    Name = "Admin",
+                    NormalizedName = "ADMIN"
+                },
+                new IdentityRole
+                {
+                    Id = roleDocenteId,
+                    Name = "Docente",
+                    NormalizedName = "DOCENTE"
+                },
+                new IdentityRole
+                {
+                    Id = roleAlumnoId,
+                    Name = "Alumno",
+                    NormalizedName = "ALUMNO"
+                }
+            );
 
             builder.Entity<Alumno>().HasIndex(a => a.Dni).IsUnique();
 

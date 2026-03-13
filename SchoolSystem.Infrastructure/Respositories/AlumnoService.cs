@@ -18,20 +18,24 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly ApplicationDbContext _context;
         public readonly IAlumnoRespository _alumnoRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
-        private readonly IMatriculaRepository _matriculaRepository;
+        private readonly IMatriculaRepository _matriculaRepository; 
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
+        private readonly ITrimestreRepository _trimestreRepository;
         public AlumnoService(
             ApplicationDbContext context,
             IAlumnoRespository alumnoRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository, 
-            IMatriculaRepository matriculaRepository, 
-            IAsignacionDocenteRepository signacionDocenteRepository)
+            IMatriculaRepository matriculaRepository,  
+            IAsignacionDocenteRepository signacionDocenteRepository,
+            ITrimestreRepository trimestreRepository)
         {
             _context = context; 
             _alumnoRepository = alumnoRepository;
             _periodoAcademicoRepository = periodoAcademicoRepository;
             _matriculaRepository = matriculaRepository;
             _signacionDocenteRepository = signacionDocenteRepository;
+            _trimestreRepository = trimestreRepository;
+
         }
         public async Task<IEnumerable<AlumnoDto>> GetAll()
         {
@@ -48,7 +52,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Sexo = alumno.Sexo,
                             Estado = alumno.Estado.ToString(),
                             Email = usuario.Email!
-                        };
+                        }; 
             return await query.ToListAsync(); 
         }
 
@@ -118,7 +122,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                     cursoId = d.CursoId,
                     NombreCurso = d.Curso!.Nombre,
                     NombreDocente = asignacionDocente?.Docente != null
-                        ? $"{asignacionDocente.Docente.Nombres}{asignacionDocente.Docente.Apellidos}" : "Si Docente asignado",
+                        ? $"{asignacionDocente.Docente.Nombres} {asignacionDocente.Docente.Apellidos}" : "Si Docente asignado",
                 };
             }).ToList();
             return dashboard;
@@ -143,6 +147,11 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Include(a => a.Docente)
                 .FirstOrDefaultAsync(a => a.CursoId == cursoId && a.SeccionId == matriculas.SeccionId && a.PeriodoAcademicoId == periodoId);
 
+            var trimestre = await _context.Trimestres.Include(t => t.PeriodoAcademico)
+                .FirstOrDefaultAsync(t => t.EstadoActivo);
+
+            string nombreTrimestreActivo = trimestre?.Nombre ?? "Trimestre no definido";
+
             var competencias = curso!.Competencias.Select(comp =>
             {
                 var calificaciones = detalleCurso.Calificaciones.FirstOrDefault(c => c.CompetenciaId == comp.Id);
@@ -151,16 +160,17 @@ namespace SchoolSystem.Infrastructure.Respositories
                 {
                     CompetenciaId = comp.Id,
                     NombreCompetencia = comp.Nombre,
-                    Nota = calificaciones?.Nota ?? "Sin Calificar"
+                    Nota = calificaciones?.Nota ?? "Sin Calificar",
+                    NombreTrimestre = nombreTrimestreActivo,
                 };
             }).ToList();
 
             return new DetalleCursoAlumnoDto
             {
                 NombreCurso = curso.Nombre,
-                NombreDocente = asignacion != null ? $"{asignacion.Docente.Nombres} {asignacion.Docente.Apellidos}" : "Sin Docente Asignado",
+                NombreDocente = asignacion != null ? $"{asignacion.Docente.Nombres.Trim() } {asignacion.Docente.Apellidos}" : "Sin Docente Asignado",
                 Competencias = competencias,
-            };
+            }; 
 
         }
     }

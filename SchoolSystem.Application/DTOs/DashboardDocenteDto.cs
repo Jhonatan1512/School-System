@@ -17,10 +17,11 @@ namespace SchoolSystem.Application.DTOs
         public List<AlumnoBasicoDto> AlumnosMatriculados = new List<AlumnoBasicoDto>();
     }
 
-    public class CompetenciaDto 
+    public class CompetenciaDto  
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
+        
     }
 
     public class AlumnoBasicoDto
@@ -42,9 +43,12 @@ namespace SchoolSystem.Application.DTOs
     }
     public class AlumnoNotaDto
     {
+        public string NombreCurso { set; get; } = string.Empty;
+        public string Aula { get; set; } = string.Empty;
         public int AlumnoId { get; set; }
         public string NombreCompleto {  get; set; } = string.Empty;
         public int DetalleMatriculaId { get; set; }
+        public string Trimestre {  get; set; } = string.Empty;
         public List<NotasRegistradasDto> NotasRegistradas { get; set; } = new List<NotasRegistradasDto> ();
     }
 

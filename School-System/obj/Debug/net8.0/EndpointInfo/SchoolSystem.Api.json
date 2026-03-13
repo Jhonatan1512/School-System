@@ -1380,6 +1380,10 @@
           "password": {
             "type": "string",
             "nullable": true
+          },
+          "rol": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
