@@ -18,7 +18,7 @@ namespace School_System.Controllers
     { 
         private readonly IDocenteRepository _docenteRepository; 
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IDocenteService _docenteService;
+        private readonly IDocenteService _docenteService; 
         private readonly ICalificacionService _calificacionService;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
@@ -248,7 +248,7 @@ namespace School_System.Controllers
         }
 
         [HttpPost("notas")]
-        public async Task<IActionResult> LlenarNotas([FromBody] CalificacionCreateDto dto)
+        public async Task<IActionResult> LlenarNotas(int docenteId, [FromBody] List<CalificacionCreateDto> dto)
         {
             try
             {
@@ -260,7 +260,7 @@ namespace School_System.Controllers
 
                 //int docenteId = int.Parse(docenteIdClaims);
 
-                var resultado = await _calificacionService.CreateAsync(docente.Id, dto);
+                var resultado = await _calificacionService.RegistroMasivo(docente.Id, dto);
                 return Ok(new
                 {
                     mesanje = "Nota agrega",

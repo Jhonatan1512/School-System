@@ -28,42 +28,53 @@ namespace SchoolSystem.Application.Services
             _detalleMatriculaRepository = detalleMatriculaRepository; 
         }
 
-        public async Task<CalificacionDto> CreateAsync(int docenteId, CalificacionCreateDto dto)
+        public async Task<List<CalificacionDto>> RegistroMasivo(int docenteId, List<CalificacionCreateDto> list)
         {
-            var trimestre = await _trimestreRepository.ObtenerPorIdAsync(dto.TimestreId);
-            if (trimestre == null) throw new Exception("el trimestre indicado no existe");
-            if (!trimestre.EstadoActivo) throw new Exception("El periodo de registro de notas ha finalizado");
+            var calificacionesProcesadas = new List<CalificacionDto>();
 
-            var detalle = await _detalleMatriculaRepository.ObtenerDetallePorId(dto.DetalleMatriculaId);
-            if (detalle == null) throw new Exception("El detalle de matricula no existe");
-
-            bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(
-                docenteId,
-                detalle.CursoId,
-                detalle.Matricula.SeccionId,
-                detalle.Matricula.PeriodoAcademicoId);
-
-            if (!esSuProfesor)
-                throw new Exception("Acceso Denegado: no esta asignado a esta asignatura en esta sección");
-
-            var nuevaCalificación = new Calificacion
+            foreach (var dto in list)
             {
-                Nota = dto.Nota,
-                TrimestreId = dto.TimestreId,
-                CompetenciaId = dto.CompetenciaId,
-                DetalleMatriculaId = dto.DetalleMatriculaId,
-            };
+                // 1. Validación de Trimestre
+                var trimestre = await _trimestreRepository.ObtenerPorIdAsync(dto.TrimestreId);
+                if (trimestre == null || !trimestre.EstadoActivo) continue;
 
-            var creado = await _calificacionRepository.RegistrarCalificacion(nuevaCalificación);
+                // 2. RESTRICCIÓN: Verificar si ya existe la nota para evitar duplicados
+                var calificacionExistente = await _calificacionRepository.ObtenerCalificacionExistente(
+                    dto.DetalleMatriculaId, dto.CompetenciaId, dto.TrimestreId);
 
-            return new CalificacionDto
-            {
-                Id = creado.Id,
-                Nota = creado.Nota,
-                TimestreId = creado.TrimestreId,
-                DetalleMatriculaId = creado.DetalleMatriculaId,
-                CompetenciaId = creado.CompetenciaId,
-            };
+                Calificacion resultadoDb;
+
+                if (calificacionExistente != null)
+                {
+                    // SI EXISTE: Solo actualizamos la nota
+                    calificacionExistente.Nota = dto.Nota;
+                    // Usamos el método de actualizar de tu repositorio
+                    await _calificacionRepository.ActualizarCalificacionAsync(calificacionExistente);
+                    resultadoDb = calificacionExistente;
+                }
+                else
+                {
+                    // SI NO EXISTE: Creamos el nuevo registro
+                    var nuevaCalificacion = new Calificacion
+                    {
+                        Nota = dto.Nota,
+                        TrimestreId = dto.TrimestreId,
+                        CompetenciaId = dto.CompetenciaId,
+                        DetalleMatriculaId = dto.DetalleMatriculaId,
+                    };
+                    resultadoDb = await _calificacionRepository.RegistrarCalificacion(nuevaCalificacion);
+                }
+
+                calificacionesProcesadas.Add(new CalificacionDto
+                {
+                    Id = resultadoDb.Id,
+                    Nota = resultadoDb.Nota,
+                    TrimestreId = resultadoDb.TrimestreId,
+                    CompetenciaId = resultadoDb.CompetenciaId,
+                    DetalleMatriculaId = resultadoDb.DetalleMatriculaId,
+                });
+            }
+            return calificacionesProcesadas;
         }
     }
 }

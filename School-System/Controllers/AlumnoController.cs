@@ -40,7 +40,7 @@ namespace School_System.Controllers
         public async Task<ActionResult> obtenerTodos()
         {
             var alumnos = await _alumnoService.GetAll();
-            return Ok(alumnos);
+            return Ok(alumnos); 
         }
 
         //POST :api/alumno

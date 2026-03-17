@@ -360,8 +360,13 @@
     "Order": 0,
     "Parameters": [
       {
+        "Name": "docenteId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
         "Name": "dto",
-        "Type": "SchoolSystem.Application.DTOs.CalificacionCreateDto",
+        "Type": "System.Collections.Generic.List\u00601[[SchoolSystem.Application.DTOs.CalificacionCreateDto, SchoolSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "IsRequired": true
       }
     ],

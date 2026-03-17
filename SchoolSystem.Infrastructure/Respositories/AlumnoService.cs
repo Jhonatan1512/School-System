@@ -21,6 +21,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository; 
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
         private readonly ITrimestreRepository _trimestreRepository;
+
         public AlumnoService(
             ApplicationDbContext context,
             IAlumnoRespository alumnoRepository, 
@@ -41,13 +42,28 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             var query = from alumno in _context.Alumnos 
                         join usuario in _context.Users
-                        on alumno.UsuarioId equals usuario.Id
+                        on alumno.UsuarioId equals usuario.Id 
+
+                        join matricula in _context.Matriculas 
+                        on alumno.Id equals matricula.AlumnoId into matriculasGrupo
+                        from m in matriculasGrupo.DefaultIfEmpty()
+
+                        join grado in _context.Grados 
+                        on m.GradoId equals grado.Id  into gradosGrupo
+                        from g in gradosGrupo.DefaultIfEmpty()
+
+                        join seccion in _context.Secciones
+                        on m.SeccionId equals seccion.Id into seccionesGrupo 
+                        from s in seccionesGrupo.DefaultIfEmpty()
+
                         select new AlumnoDto
                         {
                             Id = alumno.Id,
                             Nombre = alumno.Nombre,
                             Apellidos = alumno.Apellidos,
                             Dni = alumno.Dni,
+                            Aula = (g != null && s != null)
+                                    ? $"{g.Nombre}{s.Nombre}" : "Sin Asignar",
                             FechaNacimiento = alumno.FechaNacimiento,
                             Sexo = alumno.Sexo,
                             Estado = alumno.Estado.ToString(),

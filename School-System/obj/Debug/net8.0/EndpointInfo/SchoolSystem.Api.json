@@ -604,21 +604,40 @@
         "tags": [
           "Docente"
         ],
+        "parameters": [
+          {
+            "name": "docenteId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CalificacionCreateDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CalificacionCreateDto"
+                }
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CalificacionCreateDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CalificacionCreateDto"
+                }
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CalificacionCreateDto"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CalificacionCreateDto"
+                }
               }
             }
           }
@@ -1108,6 +1127,10 @@
             "type": "string",
             "nullable": true
           },
+          "aula": {
+            "type": "string",
+            "nullable": true
+          },
           "fechaNacimiento": {
             "type": "string",
             "format": "date-time"
@@ -1164,7 +1187,7 @@
             "type": "string",
             "nullable": true
           },
-          "timestreId": {
+          "trimestreId": {
             "type": "integer",
             "format": "int32"
           },

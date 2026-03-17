@@ -9,7 +9,7 @@ namespace SchoolSystem.Application.Interfaces
 {
     public interface ICalificacionService
     {
-        Task<CalificacionDto> CreateAsync(int docenteId, CalificacionCreateDto dto); 
+        Task<List<CalificacionDto>> RegistroMasivo(int docenteId, List<CalificacionCreateDto> list);
     }
 }
  

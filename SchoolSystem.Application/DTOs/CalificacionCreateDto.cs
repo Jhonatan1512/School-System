@@ -10,7 +10,7 @@ namespace SchoolSystem.Application.DTOs
     {
         //public int DocenteId { get; set; }
         public string Nota {  get; set; } = string.Empty;
-        public int TimestreId { get; set; }
+        public int TrimestreId { get; set; }
         public int CompetenciaId { get; set; }
         public int DetalleMatriculaId { get; set; }
     }
@@ -18,7 +18,7 @@ namespace SchoolSystem.Application.DTOs
     {
         public int Id { get; set; }
         public string Nota { get; set; } = string.Empty;
-        public int TimestreId { get; set; }
+        public int TrimestreId { get; set; }
         public int CompetenciaId { get; set; }
         public int DetalleMatriculaId { get; set; }
     }

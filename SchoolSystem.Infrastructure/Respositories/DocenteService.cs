@@ -108,7 +108,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                         DetalleMatriculaId = detalle.Id,
                         NotasRegistradas = detalle.Calificaciones.Select(c => new NotasRegistradasDto
                         {
-                            copetenciaId = c.CompetenciaId,
+                            competenciaId = c.CompetenciaId,
                             Nota = c.Nota,
                         }).ToList(),
                         Trimestre = nombreTrimestreActivo

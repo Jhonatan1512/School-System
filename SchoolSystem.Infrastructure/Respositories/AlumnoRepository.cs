@@ -25,7 +25,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context.Alumnos.Update(alumno);
             await _context.SaveChangesAsync();
         } 
-
+         
         public async Task<Alumno> AgregarAlumnoAsync(Alumno alumno)
         {
             _context.Alumnos.Add(alumno);

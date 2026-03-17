@@ -33,7 +33,7 @@ namespace SchoolSystem.Application.DTOs
 
     public class NotasRegistradasDto 
     {
-        public int copetenciaId { get; set; }
+        public int competenciaId { get; set; }
         public string Nota { get; set; } = string.Empty;
     }
     public class DetalleCursoDto
