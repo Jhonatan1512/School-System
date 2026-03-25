@@ -15,36 +15,56 @@ namespace SchoolSystem.Application.Services
         private readonly IAsignacionDocenteRepository _asignacionDocenteRepository;
         public AsignacionDocenteService(IAsignacionDocenteRepository asignacionDocenteRepository)
         {
-            _asignacionDocenteRepository = asignacionDocenteRepository;
+            _asignacionDocenteRepository = asignacionDocenteRepository;  
         }
 
-        public async Task<AsignacionDocenteDto> AsignarCursoAsync(AsignacionDocenteCreateDto dto)
+        public async Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto)
         {
-            bool existe = await _asignacionDocenteRepository.ExisteAsignacionAsync(
-                dto.DocenteId, dto.CursoId, dto.SeccionId, dto.PeriodoAcademicoId);
+            var resultado = new List<AsignacionDocenteDto>();
 
-            if (existe) throw new Exception("El docente ya se encuentra asignado a este curso en esta sección en el periodo actual");
-
-            var nuevaAsignacion = new AsignacionDocente
+            foreach (var cursoId in dto.CursosIds)
             {
-                DocenteId = dto.DocenteId,
-                CursoId = dto.CursoId,
-                GradoId = dto.GradoId,
-                SeccionId = dto.SeccionId,
-                PeriodoAcademicoId = dto.PeriodoAcademicoId,
-            };
+                bool existe = await _asignacionDocenteRepository.ExisteAsignacionAsync(
+                    dto.DocenteId, cursoId, dto.SeccionId, dto.PeriodoAcademicoId);
+                if (existe) throw new Exception($"El docente ya se encuentra asignado al curso {cursoId} en esta sección en el periodo actual");
 
-            var creada = await _asignacionDocenteRepository.CrearAsignacionAsync(nuevaAsignacion);
+                var nuevaAsignacion = new AsignacionDocente
+                {
+                    DocenteId = dto.DocenteId,
+                    CursoId = cursoId,
+                    GradoId = dto.GradoId,
+                    SeccionId = dto.SeccionId,
+                    PeriodoAcademicoId = dto.PeriodoAcademicoId,
+                };
 
-            return new AsignacionDocenteDto
+                var creada = await _asignacionDocenteRepository.CrearAsignacionAsync(nuevaAsignacion);
+
+                resultado.Add(new AsignacionDocenteDto
+                {
+                    Id = creada.Id,
+                    DocenteId = creada.DocenteId,
+                    CursoId = creada.CursoId,
+                    GradoId = creada.GradoId,
+                    SeccionId = creada.SeccionId,
+                    PeriodoAcademicoId = creada.PeriodoAcademicoId
+                });
+            }
+            return resultado;
+        }
+
+        public async Task<IEnumerable<GetAsignación>> obtenerDocentesAsignadosAsync()
+        {
+            var asignacion = await _asignacionDocenteRepository.GetAllAsync();
+
+            return asignacion.Select(a => new GetAsignación
             {
-                Id = creada.Id,
-                DocenteId = creada.DocenteId,
-                CursoId = creada.CursoId,
-                GradoId= creada.GradoId,
-                SeccionId = creada.SeccionId,
-                PeriodoAcademicoId = creada.PeriodoAcademicoId
-            };
+                NombreDocente = $"{a.Docente.Nombres} {a.Docente.Apellidos}",
+                Dni = a.Docente.Dni,
+                NombreCurso = a.Curso.Nombre,
+                NombreAula = $"{a.Grado.Nombre}{a.Seccion.Nombre}",
+                NombrePeriodo = a.PeriodoAcademico.Nombre,
+                Estado = a.Docente.EsActivo.ToString()
+            });
         }
     }
 }

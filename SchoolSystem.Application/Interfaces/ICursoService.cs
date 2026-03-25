@@ -13,5 +13,6 @@ namespace SchoolSystem.Application.Interfaces
         Task<Curso> CrearCursoCompetenciaAsync(CursoCompetenciaDto dto);
         Task<IEnumerable<CursoCompetenciaDto>> ObtenerTodosAsync();
         Task<bool> ActualizarCursoCompetenciaAsync (int id, CursoCompetenciaDto dto);
+        Task<IEnumerable<CompetenciasCursoDto?>> ObtenerPorIdAsync(int id);
     }
 }

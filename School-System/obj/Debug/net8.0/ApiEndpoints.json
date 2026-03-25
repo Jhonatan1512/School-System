@@ -101,6 +101,27 @@
   },
   {
     "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "ObtenerAlumnosSeccion",
+    "RelativePath": "api/Alumno/gradoId/{gradoId}/seccionId/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AlumnoController",
     "Method": "ObtenrMisCursos",
     "RelativePath": "api/Alumno/mis-cursos",
     "HttpMethod": "GET",
@@ -155,6 +176,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "getAll",
+    "RelativePath": "api/AsignacionDocente",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -231,6 +262,22 @@
       {
         "Name": "dto",
         "Type": "SchoolSystem.Application.DTOs.CursoCompetenciaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CursoController",
+    "Method": "ObtenerPorId",
+    "RelativePath": "api/Curso/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -406,6 +453,16 @@
   },
   {
     "ContainingType": "School_System.Controllers.GradoController",
+    "Method": "ObtenerTodos",
+    "RelativePath": "api/Grado",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.GradoController",
     "Method": "Obtenergrado",
     "RelativePath": "api/Grado/{id}",
     "HttpMethod": "GET",
@@ -502,6 +559,27 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "ActualizarPeriodo",
+    "RelativePath": "api/PeriodoAcademico/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.PeriodoAcademicoDto",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

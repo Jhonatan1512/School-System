@@ -19,7 +19,7 @@ namespace SchoolSystem.Application.Services
         {
             _cursoRepository = cursoRepository;
             _gradoRepository = gradoRepository;
-        }
+        } 
 
         public async Task<bool> ActualizarCursoCompetenciaAsync(int id, CursoCompetenciaDto dto)
         {
@@ -78,14 +78,28 @@ namespace SchoolSystem.Application.Services
             return nuevoCurso;
         }
 
+        public async Task<IEnumerable<CompetenciasCursoDto?>> ObtenerPorIdAsync(int id)
+        {
+            var curso = await _cursoRepository.ObtenerPorIdAsync(id);
+
+            var cursoDto = curso!.Competencias.Select(c => new CompetenciasCursoDto
+            {
+                Id = c.Id,
+                NombreCompetencia = c.Nombre,
+                CursoId = curso.Id,
+            }).ToList();
+            return cursoDto;
+        }
+
         public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerTodosAsync()
         {
             var cursos = await _cursoRepository.ObtenerCursosAsync();
 
             var cursosDto = cursos.Select(curso => new CursoCompetenciaDto
             {
-                Id = curso.Id,
+                Id = curso.Id, 
                 Nombre = curso.Nombre,
+                NombreAula = curso.Grado?.Nombre ?? "Sin Grado",
                 GradoId = curso.GradoId,
                 Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
                 {

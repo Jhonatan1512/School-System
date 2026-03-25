@@ -11,5 +11,6 @@ namespace SchoolSystem.Domain.Interfaces
     {
         Task<Grado> CrearGrado(Grado grado);
         Task<Grado?> ObtenerPorId(int id);
+        Task<IEnumerable<Grado>> GetAllAsync(); 
     }
 }

@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SchoolSystem.Infrastructure.Respositories
 {
-    public class AlumnoService : IAlumnoService
+    public class AlumnoService : IAlumnoService 
     {
         private readonly ApplicationDbContext _context;
         public readonly IAlumnoRespository _alumnoRepository;
@@ -75,8 +75,16 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task<AlumnoDto?> GetByDniAsync(string dni)
         {
             var datos = from alumno in _context.Alumnos
-                        join usuario in _context.Users
-                        on alumno.UsuarioId equals usuario.Id
+                        join usuario in _context.Users on alumno.UsuarioId equals usuario.Id
+                        join m in _context.Matriculas on alumno.Id equals m.AlumnoId into matriculaGroup
+                        from matricula in matriculaGroup.DefaultIfEmpty()
+                        join g in _context.Grados on matricula.GradoId equals g.Id into gradoGroup
+                        from grado in gradoGroup.DefaultIfEmpty()
+                        join s in _context.Secciones on matricula.SeccionId equals s.Id into seccionGroup
+                        from secciones in seccionGroup.DefaultIfEmpty()
+                        join pa in _context.PeriodoAcademicos on matricula.PeriodoAcademicoId equals pa.Id into periodoGroup
+                        from periodo in periodoGroup.DefaultIfEmpty()
+
                         where alumno.Dni == dni
                         select new AlumnoDto
                         {
@@ -84,10 +92,14 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Nombre = alumno.Nombre,
                             Apellidos = alumno.Apellidos,
                             Dni = alumno.Dni,
+                            Aula = (grado != null && secciones != null) 
+                                    ? $"{grado.Nombre}{secciones.Nombre}" : "Sin Aula",
                             FechaNacimiento = alumno.FechaNacimiento,
                             Sexo = alumno.Sexo,
                             Estado = alumno.Estado.ToString(),
-                            Email = usuario.Email!
+                            Email = usuario.Email!,
+                            PeriodoAcademico = (periodo != null) 
+                                        ? $"{periodo.Nombre}" : "Sin Matrícula"
                         };
             return await datos.FirstOrDefaultAsync();
         }
@@ -188,6 +200,39 @@ namespace SchoolSystem.Infrastructure.Respositories
                 Competencias = competencias,
             }; 
 
+        }
+
+        public async Task<IEnumerable<AlumnoDto>> AlumnosSeccionAsync(int gradoId, int seccionId, int periodoId)
+        {
+            var query = from alumno in _context.Alumnos
+                        join usuario in _context.Users
+                        on alumno.UsuarioId equals usuario.Id
+
+                        join matricula in _context.Matriculas
+                        on alumno.Id equals matricula.AlumnoId 
+
+                        join grado in _context.Grados
+                        on matricula.GradoId equals grado.Id 
+
+                        join seccion in _context.Secciones
+                        on matricula.SeccionId equals seccion.Id 
+
+                        where grado.Id == gradoId && seccion.Id == seccionId 
+
+                        select new AlumnoDto
+                        {
+                            Id = alumno.Id,
+                            Nombre = alumno.Nombre,
+                            Apellidos = alumno.Apellidos,
+                            Dni = alumno.Dni,
+                            Aula = (grado != null && seccion != null)
+                                    ? $"{grado.Nombre}{seccion.Nombre}" : "Sin Asignar",
+                            FechaNacimiento = alumno.FechaNacimiento,
+                            Sexo = alumno.Sexo,
+                            Estado = alumno.Estado.ToString(),
+                            Email = usuario.Email!
+                        };
+            return await query.ToListAsync();
         }
     }
 }

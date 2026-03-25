@@ -30,9 +30,14 @@ namespace SchoolSystem.Infrastructure.Respositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<PeriodoAcademico?> GetByIdAsync(int id)
+        {
+            return await _context.PeriodoAcademicos.FindAsync(id);
+        }
+
         public async Task<PeriodoAcademico?> ObtenerPeriodoAcademicoActivo()
         {
-            return await _context.PeriodoAcademicos.FirstOrDefaultAsync(p => p.EstadoActivo);
+            return await _context.PeriodoAcademicos.FirstOrDefaultAsync(p => p.EstadoActivo); 
         }
 
         public async Task<IEnumerable<PeriodoAcademico>> ObtenerTodosasync()

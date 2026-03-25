@@ -79,7 +79,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Include(c => c.Competencias)
                 .FirstOrDefaultAsync(c => c.Id == cursoId);
 
-            if (curso == null) throw new Exception("Curso no encontrado");
+            if (curso == null) throw new Exception("Curso no encontrado"); 
 
             var matriculas = await _context.Matriculas
                 .Include(m => m.Alumno)

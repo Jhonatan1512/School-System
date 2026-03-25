@@ -11,4 +11,16 @@ namespace SchoolSystem.Application.DTOs
         public int Id { get; set; }
         public string Nombre { get; set; }
     }
+
+    public class GradoDetalleDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public List<CursoSimple> Cursos { get; set; }
+    }
+    public class CursoSimple
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+    } 
 }

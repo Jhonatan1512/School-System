@@ -11,5 +11,6 @@ namespace SchoolSystem.Application.Interfaces
     public interface IPeriodoAcademicoService
     {
         Task<PeriodoAcademico> CrearPeriodoAcademicoAsync(PeriodoAcademicoDto dto);
+        Task<PeriodoAcademico> ActualizarPeriodo(PeriodoAcademicoDto dto);
     }
 }

@@ -32,7 +32,9 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<IEnumerable<Curso>> ObtenerCursosAsync()
         {
-            return await _context.Cursos.Include(c => c.Competencias).ToListAsync();
+            return await _context.Cursos.Include(c => c.Competencias)
+                .Include(c => c.Grado)
+                .ToListAsync();
         }
 
         public async Task<List<Curso>> ObtenerPorGrado(int gradoId)
@@ -42,7 +44,9 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<Curso?> ObtenerPorIdAsync(int id)
         {
-            return await _context.Cursos.Include(c => c.Competencias).FirstOrDefaultAsync(c => c.Id == id);
+            return await _context.Cursos.Include(c => c.Competencias)
+                .Include(c => c.Grado)
+                .FirstOrDefaultAsync(c => c.Id == id);
         }
     }
 }

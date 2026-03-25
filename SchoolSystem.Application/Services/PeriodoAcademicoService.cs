@@ -17,13 +17,36 @@ namespace SchoolSystem.Application.Services
         {
             _periodoAcademicoRepository = periodoAcademicoRepository;
         }
+
+        public async Task<PeriodoAcademico> ActualizarPeriodo(PeriodoAcademicoDto dto)
+        {
+            var periodoEditar = await _periodoAcademicoRepository.GetByIdAsync(dto.Id);
+            if (periodoEditar == null) return null;
+
+            if (dto.EstadoActivo)
+            {
+                var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+                if (periodoActivo != null && periodoActivo.Id != dto.Id)
+                {
+                    periodoActivo.EstadoActivo = false;
+                    await _periodoAcademicoRepository.ActualizarPeriodoAsync(periodoActivo);
+                }
+            }
+
+            periodoEditar.Nombre = dto.Nombre;
+            periodoEditar.EstadoActivo = dto.EstadoActivo;
+
+            await _periodoAcademicoRepository.ActualizarPeriodoAsync(periodoEditar);
+            return periodoEditar;
+        }
+
         public async Task<PeriodoAcademico> CrearPeriodoAcademicoAsync(PeriodoAcademicoDto dto)
         {
             if (dto.EstadoActivo)
             {
                 var periodoAnterior = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
 
-                if (periodoAnterior != null)
+                if (periodoAnterior != null) 
                 {
                     periodoAnterior.EstadoActivo = false;
                     await _periodoAcademicoRepository.ActualizarPeriodoAsync(periodoAnterior);

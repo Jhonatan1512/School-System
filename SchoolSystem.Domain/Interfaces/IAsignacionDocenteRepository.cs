@@ -13,6 +13,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task<List<AsignacionDocente>> ObtenerAsignacionCompletaDocenteAsync(int docenteId, int periodoId);
         Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto);
         Task<bool> ExisteAsignacionAsync(int docenteId, int cursoId, int seccionId, int periodoId);
-
+        Task<IEnumerable<AsignacionDocente>> GetAllAsync(); 
     }
 }

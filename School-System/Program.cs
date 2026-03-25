@@ -38,6 +38,7 @@ builder.Services.AddScoped<IAsignacionDocenteService, AsignacionDocenteService>(
 builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
 builder.Services.AddScoped<ICalificacionService,  CalificacionService>();
 builder.Services.AddScoped<IDetalleMatriculaRepository, DetalleMatriculaRepository>();
+builder.Services.AddScoped<IGradoSevice, GradoService>();   
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

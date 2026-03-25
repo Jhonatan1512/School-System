@@ -20,23 +20,29 @@ namespace School_System.Controllers
         private readonly IAlumnoService _alumnoService; 
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
-
+        private readonly IGradoRepository _gradoRepository;
+        private readonly ISeccionRepository _seccionRepository;
         public AlumnoController(
             IAlumnoRespository alumnoRespository, 
             UserManager<ApplicationUser> userManager, 
             IAlumnoService alumnoService,
             IPeriodoAcademicoRepository periodoAcademicoRepository,
-            RoleManager<IdentityRole> roleManager)
+            RoleManager<IdentityRole> roleManager,
+            IGradoRepository gradoRepository,
+            ISeccionRepository seccionRepository)
         {
             _alumnoRespository = alumnoRespository;
             _userManager = userManager;
             _alumnoService = alumnoService;
             _periodoAcademicoRepository = periodoAcademicoRepository;
             _roleManager = roleManager;
+            _gradoRepository = gradoRepository;
+            _seccionRepository = seccionRepository;
         }
 
         //GET :api/alumno
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> obtenerTodos()
         {
             var alumnos = await _alumnoService.GetAll();
@@ -45,6 +51,7 @@ namespace School_System.Controllers
 
         //POST :api/alumno
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CrearAlumno([FromBody] AlumnoDto alumnoDto)
         {
             var partesApellidos = alumnoDto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -103,6 +110,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
             var alumno = await _alumnoService.GetByIdAsync(id);
@@ -115,6 +123,7 @@ namespace School_System.Controllers
             return Ok(alumno);
         }
         [HttpGet("dni/{dni}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPorDni(string dni)
         {
             var alumno = await _alumnoService.GetByDniAsync(dni);
@@ -128,6 +137,7 @@ namespace School_System.Controllers
         }
 
         [HttpPut("{dni}")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> ActualizarAlumno(string dni, [FromBody] AlumnoDto alumnoDto)
         {
             var alumnoExiste = await _alumnoRespository.ObtenerPorDni(dni);
@@ -180,6 +190,7 @@ namespace School_System.Controllers
         }
 
         [HttpPatch("{dni}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ResetearPasswordAdmin(string dni, [FromBody] AdminResetPassword adminResetPassword)
         {
             var alumnoExistente = await _alumnoRespository.ObtenerPorDni(dni);
@@ -201,7 +212,7 @@ namespace School_System.Controllers
         }
 
         [HttpPut("passowrd")]
-        [Authorize]
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> CambiarMiPassword([FromBody] UserResetPasswordDto alumnoResetPasswordDto)
         {
             var usuarioLogueadoId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -233,6 +244,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("mis-cursos")]
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> ObtenrMisCursos()
         {
             try
@@ -252,6 +264,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("mis-cursos/{cursoId}/detalle")]
+        [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> ObtenerDetalleCursos(int cursoId)
         {
             try
@@ -265,6 +278,39 @@ namespace School_System.Controllers
 
                 var detalle = await _alumnoService.ObtenerDetalleCursoAsync(alumno.Id, cursoId, periodoActivo.Id);
                 return Ok(detalle);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("gradoId/{gradoId}/seccionId/{seccionId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ObtenerAlumnosSeccion(int gradoId, int seccionId)
+        {
+            try
+            {
+                var periodo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+                if (periodo == null) return BadRequest("No existe periodo activo");
+
+                var grado = await _gradoRepository.ObtenerPorId(gradoId);
+                if (grado == null) return BadRequest("Grado no encontrado)");
+
+                var seccion = await _seccionRepository.ObtenerPorIdAsync(seccionId);
+                if (seccion == null) return BadRequest("Sección no encontrada");
+
+                var detalle = await _alumnoService.AlumnosSeccionAsync(grado.Id, seccion.Id, periodo.Id);
+
+                if (detalle == null || !detalle.Any())
+                {
+                    return Ok(new { 
+                        mensaje = "No hay alumnos matriculados en esta sección en el periodo actual",
+                        data = new List<AlumnoDto>()});
+                } else
+                {
+                    return Ok(detalle);
+                }
+
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

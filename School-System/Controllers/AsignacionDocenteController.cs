@@ -8,7 +8,7 @@ namespace School_System.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class AsignacionDocenteController : ControllerBase
+    public class AsignacionDocenteController : ControllerBase 
     {
         private readonly IAsignacionDocenteService _asignacionDocenteService;
         public AsignacionDocenteController(IAsignacionDocenteService asignacionDocenteService)
@@ -17,6 +17,7 @@ namespace School_System.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AsignarCurso([FromBody] AsignacionDocenteCreateDto dto)
         {
             try
@@ -30,6 +31,22 @@ namespace School_System.Controllers
             }
             catch (Exception ex) 
             { 
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> getAll()
+        {
+            try
+            {
+                var datos = await _asignacionDocenteService.obtenerDocentesAsignadosAsync();
+                return Ok(datos);
+
+
+            }catch (Exception ex)
+            {
                 return BadRequest(ex.Message);
             }
         }

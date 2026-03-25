@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Interfaces
 {
-    public interface IAsignacionDocenteService
+    public interface IGradoSevice
     {
-        Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto);
-        Task<IEnumerable<GetAsignación>> obtenerDocentesAsignadosAsync();
+        Task<GradoDetalleDto?> GetGradoDetalle(int id);
     }
 }
- 

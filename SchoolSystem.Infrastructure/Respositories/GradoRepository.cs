@@ -18,15 +18,21 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context = context;
         }
         public async Task<Grado> CrearGrado(Grado grado)
-        {
+        { 
             _context.Grados.Add(grado);
             await _context.SaveChangesAsync();
             return grado;
+        }
+
+        public async Task<IEnumerable<Grado>> GetAllAsync()
+        { 
+            return await _context.Grados.ToListAsync();
         }
 
         public async Task<Grado?> ObtenerPorId(int id)
         {
             return await _context.Grados.FirstOrDefaultAsync(x => x.Id == id);
         }
+        
     }
 }

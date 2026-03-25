@@ -21,6 +21,7 @@ namespace School_System.Controllers
 
         //POST :api/periodoAcademico
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CrearPeriodo([FromBody] PeriodoAcademicoDto dto)
         {
             var nuevoPeriodo = await _periodoAcademicoService.CrearPeriodoAcademicoAsync(dto);
@@ -35,10 +36,34 @@ namespace School_System.Controllers
 
         //GET :api/periodoAcademico
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPeriodos()
         {
-            var periodos = await _periodoAcademicoRepo.ObtenerTodosasync();
+            var periodos = await _periodoAcademicoRepo.ObtenerPeriodoAcademicoActivo();
             return Ok(periodos);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ActualizarPeriodo(int id, [FromBody] PeriodoAcademicoDto dto)
+        {
+            if (dto == null) return BadRequest("Los datos son nulos.");
+
+            dto.Id = id;
+
+            var periodoActualizar = await _periodoAcademicoService.ActualizarPeriodo(dto);
+
+            if (periodoActualizar == null)
+            {
+                return NotFound(new { mensaje = $"No se encontró el periodo con ID {id}" });
+            }
+
+            return Ok(new
+            {
+                mensaje = "Periodo Actualizado",
+                nombre = periodoActualizar.Nombre,
+                estado = periodoActualizar.EstadoActivo
+            });
         }
     }
 }

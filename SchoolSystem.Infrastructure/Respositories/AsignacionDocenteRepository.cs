@@ -21,16 +21,27 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto)
         {
-             _context.AsignacionDocentes.Add(dto);
+             _context.AsignacionDocentes.Add(dto); 
             await _context.SaveChangesAsync();
-            return dto;
+            return dto; 
         }
 
         public async Task<bool> ExisteAsignacionAsync(int docenteId, int cursoId, int seccionId, int periodoId)
         {
             return await _context.AsignacionDocentes.AnyAsync(a => a.DocenteId == docenteId &&
             a.CursoId == cursoId && a.SeccionId ==  seccionId && a.PeriodoAcademicoId == periodoId);
-        } 
+        }
+
+        public async Task<IEnumerable<AsignacionDocente>> GetAllAsync()
+        {
+            return await _context.AsignacionDocentes.Include(a => a.Docente)
+                            .Include(a => a.Curso)
+                            .Include(a => a.Grado)
+                            .Include(a => a.Seccion)
+                            .Include(a => a.PeriodoAcademico)
+                            .Where(a => a.PeriodoAcademico.EstadoActivo)
+                            .ToListAsync();
+        }
 
         public async Task<List<AsignacionDocente>> ObtenerAsignacionCompletaDocenteAsync(int docenteId, int periodoId)
         {

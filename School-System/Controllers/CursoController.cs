@@ -60,11 +60,24 @@ namespace School_System.Controllers
             {
                 var resultado = await _cursoService.ActualizarCursoCompetenciaAsync(id, dto);
 
-                if (!resultado) return NotFound(new {mensaje = "Cursi No Encontrado"});
+                if (!resultado) return NotFound(new {mensaje = "Curso No Encontrado"});
 
                 return Ok(new { mesaje = "Datos del Curso Actualizados", datos = resultado});
             }
             catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> ObtenerPorId(int id)
+        {
+            try
+            {
+                var resultado = await _cursoService.ObtenerPorIdAsync(id);
+                return Ok(new { mensaje = "Competencias del Curso", data = resultado });
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

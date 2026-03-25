@@ -237,6 +237,38 @@
         }
       }
     },
+    "/api/Alumno/gradoId/{gradoId}/seccionId/{seccionId}": {
+      "get": {
+        "tags": [
+          "Alumno"
+        ],
+        "parameters": [
+          {
+            "name": "gradoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "seccionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/AsignacionDocente": {
       "post": {
         "tags": [
@@ -261,6 +293,16 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "AsignacionDocente"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -406,6 +448,27 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Curso"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -733,6 +796,16 @@
             "description": "OK"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "Grado"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/Matricula": {
@@ -874,6 +947,48 @@
         "tags": [
           "PeriodoAcademico"
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PeriodoAcademico/{id}": {
+      "put": {
+        "tags": [
+          "PeriodoAcademico"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1147,6 +1262,10 @@
             "type": "string",
             "nullable": true
           },
+          "periodoAcademico": {
+            "type": "string",
+            "nullable": true
+          },
           "usuarioId": {
             "type": "string",
             "nullable": true
@@ -1161,9 +1280,13 @@
             "type": "integer",
             "format": "int32"
           },
-          "cursoId": {
-            "type": "integer",
-            "format": "int32"
+          "cursosIds": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
           },
           "gradoId": {
             "type": "integer",
@@ -1273,6 +1396,10 @@
             "format": "int32"
           },
           "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "nombreAula": {
             "type": "string",
             "nullable": true
           },
