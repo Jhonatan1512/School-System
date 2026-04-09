@@ -18,10 +18,10 @@ namespace SchoolSystem.Application.Services
             _periodoAcademicoRepository = periodoAcademicoRepository;
         }
 
-        public async Task<PeriodoAcademico> ActualizarPeriodo(PeriodoAcademicoDto dto)
-        {
+        public async Task<PeriodoAcademico> ActualizarPeriodo(PeriodoacademicoActualizarDto dto)
+        { 
             var periodoEditar = await _periodoAcademicoRepository.GetByIdAsync(dto.Id);
-            if (periodoEditar == null) return null;
+            if (periodoEditar is null) return null!;
 
             if (dto.EstadoActivo)
             {
@@ -36,6 +36,11 @@ namespace SchoolSystem.Application.Services
             periodoEditar.Nombre = dto.Nombre;
             periodoEditar.EstadoActivo = dto.EstadoActivo;
 
+            if(dto.FechaCierre != DateTime.MinValue)
+            {
+                periodoEditar.FechaCierre = dto.FechaCierre;
+            }
+
             await _periodoAcademicoRepository.ActualizarPeriodoAsync(periodoEditar);
             return periodoEditar;
         }
@@ -45,7 +50,7 @@ namespace SchoolSystem.Application.Services
             if (dto.EstadoActivo)
             {
                 var periodoAnterior = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
-
+                 
                 if (periodoAnterior != null) 
                 {
                     periodoAnterior.EstadoActivo = false;
@@ -53,10 +58,14 @@ namespace SchoolSystem.Application.Services
                 }
             }
 
+            int anioactual = DateTime.UtcNow.Year;
+
             var nuevoPeriodo = new PeriodoAcademico
             {
                 Nombre = dto.Nombre,
                 EstadoActivo = dto.EstadoActivo,
+                FechaInicio = DateTime.UtcNow,
+                FechaCierre = new DateTime(anioactual, 12, 31, 23, 59, 59, DateTimeKind.Utc),
             };
 
             await _periodoAcademicoRepository.AgregarPeriodoAsync(nuevoPeriodo);

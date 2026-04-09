@@ -576,10 +576,46 @@
       },
       {
         "Name": "dto",
-        "Type": "SchoolSystem.Application.DTOs.PeriodoAcademicoDto",
+        "Type": "SchoolSystem.Application.DTOs.PeriodoacademicoActualizarDto",
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "Delete",
+    "RelativePath": "api/PeriodoAcademico/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "GetAll",
+    "RelativePath": "api/PeriodoAcademico/all",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PeriodoAcademicoController",
+    "Method": "GetPeriodActivo",
+    "RelativePath": "api/PeriodoAcademico/periodo-activo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -663,6 +699,43 @@
   },
   {
     "ContainingType": "School_System.Controllers.TrimestreController",
+    "Method": "Actualizar",
+    "RelativePath": "api/Trimestre/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarTrimestreDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.TrimestreController",
+    "Method": "Delete",
+    "RelativePath": "api/Trimestre/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.TrimestreController",
     "Method": "ExtenderTrimestre",
     "RelativePath": "api/Trimestre/{id}/extender",
     "HttpMethod": "PUT",
@@ -685,17 +758,11 @@
   {
     "ContainingType": "School_System.Controllers.TrimestreController",
     "Method": "ObtenerPoPeriodo",
-    "RelativePath": "api/Trimestre/periodo/{periodoId}",
+    "RelativePath": "api/Trimestre/periodo",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
-    "Parameters": [
-      {
-        "Name": "periodoId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      }
-    ],
+    "Parameters": [],
     "ReturnTypes": []
   }
 ]

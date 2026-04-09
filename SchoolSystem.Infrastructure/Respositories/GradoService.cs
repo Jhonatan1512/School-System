@@ -17,6 +17,25 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
+
+        public async Task<IEnumerable<GradoDto>> GetAllAsync()
+        {
+            return await _context.Grados
+                .Select(g => new GradoDto
+                {
+                    Id = g.Id,
+                    Nombre = g.Nombre,
+                    TotalSecciones = _context.Matriculas
+                        .Where(m => m.GradoId == g.Id)
+                        .Select(m => m.SeccionId)
+                        .Distinct()
+                        .Count(),
+                     TotalAlumnos = _context.Matriculas
+                        .Count(m => m.GradoId == g.Id)
+                })
+                .ToListAsync();
+        }
+
         public async Task<GradoDetalleDto?> GetGradoDetalle(int id)
         {
             return await _context.Grados.Where(g => g.Id == id)
@@ -27,7 +46,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                         Cursos = g.Cursos.Select (c => new CursoSimple {
                             Id = c.Id,
                             Nombre = c.Nombre,
-                        }).ToList()
+                        }).ToList() 
                     }).FirstOrDefaultAsync();
         }
     }

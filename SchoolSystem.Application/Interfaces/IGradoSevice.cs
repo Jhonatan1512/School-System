@@ -10,5 +10,6 @@ namespace SchoolSystem.Application.Interfaces
     public interface IGradoSevice
     {
         Task<GradoDetalleDto?> GetGradoDetalle(int id);
+        Task<IEnumerable<GradoDto>> GetAllAsync();
     }
-}
+} 

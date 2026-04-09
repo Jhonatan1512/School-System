@@ -16,7 +16,18 @@ namespace SchoolSystem.Application.DTOs
         public int PeriodoAcademicoId { get; set; }
     }
 
-    public class TrimestreCreadoDto
+    public class GetTrimestresDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public DateTime FechaInicio { get; set; }
+        public DateTime FechaCierre { get; set; }
+        public bool EstadoActivo { get; set; }
+        public string NombrePeriodo { get; set; } = string.Empty;
+        public int PeriodoActivoId { get; set; }
+    }
+
+    public class TrimestreCreadoDto 
     {
         public string Nombre { get; set; } = string.Empty ;
         public DateTime FechaInicio { get; set; }
@@ -27,5 +38,12 @@ namespace SchoolSystem.Application.DTOs
     public class TrimestreExtensionDto
     {
         public DateTime NuevaFechaCierre { get; set;}
+    }
+
+    public class ActualizarTrimestreDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public DateTime FechaInicio { get; set; }
     }
 }

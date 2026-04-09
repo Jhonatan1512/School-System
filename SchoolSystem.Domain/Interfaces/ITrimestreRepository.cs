@@ -11,8 +11,9 @@ namespace SchoolSystem.Domain.Interfaces
     {
         Task<Trimestre> CrearTrimestreAsync(Trimestre trimestre);
         Task<Trimestre?> ObtenerTrimestreActioPorPeriodo(int periodoAcademicoId);
-        Task<IEnumerable<Trimestre>> ObtenerPorPeriodo(int periodoAcademicoId);
+        Task<IEnumerable<Trimestre>> ObtenerPorPeriodo();
         Task<Trimestre?> ObtenerPorIdAsync(int id);
         Task ActualizarTrimestreAsync(Trimestre trimestre);
+        Task EliminarAsync(int id);
     }
 }

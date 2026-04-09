@@ -11,5 +11,15 @@ namespace SchoolSystem.Application.DTOs
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public bool EstadoActivo { get; set; } = true;
+        public DateTime FechaIncio { get; set; }
+        public DateTime FechaCierre { get; set; }
+    }
+
+    public class PeriodoacademicoActualizarDto
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; } = string.Empty;
+        public bool EstadoActivo { get; set; } 
+        public DateTime FechaCierre { get; set; }
     }
 }

@@ -7,7 +7,7 @@ using SchoolSystem.Domain.Interfaces;
 namespace School_System.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController] 
     [Authorize]
     public class PeriodoAcademicoController : ControllerBase
     {
@@ -45,7 +45,7 @@ namespace School_System.Controllers
 
         [HttpPut("{id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ActualizarPeriodo(int id, [FromBody] PeriodoAcademicoDto dto)
+        public async Task<IActionResult> ActualizarPeriodo(int id, [FromBody] PeriodoacademicoActualizarDto dto)
         {
             if (dto == null) return BadRequest("Los datos son nulos.");
 
@@ -62,8 +62,39 @@ namespace School_System.Controllers
             {
                 mensaje = "Periodo Actualizado",
                 nombre = periodoActualizar.Nombre,
-                estado = periodoActualizar.EstadoActivo
+                estado = periodoActualizar.EstadoActivo,
+                fechaCierre = periodoActualizar.FechaCierre
             });
+        }
+
+        [HttpGet("all")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            var periodos = await  _periodoAcademicoRepo.ObtenerTodosasync();
+            return Ok(periodos);
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var periodoEsiste = await _periodoAcademicoRepo.GetByIdAsync(id);
+            if (periodoEsiste is null)
+            {
+                return NotFound(new { mensaje = "Periodo no encontrado" });
+            }
+
+            await _periodoAcademicoRepo.EliminarPeriodo(id);
+            return NoContent();
+        }
+
+        [HttpGet("periodo-activo")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetPeriodActivo()
+        {
+            var periodoActivo = await _periodoAcademicoRepo.ObtenerPeriodoAcademicoActivo();
+            return Ok(periodoActivo);
         }
     }
 }

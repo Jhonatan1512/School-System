@@ -974,21 +974,66 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+                "$ref": "#/components/schemas/PeriodoacademicoActualizarDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+                "$ref": "#/components/schemas/PeriodoacademicoActualizarDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/PeriodoAcademicoDto"
+                "$ref": "#/components/schemas/PeriodoacademicoActualizarDto"
               }
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "PeriodoAcademico"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PeriodoAcademico/all": {
+      "get": {
+        "tags": [
+          "PeriodoAcademico"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PeriodoAcademico/periodo-activo": {
+      "get": {
+        "tags": [
+          "PeriodoAcademico"
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -1131,21 +1176,10 @@
         }
       }
     },
-    "/api/Trimestre/periodo/{periodoId}": {
+    "/api/Trimestre/periodo": {
       "get": {
         "tags": [
           "Trimestre"
-        ],
-        "parameters": [
-          {
-            "name": "periodoId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -1195,6 +1229,69 @@
           }
         }
       }
+    },
+    "/api/Trimestre/{id}": {
+      "put": {
+        "tags": [
+          "Trimestre"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarTrimestreDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarTrimestreDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarTrimestreDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Trimestre"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1209,6 +1306,24 @@
           "seccionId": {
             "type": "integer",
             "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ActualizarTrimestreDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "fechaInicio": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -1516,6 +1631,35 @@
           },
           "estadoActivo": {
             "type": "boolean"
+          },
+          "fechaIncio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fechaCierre": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PeriodoacademicoActualizarDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "estadoActivo": {
+            "type": "boolean"
+          },
+          "fechaCierre": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

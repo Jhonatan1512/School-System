@@ -17,10 +17,34 @@ namespace SchoolSystem.Application.Services
         {
             _trimestreRepository = trimestreRepository;
         }
+
+        public async Task<TrimestreDto> ActualizarTrimestreAsync(int id, ActualizarTrimestreDto dto)
+        {
+            var trimestreExiste = await _trimestreRepository.ObtenerPorIdAsync(id);
+            if (trimestreExiste is null)
+            {
+                throw new Exception("El trimestre no existe"); 
+            }
+
+            trimestreExiste.Nombre = dto.Nombre;
+            trimestreExiste.FechaInicio = dto.FechaInicio;
+
+            await _trimestreRepository.ActualizarTrimestreAsync(trimestreExiste);
+            return new TrimestreDto
+            {
+                Id = trimestreExiste.Id,
+                Nombre = trimestreExiste.Nombre,
+                FechaInicio = trimestreExiste.FechaInicio,
+                FechaCierre = trimestreExiste.FechaCierre,
+                EstadoActivo = trimestreExiste.EstadoActivo,
+                PeriodoAcademicoId = trimestreExiste.PeriodoAcademicoId
+            };
+        }
+
         public async Task<TrimestreDto> CrearTrimestreAsync(TrimestreCreadoDto dto)
         {
             var nuevoTrimestre = new Trimestre
-            {
+            { 
                 Nombre = dto.Nombre,
                 FechaInicio = dto.FechaInicio,
                 FechaCierre = dto.FechaCierre,
@@ -43,7 +67,7 @@ namespace SchoolSystem.Application.Services
         public async Task<TrimestreDto> ExtenderTrimestreAsync(int id, TrimestreExtensionDto dto)
         {
             var trimestre = await _trimestreRepository.ObtenerPorIdAsync(id);
-            if (trimestre == null) throw new Exception("El trimestre no estiste");
+            if (trimestre == null) throw new Exception("El trimestre no extiste");
 
             trimestre.FechaCierre = dto.NuevaFechaCierre;
             trimestre.EstadoActivo = true;
@@ -61,19 +85,19 @@ namespace SchoolSystem.Application.Services
             };
             
         }
-
-        public async Task<IEnumerable<TrimestreDto>> ObtenerPorPeriodo(int periodoId)
+        public async Task<IEnumerable<GetTrimestresDto>> ObtenerPorPeriodo()
         {
-            var trimestre = await _trimestreRepository.ObtenerPorPeriodo(periodoId);
+            var trimestre = await _trimestreRepository.ObtenerPorPeriodo();
 
-            return trimestre.Select(t => new TrimestreDto
+            return trimestre.Select(t => new GetTrimestresDto
             {
                 Id = t.Id,
                 Nombre = t.Nombre,
                 FechaInicio = t.FechaInicio,
                 FechaCierre = t.FechaCierre,
                 EstadoActivo = t.EstadoActivo,
-                PeriodoAcademicoId = t.PeriodoAcademicoId
+                NombrePeriodo = t.PeriodoAcademico?.Nombre ?? "Sin Nombre",
+                PeriodoActivoId = t.PeriodoAcademicoId
             });
         }
     }

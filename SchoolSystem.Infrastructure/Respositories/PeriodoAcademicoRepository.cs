@@ -12,11 +12,11 @@ namespace SchoolSystem.Infrastructure.Respositories
 {
     public class PeriodoAcademicoRepository : IPeriodoAcademicoRepository 
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context; 
         public PeriodoAcademicoRepository(ApplicationDbContext context)
         {
             _context = context;
-        }
+        } 
 
         public async Task ActualizarPeriodoAsync(PeriodoAcademico periodo)
         {
@@ -28,6 +28,20 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             await _context.PeriodoAcademicos.AddAsync(periodo);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> EliminarPeriodo(int id)
+        {
+            var filasafectadas = await _context.PeriodoAcademicos
+                .Where(p => p.Id == id)
+                .ExecuteDeleteAsync();
+
+            if(filasafectadas == 0)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<PeriodoAcademico?> GetByIdAsync(int id)

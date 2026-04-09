@@ -11,7 +11,8 @@ namespace SchoolSystem.Application.Interfaces
     public interface ITrimestreService
     {
         Task<TrimestreDto> CrearTrimestreAsync(TrimestreCreadoDto dto);
-        Task<IEnumerable<TrimestreDto>> ObtenerPorPeriodo(int periodoId);
-        Task<TrimestreDto> ExtenderTrimestreAsync(int id, TrimestreExtensionDto dto);
+        Task<IEnumerable<GetTrimestresDto>> ObtenerPorPeriodo();
+        Task<TrimestreDto> ExtenderTrimestreAsync(int id, TrimestreExtensionDto dto); 
+        Task<TrimestreDto> ActualizarTrimestreAsync(int id, ActualizarTrimestreDto dto);
     }
 }

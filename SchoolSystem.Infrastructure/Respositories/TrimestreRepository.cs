@@ -21,7 +21,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task ActualizarTrimestreAsync(Trimestre trimestre)
         {
             _context.Trimestres.Update(trimestre);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
         }
 
         public async Task<Trimestre> CrearTrimestreAsync(Trimestre trimestre)
@@ -31,14 +31,23 @@ namespace SchoolSystem.Infrastructure.Respositories
             return trimestre;
         }
 
+        public async Task EliminarAsync(int id)
+        {
+            await _context.Trimestres.Where(t => t.Id == id).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<Trimestre?> ObtenerPorIdAsync(int id)
         {
             return await _context.Trimestres.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Trimestre>> ObtenerPorPeriodo(int periodoAcademicoId)
+        public async Task<IEnumerable<Trimestre>> ObtenerPorPeriodo()
         {
-            return await _context.Trimestres.Where(t => t.PeriodoAcademicoId ==  periodoAcademicoId).ToListAsync();
+            return await _context.Trimestres
+                .Where(t => t.PeriodoAcademico!.EstadoActivo)
+                .Include(t => t.PeriodoAcademico)
+                .ToListAsync();
         }
 
         public async Task<Trimestre?> ObtenerTrimestreActioPorPeriodo(int periodoAcademicoId)

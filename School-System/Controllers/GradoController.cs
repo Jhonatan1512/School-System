@@ -16,7 +16,7 @@ namespace School_System.Controllers
         public GradoController(IGradoRepository gradoRepository, IGradoSevice gradoSevice) 
         {
             _gradoRepository = gradoRepository;
-            _gradoSevice = gradoSevice;
+            _gradoSevice = gradoSevice; 
         }
 
         //GET :api/grado
@@ -52,7 +52,7 @@ namespace School_System.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerTodos()
         {
-            var grados = await _gradoRepository.GetAllAsync();
+            var grados = await _gradoSevice.GetAllAsync();
             return Ok(grados);
         }
     }

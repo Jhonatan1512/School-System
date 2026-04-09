@@ -14,5 +14,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task ActualizarPeriodoAsync(PeriodoAcademico periodo);
         Task<IEnumerable<PeriodoAcademico>> ObtenerTodosasync();
         Task<PeriodoAcademico?> GetByIdAsync(int id);
+        Task<bool> EliminarPeriodo(int id);
     }
 }

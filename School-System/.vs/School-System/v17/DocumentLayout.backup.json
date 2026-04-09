@@ -3,20 +3,23 @@
   "WorkspaceRootPath": "D:\\.NET-API\\School-System\\School-System\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\services\\cursoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{631D54F1-B712-42C2-8790-BE7ACA562737}|..\\SchoolSystem.Domain\\SchoolSystem.Domain.csproj|d:\\.net-api\\school-system\\schoolsystem.domain\\interfaces\\igradorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\interfaces\\icursoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\gradorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\dtos\\cursocompetenciadto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\gradoservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\cursorepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\interfaces\\igradosevice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|d:\\.net-api\\school-system\\school-system\\controllers\\cursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|solutionrelative:controllers\\cursocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|d:\\.net-api\\school-system\\school-system\\controllers\\gradocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|solutionrelative:controllers\\gradocontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\dtos\\gradodto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,72 +29,93 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "IGradoRepository.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IGradoRepository.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Domain\\Interfaces\\IGradoRepository.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IGradoRepository.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Domain\\Interfaces\\IGradoRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAdAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T01:10:08.475Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "GradoDto.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\GradoDto.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\DTOs\\GradoDto.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\GradoDto.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\GradoDto.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T00:55:00.704Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "CursoController.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\School-System\\Controllers\\CursoController.cs",
-              "RelativeDocumentMoniker": "Controllers\\CursoController.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\School-System\\Controllers\\CursoController.cs",
-              "RelativeToolTip": "Controllers\\CursoController.cs",
-              "ViewState": "AgIAACEAAAAAAAAAAAAYwD8AAAAAAAAAAAAAAA==",
+              "Title": "GradoController.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\School-System\\Controllers\\GradoController.cs",
+              "RelativeDocumentMoniker": "Controllers\\GradoController.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\School-System\\Controllers\\GradoController.cs",
+              "RelativeToolTip": "Controllers\\GradoController.cs",
+              "ViewState": "AgIAABsAAAAAAAAAAAAYwC8AAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T21:34:53.842Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CursoCompetenciaDto.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\CursoCompetenciaDto.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\DTOs\\CursoCompetenciaDto.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\CursoCompetenciaDto.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\CursoCompetenciaDto.cs",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAABgAAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T20:25:54.037Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "ICursoService.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\ICursoService.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Interfaces\\ICursoService.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\ICursoService.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\ICursoService.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAtAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T20:25:11.284Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "CursoService.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Services\\CursoService.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Services\\CursoService.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Services\\CursoService.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Application\\Services\\CursoService.cs",
-              "ViewState": "AgIAAEYAAAAAAAAAAAAUwGAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T20:21:48.268Z",
+              "WhenOpened": "2026-04-09T00:53:55.874Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "CursoRepository.cs",
-              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\CursoRepository.cs",
-              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\CursoRepository.cs",
-              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\CursoRepository.cs",
-              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\CursoRepository.cs",
-              "ViewState": "AgIAABMAAAAAAAAAAAAQwC8AAAAmAAAAAAAAAA==",
+              "Title": "IGradoSevice.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IGradoSevice.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Interfaces\\IGradoSevice.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IGradoSevice.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\IGradoSevice.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAyAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-03-23T20:21:32.996Z"
+              "WhenOpened": "2026-04-09T00:53:50.424Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "GradoService.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\GradoService.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\GradoService.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\GradoService.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\GradoService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACEAAAAYAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T00:51:05.863Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "GradoRepository.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\GradoRepository.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\GradoRepository.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\GradoRepository.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\GradoRepository.cs",
+              "ViewState": "AgIAAAkAAAAAAAAAAAAAABwAAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-04-09T00:50:56.343Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             }
           ]
         }
