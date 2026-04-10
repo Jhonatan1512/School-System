@@ -17,11 +17,25 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
+
+        public async Task ActualizarGradoAsync(Grado grado)
+        {
+            _context.Grados.Update(grado);
+            await _context.SaveChangesAsync();
+
+        }
+
         public async Task<Grado> CrearGrado(Grado grado)
         {  
             _context.Grados.Add(grado);
             await _context.SaveChangesAsync();
             return grado;
+        }
+
+        public async Task EliminarGrado(int id)
+        {
+            await _context.Grados.Where(g => g.Id == id).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Grado>> GetAllAsync()

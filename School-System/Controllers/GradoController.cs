@@ -34,6 +34,11 @@ namespace School_System.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CrearGrado(Grado grado)
         {
+            if (grado == null || string.IsNullOrEmpty(grado.Nombre))
+            {
+                return BadRequest(new { mensaje = "El nombre del grado es obligatorio" });
+            }
+
             var nuevoGrado = new Grado
             {
                 Nombre = grado.Nombre,
@@ -54,6 +59,54 @@ namespace School_System.Controllers
         {
             var grados = await _gradoSevice.GetAllAsync();
             return Ok(grados);
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Eliminar(int id)
+        {
+            try
+            {
+                var gradoExiste = await _gradoRepository.ObtenerPorId(id);
+                if(gradoExiste is null)
+                {
+                    return NotFound("Grado no encontrado");
+                }
+
+                await _gradoRepository.EliminarGrado(id);
+                return Ok(new { mensaje = "Registro de grado eliminado" });
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Update(int id, [FromBody] Grado grado)
+        {
+            if (grado == null || string.IsNullOrEmpty(grado.Nombre))
+            {
+                return BadRequest(new { mensaje = "El nombre del grado es obligatorio" });
+            }
+
+            try
+            {
+                var gradoExiste = await _gradoRepository.ObtenerPorId(id);
+
+                if (gradoExiste == null)
+                    return NotFound(new { mensaje = "Grado no encontrado" });
+
+                gradoExiste.Nombre = grado.Nombre;
+
+                await _gradoRepository.ActualizarGradoAsync(gradoExiste);
+                return Ok(new { mensaje = "Datos del grado actualizados" });
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

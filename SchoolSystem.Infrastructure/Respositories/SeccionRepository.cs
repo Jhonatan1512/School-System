@@ -17,7 +17,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
-
+         
         public async Task ActualizarAsync(Seccion seccion)
         {
             _context.Secciones.Update(seccion);

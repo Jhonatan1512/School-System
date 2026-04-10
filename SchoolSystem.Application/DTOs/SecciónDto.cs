@@ -12,3 +12,4 @@ namespace SchoolSystem.Application.DTOs
         public string Nombre { get; set; } = string.Empty;
     }
 }
+ 

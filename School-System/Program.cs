@@ -39,6 +39,8 @@ builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
 builder.Services.AddScoped<ICalificacionService,  CalificacionService>();
 builder.Services.AddScoped<IDetalleMatriculaRepository, DetalleMatriculaRepository>();
 builder.Services.AddScoped<IGradoSevice, GradoService>();   
+builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
+builder.Services.AddScoped<IConfiguracionService, ConfiguracionGradoSeccionService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -58,7 +60,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]);
+var key = Encoding.ASCII.GetBytes(jwtSettings["Key"]!);
 
 builder.Services.AddAuthentication(options =>
 {

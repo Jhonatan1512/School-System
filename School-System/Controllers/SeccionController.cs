@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Domain.Entities;
 using SchoolSystem.Domain.Interfaces;
+using static System.Collections.Specialized.BitVector32;
 
 namespace School_System.Controllers
 {
@@ -10,7 +12,7 @@ namespace School_System.Controllers
     [ApiController]
     [Authorize]
     public class SeccionController : ControllerBase
-    {
+    { 
         private readonly ISeccionRepository _seccionRepository;
         public SeccionController(ISeccionRepository seccionRepository)
         {
@@ -21,6 +23,10 @@ namespace School_System.Controllers
         [HttpPost]
         public async Task<IActionResult> AgregarSeccion([FromBody] Seccion seccion)
         {
+            if (seccion.Nombre.IsNullOrEmpty())
+            {
+                return BadRequest("Todos los campos son obligatorios");
+            }
             var nuevaSeccion = new Seccion
             {
                 Nombre = seccion.Nombre
@@ -52,6 +58,11 @@ namespace School_System.Controllers
         public async Task<IActionResult> ActualizarDatos(int id,[FromBody] SecciónDto seccionDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
+
+            if (seccionDto.Nombre.IsNullOrEmpty())
+            {
+                return BadRequest("Todos los campos son obligatorios");
+            }
 
             var resultado = await _seccionRepository.ObtenerPorIdAsync(id);
 

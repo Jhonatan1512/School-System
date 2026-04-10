@@ -16,5 +16,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task<List<Matricula>> ObtenerPorAulaAsync(int gradoId, int seccionId, int periodoId);
         Task<List<DetalleMatricula>> ObtenerCursosDelAlumnoPoPeriodoAsync(int alumnoId, int periodoId);
         Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionIds, int periodoId);
+        Task<int> ContarMatrculadosAsync(int gradoId, int seccionId, int periodoId);
     }
 }

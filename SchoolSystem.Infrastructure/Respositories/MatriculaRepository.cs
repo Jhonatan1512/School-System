@@ -29,6 +29,11 @@ namespace SchoolSystem.Infrastructure.Respositories
             await _context.SaveChangesAsync(); 
         }
 
+        public async Task<int> ContarMatrculadosAsync(int gradoId, int seccionId, int periodoId)
+        {
+            return await _context.Matriculas.CountAsync(m => m.GradoId == gradoId && m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId);
+        }
+
         public async Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionIds, int periodoId)
         {
             return await _context.Matriculas

@@ -14,4 +14,4 @@ namespace SchoolSystem.Domain.Interfaces
         Task<Seccion?> ObtenerPorIdAsync(int id);
         Task ActualizarAsync(Seccion seccion);
     }
-}
+} 

@@ -22,7 +22,7 @@ namespace SchoolSystem.Application.Services
         { 
             var periodoEditar = await _periodoAcademicoRepository.GetByIdAsync(dto.Id);
             if (periodoEditar is null) return null!;
-
+             
             if (dto.EstadoActivo)
             {
                 var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();

@@ -20,18 +20,24 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<IEnumerable<GradoDto>> GetAllAsync()
         {
+            var periodoActivo = await _context.PeriodoAcademicos
+                .Where(p => p.EstadoActivo)
+                .Select(p => p.Id)
+                .FirstOrDefaultAsync();
+
             return await _context.Grados
                 .Select(g => new GradoDto
                 {
                     Id = g.Id,
                     Nombre = g.Nombre,
                     TotalSecciones = _context.Matriculas
-                        .Where(m => m.GradoId == g.Id)
+                        .Where(m => m.GradoId == g.Id && m.PeriodoAcademicoId == periodoActivo)
                         .Select(m => m.SeccionId)
                         .Distinct()
                         .Count(),
                      TotalAlumnos = _context.Matriculas
-                        .Count(m => m.GradoId == g.Id)
+                        .Count(m => m.GradoId == g.Id && m.PeriodoAcademicoId == periodoActivo)
+                        
                 })
                 .ToListAsync();
         }

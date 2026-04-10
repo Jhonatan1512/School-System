@@ -17,17 +17,21 @@ namespace SchoolSystem.Application.Services
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly ICursoRepository _cursoRepository;
         private readonly IUsuarioRepository _ussuarioRepository;
+        private readonly IConfiguracionRepository configuracionRepository;
+
         public MatriculaService( 
             IMatriculaRepository matriculaRepository, 
             IPeriodoAcademicoRepository periodoAcademico, 
             ICursoRepository cursoRepository,
-            IUsuarioRepository usuarioRepository
+            IUsuarioRepository usuarioRepository,
+            IConfiguracionRepository configuracionRepository
             )
-        {
+        { 
             _matriculaRepository = matriculaRepository;
             _periodoAcademicoRepository = periodoAcademico;
-            _cursoRepository = cursoRepository;
+            _cursoRepository = cursoRepository; 
             _ussuarioRepository = usuarioRepository;
+            this.configuracionRepository = configuracionRepository;
         }
 
         public async Task<bool> ActualizarMatricula(int matriculaId, ActualizarMatriculaDto dto)
@@ -36,17 +40,31 @@ namespace SchoolSystem.Application.Services
             if (matriculaExiste == null)
                 throw new Exception("Matricula no encontrada");
 
+            if(matriculaExiste.GradoId != dto.GradoId || matriculaExiste.SeccionId != dto.SeccionId)
+            {
+                var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(matriculaExiste.PeriodoAcademicoId, dto.GradoId, dto.SeccionId);
+                if(config == null)
+                {
+                    throw new Exception("Aún no hay cupos definidos para esta sección");
+                }
+                int inscritosDestino = await _matriculaRepository.ContarMatrculadosAsync(dto.GradoId, dto.SeccionId, matriculaExiste.PeriodoAcademicoId);
+                if(inscritosDestino >= config.CapacidadMax)
+                {
+                    throw new Exception("No hay cupos suficinetes para esta sección");
+                }
+            }
+
             if(matriculaExiste.GradoId != dto.GradoId)
             {
                 var nuevosCursos = await _cursoRepository.ObtenerPorGrado(dto.GradoId);
                 if (!nuevosCursos.Any())
-                    throw new Exception("No se puede cambiar a este grado porque no tiene cursos registrados");
+                    throw new Exception("El grado o sección destino no tiene cursos registrados");
 
                 matriculaExiste.GradoId = dto.GradoId;
 
                 matriculaExiste.DetallesMatriculas.Clear();
 
-                foreach(var curso in nuevosCursos)
+                foreach (var curso in nuevosCursos)
                 {
                     matriculaExiste.DetallesMatriculas.Add(new DetalleMatricula
                     {
@@ -54,6 +72,7 @@ namespace SchoolSystem.Application.Services
                     });
                 }
             }
+
             matriculaExiste.SeccionId = dto.SeccionId;
 
             await _matriculaRepository.ActualizarMatricula(matriculaExiste);
@@ -69,6 +88,18 @@ namespace SchoolSystem.Application.Services
             var matriculaExiste = await _matriculaRepository.ObtenerPorAlumnoPeriodoAsync(dto.AlumnoId, periodoActivo.Id);
             if (matriculaExiste != null)
                 throw new Exception("El alumno ya esta matriculado en el periodo académico actual");
+
+            var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(periodoActivo.Id, dto.GradoId, dto.SeccionId);
+            if (config is null)
+            {
+                throw new Exception("Aún no hay cupos definidos para esta aula");
+            }
+
+            var TotalInscriotos = await _matriculaRepository.ContarMatrculadosAsync(dto.GradoId, dto.SeccionId, periodoActivo.Id);
+            if (TotalInscriotos >= config.CapacidadMax)
+            {
+                throw new Exception($"Cupos agotados, la sección solo permite {config.CapacidadMax} alumnos");
+            }
 
             var cursosGrado = await _cursoRepository.ObtenerPorGrado(dto.GradoId);
             if (!cursosGrado.Any())

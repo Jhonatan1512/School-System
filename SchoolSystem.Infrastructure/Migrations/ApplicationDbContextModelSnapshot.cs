@@ -312,6 +312,37 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.ToTable("Competencias");
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CapacidadMax")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodoacademicoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SeccionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GradoId");
+
+                    b.HasIndex("PeriodoacademicoId");
+
+                    b.HasIndex("SeccionId");
+
+                    b.ToTable("ConfiguracionGradoSecciones");
+                });
+
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Curso", b =>
                 {
                     b.Property<int>("Id")
@@ -753,6 +784,33 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Curso");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion", b =>
+                {
+                    b.HasOne("SchoolSystem.Domain.Entities.Grado", "Grado")
+                        .WithMany()
+                        .HasForeignKey("GradoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
+                        .WithMany()
+                        .HasForeignKey("PeriodoacademicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolSystem.Domain.Entities.Seccion", "Seccion")
+                        .WithMany()
+                        .HasForeignKey("SeccionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grado");
+
+                    b.Navigation("PeriodoAcademico");
+
+                    b.Navigation("Seccion");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Curso", b =>

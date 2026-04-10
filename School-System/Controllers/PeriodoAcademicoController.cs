@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Domain.Interfaces;
@@ -24,6 +25,15 @@ namespace School_System.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CrearPeriodo([FromBody] PeriodoAcademicoDto dto)
         {
+            if(dto.Nombre.IsNullOrEmpty() || 
+                dto.FechaIncio.ToString().IsNullOrEmpty() || 
+                dto.FechaCierre.ToString().IsNullOrEmpty() || 
+                dto.EstadoActivo.ToString().IsNullOrEmpty()
+            )
+            {
+                return BadRequest("Todos los campos son obligatorios");
+            }
+
             var nuevoPeriodo = await _periodoAcademicoService.CrearPeriodoAcademicoAsync(dto);
             return Ok(new
             {
@@ -47,7 +57,13 @@ namespace School_System.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActualizarPeriodo(int id, [FromBody] PeriodoacademicoActualizarDto dto)
         {
-            if (dto == null) return BadRequest("Los datos son nulos.");
+            if (dto.Nombre.IsNullOrEmpty() ||
+                dto.FechaCierre.ToString().IsNullOrEmpty() ||
+                dto.EstadoActivo.ToString().IsNullOrEmpty()
+            )
+            {
+                return BadRequest("Todos los campos son obligatorios");
+            }
 
             dto.Id = id;
 

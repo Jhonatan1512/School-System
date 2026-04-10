@@ -15,7 +15,7 @@ namespace SchoolSystem.Application.DTOs
         public DateTime FechaCierre { get; set; }
     }
 
-    public class PeriodoacademicoActualizarDto
+    public class PeriodoacademicoActualizarDto 
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;

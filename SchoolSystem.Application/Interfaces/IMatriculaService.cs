@@ -11,6 +11,6 @@ namespace SchoolSystem.Application.Interfaces
     {
         Task<bool> AgregarMatriculaDetallerAsync(MatriculaDto dto);
         Task<bool> ActualizarMatricula(int matriculaId, ActualizarMatriculaDto dto);
-        Task<List<GetMatriculadosSeccionDto>> ObtenerMatriculadosPorAula(int gradoId, int seccionId);
+        Task<List<GetMatriculadosSeccionDto>> ObtenerMatriculadosPorAula(int gradoId, int seccionId); 
     }
 }

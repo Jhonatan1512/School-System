@@ -221,6 +221,110 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "getAll",
+    "RelativePath": "api/Configuracion",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[SchoolSystem.Application.DTOs.ConfiguracionDetalleDto, SchoolSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "Delete",
+    "RelativePath": "api/Configuracion/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "Update",
+    "RelativePath": "api/Configuracion/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "data",
+        "Type": "SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "CrearAsigncion",
+    "RelativePath": "api/Configuracion/create",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "configuracion",
+        "Type": "SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "ObtenerDetalleCuposAula",
+    "RelativePath": "api/Configuracion/grado/{gradoId}/seccion/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SchoolSystem.Application.DTOs.ConfiguracionDetalleDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
     "ContainingType": "School_System.Controllers.CursoController",
     "Method": "Crearcurso",
     "RelativePath": "api/Curso",
@@ -472,6 +576,43 @@
       {
         "Name": "id",
         "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.GradoController",
+    "Method": "Eliminar",
+    "RelativePath": "api/Grado/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.GradoController",
+    "Method": "Update",
+    "RelativePath": "api/Grado/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "grado",
+        "Type": "SchoolSystem.Domain.Entities.Grado",
         "IsRequired": true
       }
     ],
