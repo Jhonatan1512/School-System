@@ -19,7 +19,7 @@ namespace SchoolSystem.Application.DTOs
         public string Estado {  get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty; 
         public string PeriodoAcademico {  get; set; } = string.Empty;
-        public string UsuarioId { get; set; } = string.Empty; 
+        public string UsuarioId { get; set; } = string.Empty;  
         public int MatriculaId { get; set; }
     }
     public class ActualizarEstadoDto

@@ -10,7 +10,7 @@ using System.Security.Claims;
 
 namespace School_System.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]")] 
     [ApiController]
     [Authorize]
     public class AlumnoController : ControllerBase
@@ -41,12 +41,14 @@ namespace School_System.Controllers
         }
 
         //GET :api/alumno
-        [HttpGet]
+        [HttpGet("lista-paginada")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> obtenerTodos()
+        public async Task<ActionResult<PageResponseDto<AlumnoDto>>> obtenerTodos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
         {
-            var alumnos = await _alumnoService.GetAll();
-            return Ok(alumnos); 
+            if(pagina < 1) pagina = 1;
+            if(cantidad > 20) cantidad = 20;
+            var alumnos = await _alumnoService.GetAll(pagina, cantidad);
+            return Ok(alumnos);  
         }
 
         //POST :api/alumno
@@ -71,7 +73,6 @@ namespace School_System.Controllers
             };
 
             var resultadoIdentity = await _userManager.CreateAsync(usuarioNuevo, passwordGenerada);
-
             if (!resultadoIdentity.Succeeded)
             {
                 return BadRequest(resultadoIdentity.Errors);
@@ -136,15 +137,20 @@ namespace School_System.Controllers
             return Ok(alumno);
         }
 
-        [HttpPut("{dni}")]
+        [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> ActualizarAlumno(string dni, [FromBody] AlumnoDto alumnoDto)
+        public async Task<ActionResult> ActualizarAlumno(int id, [FromBody] AlumnoDto alumnoDto)
         {
-            var alumnoExiste = await _alumnoRespository.ObtenerPorDni(dni);
+            var alumnoExiste = await _alumnoRespository.GetById(id);
             if (alumnoExiste == null) NotFound(new { mensaje = "Alumno no encontrado" });
 
-            var partesApellidos = alumnoDto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var otroConDni = await _alumnoRespository.ObtenerPorDni(alumnoDto.Dni);
+            if(otroConDni != null && otroConDni.Id != id)
+            {
+                return BadRequest("El DNI ya esta registrado en la BD");
+            }
 
+            var partesApellidos = alumnoDto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
             char inicial1 = partesApellidos.Length > 0 ? partesApellidos[0][0] : 'x';
             char inicial2 = partesApellidos.Length > 1 ? partesApellidos[1][0] : inicial1;
 
@@ -152,7 +158,6 @@ namespace School_System.Controllers
             var passwordNueva = $"{char.ToUpper(inicial1)}{char.ToLower(inicial2)}{alumnoDto.Dni}*";
 
             var usuario = await _userManager.FindByIdAsync(alumnoExiste!.UsuarioId);
-
             if (usuario != null)
             {
                 usuario.UserName = emailNuevo;
@@ -183,31 +188,38 @@ namespace School_System.Controllers
                 Credenciales = new
                 {
                     Email = emailNuevo,
-                    Passoword = passwordNueva,
+                    Password = passwordNueva, 
                 },
                 Alumno = AlumnoActualizadoCompleto
             });
         }
 
         [HttpPatch("{dni}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")] 
         public async Task<IActionResult> ResetearPasswordAdmin(string dni, [FromBody] AdminResetPassword adminResetPassword)
         {
             var alumnoExistente = await _alumnoRespository.ObtenerPorDni(dni);
             if (alumnoExistente == null) return NotFound(new { mensaje = "Alumno no encontrado" });
 
-            var usuario = await _userManager.FindByIdAsync(alumnoExistente.UsuarioId);
+            var usuario = await _userManager.FindByIdAsync(alumnoExistente.UsuarioId); 
             if (usuario == null) return NotFound(new { mensaje = "Usuario no encontrado" });
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
 
             var resultado = await _userManager.ResetPasswordAsync(usuario, token, adminResetPassword.NuevaPassword);
-            if (resultado == null) return BadRequest(resultado!.Errors);
+            if (!resultado.Succeeded)
+            {
+                return BadRequest(new
+                {
+                    mensaje = "Error al Actualizar la contraseña",
+                    errors = resultado.Errors
+                });
+            }
 
             return Ok(new
             {
                 mensaje = "Contraseña Actualizada",
-                neuvaPassword = adminResetPassword.NuevaPassword
+                nuevaPassword = adminResetPassword.NuevaPassword
             });
         }
 

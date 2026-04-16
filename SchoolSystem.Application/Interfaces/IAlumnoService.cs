@@ -10,7 +10,7 @@ namespace SchoolSystem.Application.Interfaces
 {
     public interface IAlumnoService
     {
-        Task<IEnumerable<AlumnoDto>> GetAll(); 
+        Task<PageResponseDto<AlumnoDto>> GetAll(int pagina, int cantidad); 
         Task<AlumnoDto?> GetByIdAsync(int id);
         Task<AlumnoDto?> GetByDniAsync(string dni);
         Task<List<DashboardAlumnoDto>> ObtenerMisCursos(string usuarioId);

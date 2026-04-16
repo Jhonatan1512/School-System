@@ -5,17 +5,56 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Alumno": {
+    "/api/Alumno/lista-paginada": {
       "get": {
         "tags": [
           "Alumno"
         ],
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "cantidad",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlumnoDtoPageResponseDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlumnoDtoPageResponseDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlumnoDtoPageResponseDto"
+                }
+              }
+            }
           }
         }
-      },
+      }
+    },
+    "/api/Alumno": {
       "post": {
         "tags": [
           "Alumno"
@@ -67,42 +106,19 @@
             "description": "OK"
           }
         }
-      }
-    },
-    "/api/Alumno/dni/{dni}": {
-      "get": {
-        "tags": [
-          "Alumno"
-        ],
-        "parameters": [
-          {
-            "name": "dni",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Alumno/{dni}": {
+      },
       "put": {
         "tags": [
           "Alumno"
         ],
         "parameters": [
           {
-            "name": "dni",
+            "name": "id",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -130,7 +146,31 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Alumno/dni/{dni}": {
+      "get": {
+        "tags": [
+          "Alumno"
+        ],
+        "parameters": [
+          {
+            "name": "dni",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Alumno/{dni}": {
       "patch": {
         "tags": [
           "Alumno"
@@ -1732,6 +1772,31 @@
             "nullable": true
           },
           "matriculaId": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlumnoDtoPageResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlumnoDto"
+            },
+            "nullable": true
+          },
+          "totalRegistros": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paginaActual": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPaginas": {
             "type": "integer",
             "format": "int32"
           }

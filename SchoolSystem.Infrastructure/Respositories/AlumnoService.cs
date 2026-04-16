@@ -13,16 +13,15 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Infrastructure.Respositories
 {
-    public class AlumnoService : IAlumnoService 
+    public class AlumnoService : IAlumnoService
     {
         private readonly ApplicationDbContext _context;
         public readonly IAlumnoRespository _alumnoRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly IMatriculaRepository _matriculaRepository; 
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
-        private readonly ITrimestreRepository _trimestreRepository;
-
-        public AlumnoService( 
+         
+        public AlumnoService(  
             ApplicationDbContext context,
             IAlumnoRespository alumnoRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,  
@@ -35,10 +34,9 @@ namespace SchoolSystem.Infrastructure.Respositories
             _periodoAcademicoRepository = periodoAcademicoRepository;
             _matriculaRepository = matriculaRepository;
             _signacionDocenteRepository = signacionDocenteRepository;
-            _trimestreRepository = trimestreRepository;
 
         }
-        public async Task<IEnumerable<AlumnoDto>> GetAll()
+        public async Task<PageResponseDto<AlumnoDto>> GetAll(int pagina, int cantidad)
         {
             var query = from alumno in _context.Alumnos 
                         join usuario in _context.Users
@@ -63,13 +61,31 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Apellidos = alumno.Apellidos,
                             Dni = alumno.Dni,
                             Aula = (g != null && s != null)
-                                    ? $"{g.Nombre}{s.Nombre}" : "Sin Asignar",
+                                    ? $"{g.Nombre}{s.Nombre}" : "No Matriculado",
                             FechaNacimiento = alumno.FechaNacimiento,
                             Sexo = alumno.Sexo,
                             Estado = alumno.Estado.ToString(),
-                            Email = usuario.Email!
+                            Email = usuario.Email!,
+                            UsuarioId = usuario.Id,
                         }; 
-            return await query.ToListAsync(); 
+
+            var totalRegistro = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(a =>a.Apellidos)
+                .Skip((pagina - 1) * cantidad)
+                .Take(cantidad)
+                .ToListAsync();
+
+            var totalPaginas = (int)Math.Ceiling(totalRegistro / (double)cantidad);
+
+            return new PageResponseDto<AlumnoDto>
+            {
+                Items = items,
+                TotalRegistros = totalRegistro,
+                PaginaActual = pagina,
+                TotalPaginas = totalPaginas,
+            }; 
         }
 
         public async Task<AlumnoDto?> GetByDniAsync(string dni)
@@ -253,8 +269,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 throw new Exception("El estado enviado no es válido");
             }
 
-            await _alumnoRepository.ActualizarAlumnoAsync(alumnoExiste);
-            
+            await _alumnoRepository.ActualizarAlumnoAsync(alumnoExiste);            
         }
     }
 }
