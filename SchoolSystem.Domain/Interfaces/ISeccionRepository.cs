@@ -13,5 +13,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task<IEnumerable<Seccion>> ObtenerTodosAsync();
         Task<Seccion?> ObtenerPorIdAsync(int id);
         Task ActualizarAsync(Seccion seccion);
+        Task EliminarSeccionAsync(int id); 
     }
 } 

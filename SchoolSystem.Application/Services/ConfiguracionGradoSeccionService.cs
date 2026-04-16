@@ -18,17 +18,38 @@ namespace SchoolSystem.Application.Services
         
         public ConfiguracionGradoSeccionService(
             IConfiguracionRepository configuracionRepository, 
-            IPeriodoAcademicoRepository periodoAcademicoRepository,
+            IPeriodoAcademicoRepository periodoAcademicoRepository, 
             IMatriculaRepository matriculaRepository)
         {
-            this.configuracionRepository = configuracionRepository;
+            this.configuracionRepository = configuracionRepository; 
             this.periodoAcademicoRepository = periodoAcademicoRepository;
             this.matriculaRepository = matriculaRepository; 
         }
+
+        public async Task<ConfiguracionGradoSeccion> ActualizarAsync(int id, ConfiguracionGradoSecionDto dto)
+        {
+            var configuracion = await configuracionRepository.GetconfiguracionById(id);
+            if(configuracion == null)
+            {
+                throw new Exception("No existe este registrio de confifuración");
+            }
+
+            var cantidadMatriculados = await matriculaRepository.ContarMatrculadosAsync(configuracion.GradoId, configuracion.SeccionId, configuracion.PeriodoacademicoId);
+            if(dto.CapacidadMax <= cantidadMatriculados)
+            {
+                throw new Exception($"No se puede reducir los cupos, ya hay {cantidadMatriculados} alumnos inscritos");
+            }
+
+            configuracion.CapacidadMax = dto.CapacidadMax;
+
+            await configuracionRepository.ActualizarConfiguracionAsync(configuracion);
+            return configuracion;
+        }
+
         public async Task<ConfiguracionGradoSecionDto> AgregarConfiguracion(int gradoId, int seccionId, int capacidad)
         {
             var periodActivo = await periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
-            if(periodActivo is null)
+            if(periodActivo is null) 
             {
                 throw new Exception("No hay periodo acadademico activo");
             }
@@ -62,6 +83,41 @@ namespace SchoolSystem.Application.Services
             throw new Exception("Error al guardar la configuración");
         }
 
+        public async Task<List<ConfiguracionDetalleDto>> DetallePorgrado(int gradoId)
+        {
+            var periodActivo = await periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+            if (periodActivo == null) throw new Exception("No hay periodos activos");
+
+            var connfiguracion = await configuracionRepository.GetDetailsByPeriodo(periodActivo.Id);
+
+            var configuracionFiltrada = connfiguracion.Where(c => c.GradoId == gradoId).ToList();
+
+            var listaDto = new List<ConfiguracionDetalleDto>();
+
+            foreach(var l in configuracionFiltrada)
+            {
+                var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(l.GradoId, l.SeccionId, l.PeriodoacademicoId);
+
+                if(totalInscritos < l.CapacidadMax)
+                {
+                    listaDto.Add(new ConfiguracionDetalleDto
+                    {
+                        id = l.Id,
+                        NombreGrado = l.Grado!.Nombre,
+                        NombreSeccion = l.Seccion!.Nombre,
+                        GradoId = l.Grado.Id,
+                        PeriodoAcademico = l.PeriodoAcademico!.Nombre,
+                        SeccionId = l.Seccion.Id,
+                        PeriodoId = l.PeriodoAcademico.Id,
+                        Capacidad = l.CapacidadMax,
+                        TotalMatriculados = totalInscritos,
+                    });
+                }
+            }
+
+            return listaDto;
+        }
+
         public async Task<List<ConfiguracionDetalleDto>> GetDeatilAsync()
         {
             var periodoActivo = await periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
@@ -80,13 +136,16 @@ namespace SchoolSystem.Application.Services
                     id = item.Id,
                     NombreGrado = item.Grado!.Nombre,
                     NombreSeccion = item.Seccion!.Nombre,
+                    GradoId = item.Grado.Id,
                     PeriodoAcademico = item.PeriodoAcademico!.Nombre,
+                    SeccionId = item.Seccion.Id,
+                    PeriodoId = item.PeriodoAcademico.Id,
                     Capacidad = item.CapacidadMax,
                     TotalMatriculados = totalInscritos,
                 });
             }
 
-            return listaDtos;
+            return listaDtos.OrderBy(x => x.GradoId).ThenBy(x => x.NombreSeccion).ToList();
         }
 
         public async Task<ConfiguracionDetalleDto> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId)

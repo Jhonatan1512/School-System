@@ -21,7 +21,7 @@ namespace SchoolSystem.Application.Services
         public async Task<PeriodoAcademico> ActualizarPeriodo(PeriodoacademicoActualizarDto dto)
         { 
             var periodoEditar = await _periodoAcademicoRepository.GetByIdAsync(dto.Id);
-            if (periodoEditar is null) return null!;
+            if (periodoEditar is null) throw new Exception("Periodo no encontrado");
              
             if (dto.EstadoActivo)
             {

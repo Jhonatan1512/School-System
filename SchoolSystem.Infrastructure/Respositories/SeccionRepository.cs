@@ -39,5 +39,11 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Secciones.ToListAsync();
         }
+
+        public async Task EliminarSeccionAsync(int id)
+        {
+            await _context.Secciones.Where(s => s.Id == id).ExecuteDeleteAsync();
+            await _context.SaveChangesAsync();
+        }
     }
 }

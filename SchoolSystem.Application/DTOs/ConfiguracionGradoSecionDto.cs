@@ -11,15 +11,24 @@ namespace SchoolSystem.Application.DTOs
         public int GradoId { get; set; }
         public int SeccionId { get; set; }
         public int PeriodoacademicoId { get; set; }
+        public int CapacidadMax { get; set; } 
+    }
+
+    public class ConfigracionUpdateDto
+    {
+        public int Id { get; set; }
         public int CapacidadMax { get; set; }
     }
 
-    public class ConfiguracionDetalleDto
+    public class ConfiguracionDetalleDto 
     {
         public int id { get; set; }
         public string NombreGrado { get; set; } = string.Empty;
+        public int GradoId { get; set; }
         public string NombreSeccion { get; set; } = string.Empty;
+        public int SeccionId { get; set; }
         public string PeriodoAcademico { get; set; } = string.Empty;
+        public int PeriodoId { get; set; }
         public int Capacidad { get; set; }
         public int TotalMatriculados { get; set; }
         public int CuposDisponible => Capacidad - TotalMatriculados;

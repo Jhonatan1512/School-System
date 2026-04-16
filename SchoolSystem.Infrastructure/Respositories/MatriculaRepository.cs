@@ -22,7 +22,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return _context.SaveChangesAsync();
         }
-
+         
         public async Task AgregaratriculaAsync(Matricula matricula)
         {
             await _context.Matriculas.AddAsync(matricula);
@@ -31,7 +31,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<int> ContarMatrculadosAsync(int gradoId, int seccionId, int periodoId)
         {
-            return await _context.Matriculas.CountAsync(m => m.GradoId == gradoId && m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId);
+            return await _context.Matriculas.CountAsync(m => m.GradoId == gradoId && m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId && m.Alumno!.Estado == Domain.Enums.AlumnoEnum.Activo);
         }
 
         public async Task<List<Matricula>> ObtenerAlumnosPorSeccionPeriodoAsync(List<int> seccionIds, int periodoId)
@@ -45,7 +45,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<List<DetalleMatricula>> ObtenerCursosDelAlumnoPoPeriodoAsync(int alumnoId, int periodoId)
         {
-            return await _context.DetalleMatriculas.Include(d => d.Matricula).Include(d => d.Curso).ThenInclude(c => c.Competencias)
+            return await _context.DetalleMatriculas.Include(d => d.Matricula).Include(d => d.Curso).ThenInclude(c => c!.Competencias)
                 .Where(d => d.Matricula!.AlumnoId == alumnoId && d.Matricula.PeriodoAcademicoId == periodoId).ToListAsync();
         }
          
@@ -59,7 +59,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             return await _context.Matriculas
                 .Include(m => m.DetallesMatriculas)
                 .ThenInclude(d => d.Curso)
-                .ThenInclude(c => c.Competencias)
+                .ThenInclude(c => c!.Competencias)
                 .FirstOrDefaultAsync(m => m.AlumnoId == alumnoId && m.PeriodoAcademicoId == periodoId);
         }
 

@@ -85,6 +85,27 @@
   },
   {
     "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "UpdateEstado",
+    "RelativePath": "api/Alumno/alumnoId/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarEstadoDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AlumnoController",
     "Method": "ObtenerPorDni",
     "RelativePath": "api/Alumno/dni/{dni}",
     "HttpMethod": "GET",
@@ -271,7 +292,7 @@
       },
       {
         "Name": "data",
-        "Type": "SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion",
+        "Type": "SchoolSystem.Application.DTOs.ConfiguracionGradoSecionDto",
         "IsRequired": true
       }
     ],
@@ -288,6 +309,22 @@
       {
         "Name": "configuracion",
         "Type": "SchoolSystem.Domain.Entities.ConfiguracionGradoSeccion",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.ConfiguracionController",
+    "Method": "GetByGrado",
+    "RelativePath": "api/Configuracion/grado/{gradoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -817,6 +854,22 @@
       {
         "Name": "seccionDto",
         "Type": "SchoolSystem.Application.DTOs.Secci\u00F3nDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.SeccionController",
+    "Method": "Delete",
+    "RelativePath": "api/Seccion/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

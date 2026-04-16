@@ -20,15 +20,15 @@ namespace SchoolSystem.Application.Services
         private readonly IConfiguracionRepository configuracionRepository;
 
         public MatriculaService( 
-            IMatriculaRepository matriculaRepository, 
-            IPeriodoAcademicoRepository periodoAcademico, 
+            IMatriculaRepository matriculaRepository,  
+            IPeriodoAcademicoRepository periodoAcademico,  
             ICursoRepository cursoRepository,
             IUsuarioRepository usuarioRepository,
             IConfiguracionRepository configuracionRepository
-            )
+            ) 
         { 
             _matriculaRepository = matriculaRepository;
-            _periodoAcademicoRepository = periodoAcademico;
+            _periodoAcademicoRepository = periodoAcademico; 
             _cursoRepository = cursoRepository; 
             _ussuarioRepository = usuarioRepository;
             this.configuracionRepository = configuracionRepository;
@@ -61,7 +61,6 @@ namespace SchoolSystem.Application.Services
                     throw new Exception("El grado o sección destino no tiene cursos registrados");
 
                 matriculaExiste.GradoId = dto.GradoId;
-
                 matriculaExiste.DetallesMatriculas.Clear();
 
                 foreach (var curso in nuevosCursos)
@@ -74,7 +73,6 @@ namespace SchoolSystem.Application.Services
             }
 
             matriculaExiste.SeccionId = dto.SeccionId;
-
             await _matriculaRepository.ActualizarMatricula(matriculaExiste);
             return true;
         }

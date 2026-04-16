@@ -2,6 +2,7 @@
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Domain.Entities;
+using SchoolSystem.Domain.Enums;
 using SchoolSystem.Domain.Interfaces;
 using SchoolSystem.Infrastructure.Data;
 using System;
@@ -9,7 +10,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 
 namespace SchoolSystem.Infrastructure.Respositories
 {
@@ -22,13 +22,13 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
         private readonly ITrimestreRepository _trimestreRepository;
 
-        public AlumnoService(
+        public AlumnoService( 
             ApplicationDbContext context,
             IAlumnoRespository alumnoRepository, 
-            IPeriodoAcademicoRepository periodoAcademicoRepository, 
+            IPeriodoAcademicoRepository periodoAcademicoRepository,  
             IMatriculaRepository matriculaRepository,  
             IAsignacionDocenteRepository signacionDocenteRepository,
-            ITrimestreRepository trimestreRepository)
+            ITrimestreRepository trimestreRepository) 
         {
             _context = context; 
             _alumnoRepository = alumnoRepository;
@@ -94,12 +94,14 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Dni = alumno.Dni,
                             Aula = (grado != null && secciones != null) 
                                     ? $"{grado.Nombre}{secciones.Nombre}" : "Sin Aula",
+                            gradoId = grado.Id,
                             FechaNacimiento = alumno.FechaNacimiento,
                             Sexo = alumno.Sexo,
                             Estado = alumno.Estado.ToString(),
                             Email = usuario.Email!,
                             PeriodoAcademico = (periodo != null) 
-                                        ? $"{periodo.Nombre}" : "Sin Matrícula"
+                                        ? $"{periodo.Nombre}" : "Sin Matrícula",
+                            MatriculaId = matricula.Id,
                         };
             return await datos.FirstOrDefaultAsync();
         }
@@ -196,7 +198,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             return new DetalleCursoAlumnoDto
             {
                 NombreCurso = curso.Nombre,
-                NombreDocente = asignacion != null ? $"{asignacion.Docente.Nombres.Trim() } {asignacion.Docente.Apellidos}" : "Sin Docente Asignado",
+                NombreDocente = asignacion != null ? $"{asignacion.Docente!.Nombres.Trim() } {asignacion.Docente.Apellidos}" : "Sin Docente Asignado",
                 Competencias = competencias,
             }; 
 
@@ -217,7 +219,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                         join seccion in _context.Secciones
                         on matricula.SeccionId equals seccion.Id 
 
-                        where grado.Id == gradoId && seccion.Id == seccionId 
+                        where grado.Id == gradoId && seccion.Id == seccionId && alumno.Estado == AlumnoEnum.Activo
 
                         select new AlumnoDto
                         {
@@ -233,6 +235,26 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Email = usuario.Email!
                         };
             return await query.ToListAsync();
+        }
+
+        public async Task ActualizarEstadoAsync(int id, ActualizarEstadoDto dto)
+        {
+            var alumnoExiste = await _alumnoRepository.GetById(id);
+            if( alumnoExiste is null )
+            {
+                throw new KeyNotFoundException("el alumno no existe");
+            }
+
+            if(Enum.TryParse<AlumnoEnum>(dto.Estado, true, out var nuevoEstado))
+            {
+                alumnoExiste.Estado = nuevoEstado;
+            } else
+            {
+                throw new Exception("El estado enviado no es válido");
+            }
+
+            await _alumnoRepository.ActualizarAlumnoAsync(alumnoExiste);
+            
         }
     }
 }

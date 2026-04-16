@@ -10,6 +10,6 @@ namespace SchoolSystem.Domain.Enums
     {
         Activo = 1,
         Trasladado = 2,
-        Retirado = 3
+        Retirado = 3  
     }
 }

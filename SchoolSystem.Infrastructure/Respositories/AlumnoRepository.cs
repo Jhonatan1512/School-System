@@ -22,7 +22,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task ActualizarAlumnoAsync(Alumno alumno)
         {
-            _context.Alumnos.Update(alumno);
+            _context.Alumnos.Update(alumno); 
             await _context.SaveChangesAsync();
         } 
          
@@ -41,6 +41,11 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task<Alumno?> ObtenerPorUsuarioAsync(string usuarioId)
         {
             return await _context.Alumnos.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId);
+        }
+
+        public async Task<Alumno?> GetById(int id)
+        {
+            return await _context.Alumnos.FirstAsync(a => a.Id == id);
         }
     }
 }

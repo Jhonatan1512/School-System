@@ -15,9 +15,9 @@ namespace School_System.Controllers
         {
             _matriculaService = matriculaService;
         }
-
+          
         //POST :api/matricula
-        [HttpPost]
+        [HttpPost] 
         public async Task<IActionResult> AgregarMatricula([FromBody] MatriculaDto dto)
         {
             try

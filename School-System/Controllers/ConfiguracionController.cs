@@ -112,7 +112,7 @@ namespace School_System.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> Update(int id, [FromBody] ConfiguracionGradoSeccion data)
+        public async Task<ActionResult> Update(int id, [FromBody] ConfiguracionGradoSecionDto data)
         {
             if (data == null)
             {
@@ -124,12 +124,23 @@ namespace School_System.Controllers
             }
             try
             {
-                var existe = await configuracionRepository.GetconfiguracionById(id);
-                if (existe is null)return NotFound();   
+                await configuracionService.ActualizarAsync(id, data);
+                return NoContent();
 
-                existe.CapacidadMax = data.CapacidadMax;
-                await configuracionRepository.ActualizarConfiguracionAsync(existe);
-                return Ok(new { mensaje = "Datos actualizados"});
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("grado/{gradoId}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetByGrado(int gradoId)
+        {
+            try
+            {
+                var result = await configuracionService.DetallePorgrado(gradoId);
+                return Ok(result);
 
             } catch (Exception ex)
             {

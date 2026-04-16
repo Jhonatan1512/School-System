@@ -13,6 +13,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task ActualizarAlumnoAsync(Alumno alumno);
         Task<Alumno?> ObtenerPorDni(string dni);
         Task<Alumno?> ObtenerPorUsuarioAsync(string usuarioId);
-
+        Task<Alumno?> GetById(int id); 
     }
 }

@@ -24,7 +24,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             context.ConfiguracionGradoSecciones.Add(gradoSeccion);            
             return await context.SaveChangesAsync() > 0 ;
-        }
+        } 
 
         public async Task<ConfiguracionGradoSeccion?> ObtenerConfiguracionEspecificaAsync(int periodoId, int gradoId, int seccionId)
         {

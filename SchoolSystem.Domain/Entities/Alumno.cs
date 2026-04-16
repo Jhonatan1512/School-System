@@ -16,7 +16,7 @@ namespace SchoolSystem.Domain.Entities
         public DateTime FechaNacimiento { get; set; }
         public string Sexo { get; set; } = string.Empty;
         public AlumnoEnum Estado { get; set; } = AlumnoEnum.Activo;
-        public string UsuarioId { get; set; }
+        public string UsuarioId { get; set; } = string.Empty.ToString();
         public ICollection<Matricula> Matriculas { get; set; } = new List<Matricula>();
 
     }

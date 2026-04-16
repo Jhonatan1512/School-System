@@ -151,7 +151,7 @@ namespace School_System.Controllers
             string emailNuevo = $"{char.ToLower(inicial1)}{char.ToLower(inicial2)}{alumnoDto.Dni}@ejemplo.edu.pe";
             var passwordNueva = $"{char.ToUpper(inicial1)}{char.ToLower(inicial2)}{alumnoDto.Dni}*";
 
-            var usuario = await _userManager.FindByIdAsync(alumnoExiste.UsuarioId);
+            var usuario = await _userManager.FindByIdAsync(alumnoExiste!.UsuarioId);
 
             if (usuario != null)
             {
@@ -202,7 +202,7 @@ namespace School_System.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
 
             var resultado = await _userManager.ResetPasswordAsync(usuario, token, adminResetPassword.NuevaPassword);
-            if (resultado == null) return BadRequest(resultado.Errors);
+            if (resultado == null) return BadRequest(resultado!.Errors);
 
             return Ok(new
             {
@@ -269,7 +269,7 @@ namespace School_System.Controllers
         {
             try
             {
-                var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                var usuarioId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value!;
                 var alumno = await _alumnoRespository.ObtenerPorUsuarioAsync(usuarioId);
                 if (alumno == null) return Unauthorized("Perfil de Alumno no encontrado");
 
@@ -311,6 +311,23 @@ namespace School_System.Controllers
                     return Ok(detalle);
                 }
 
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("alumnoId/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateEstado(int id, ActualizarEstadoDto dto)
+        {
+            try
+            {
+                var alumnoExiste = await _alumnoRespository.GetById(id);
+                if (alumnoExiste == null) return NotFound("Alumno no encontrado");
+
+                await _alumnoService.ActualizarEstadoAsync(id, dto);
+                return Ok(new { mensaje = "Estado del alumno actualizado"});
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

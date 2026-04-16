@@ -15,6 +15,6 @@ namespace SchoolSystem.Application.DTOs
         public string Dni {  get; set; } = string.Empty ;
         public string Correo {  get; set; } = string.Empty ;
         public string Aula {  get; set; } = string.Empty ;
-        public string Estado {  get; set; } = string.Empty;
+        public string Estado {  get; set; } = string.Empty; 
     }
 }

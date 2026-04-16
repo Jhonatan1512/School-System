@@ -21,7 +21,8 @@ namespace School_System.Controllers
 
         //POST :api/seccion
         [HttpPost]
-        public async Task<IActionResult> AgregarSeccion([FromBody] Seccion seccion)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> AgregarSeccion([FromBody] Seccion seccion) 
         {
             if (seccion.Nombre.IsNullOrEmpty())
             {
@@ -38,6 +39,7 @@ namespace School_System.Controllers
 
         //GET :api/seccion
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObetenerTodos()
         {
             var secciones = await _seccionRepository.ObtenerTodosAsync();
@@ -46,6 +48,7 @@ namespace School_System.Controllers
 
         //GET :a8pi/seccion/id
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPord(int id)
         {
             var resultado = await _seccionRepository.ObtenerPorIdAsync(id);
@@ -55,6 +58,7 @@ namespace School_System.Controllers
 
         //PUT :api/seccion/id
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActualizarDatos(int id,[FromBody] SecciónDto seccionDto)
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
@@ -74,6 +78,24 @@ namespace School_System.Controllers
             }
 
             return NotFound(new { mensaje = "Sección no Encontrada" });            
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var seccionExiste = await _seccionRepository.ObtenerPorIdAsync(id);
+                if (seccionExiste is null) return NotFound();
+
+                await _seccionRepository.EliminarSeccionAsync(id);
+                return NoContent();
+
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }
