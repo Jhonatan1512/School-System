@@ -8,11 +8,13 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.Interfaces
 {
-    public interface ICursoService
-    {
+    public interface ICursoService 
+    { 
         Task<Curso> CrearCursoCompetenciaAsync(CursoCompetenciaDto dto);
-        Task<IEnumerable<CursoCompetenciaDto>> ObtenerTodosAsync();
+        Task<PageResponseDto<CursoCompetenciaDto>> ObtenerTodosAsync(int pagina, int cantidad);
         Task<bool> ActualizarCursoCompetenciaAsync (int id, CursoCompetenciaDto dto);
         Task<IEnumerable<CompetenciasCursoDto?>> ObtenerPorIdAsync(int id);
+        Task ActualuzarAsync(int id, CursoActualizarDto dto);
+        Task<IEnumerable<CursoCompetenciaDto>> ObtenerPorGrado(int gradoId, int seccionId, int periodoId); 
     }
 }

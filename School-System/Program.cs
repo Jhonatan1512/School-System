@@ -41,6 +41,15 @@ builder.Services.AddScoped<IDetalleMatriculaRepository, DetalleMatriculaReposito
 builder.Services.AddScoped<IGradoSevice, GradoService>();   
 builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionGradoSeccionService>();
+builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
+builder.Services.AddScoped<ICompetenciaRepository, CompetenciaRepository>();
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+    });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));

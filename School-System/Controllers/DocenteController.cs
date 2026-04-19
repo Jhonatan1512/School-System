@@ -15,7 +15,7 @@ namespace School_System.Controllers
     [ApiController]
     [Authorize]
     public class DocenteController : ControllerBase
-    { 
+    {  
         private readonly IDocenteRepository _docenteRepository; 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDocenteService _docenteService; 
@@ -40,6 +40,7 @@ namespace School_System.Controllers
 
         //POST :api/docente
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AgregarDocente([FromBody] DocenteDto docenteDto)
         {
             var apellidosPartes = docenteDto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -96,6 +97,7 @@ namespace School_System.Controllers
 
         //GET :api/docente
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> obtenerTodos()
         {
             var docentes = await _docenteService.GetAllsync();
@@ -104,6 +106,7 @@ namespace School_System.Controllers
 
         //GET :api:docente
         [HttpGet("dni/{dni}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPorDni(string dni)
         {
             var docente = await _docenteService.GetByDniAsync(dni);
@@ -117,6 +120,7 @@ namespace School_System.Controllers
 
         //PATCH :api/docente/dni
         [HttpPatch("{dni}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ResetPasword(string dni, [FromBody] AdminResetPassword adminResetPassword)
         {
             var docente = await _docenteRepository.ObtenerPorDniAsync(dni);
@@ -128,7 +132,7 @@ namespace School_System.Controllers
             var token = await _userManager.GeneratePasswordResetTokenAsync(usuario);
 
             var resultado = await _userManager.ResetPasswordAsync(usuario, token, adminResetPassword.NuevaPassword);
-            if (resultado == null) return BadRequest(resultado.Errors);
+            if (resultado == null) return BadRequest(resultado!.Errors);
 
             return Ok(new
             {
@@ -139,7 +143,7 @@ namespace School_System.Controllers
 
         //PUT :api/doncente/password
         [HttpPut("password")]
-        [Authorize]
+        [Authorize(Roles = "Docente")]
         public async Task<IActionResult> ResetPasswordDocente([FromBody] UserResetPasswordDto userResetPassword)
         {
             var usuarioLogueado = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -167,10 +171,11 @@ namespace School_System.Controllers
         }
 
         //PUT :api/docente/dni
-        [HttpPut("{dni}")]
-        public async Task<IActionResult> ModificarDocente(string dni, [FromBody] DocenteDto dto)
+        [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ModificarDocente(int id, [FromBody] DocenteDto dto)
         {
-            var docente = await _docenteRepository.ObtenerPorDniAsync(dni);
+            var docente = await _docenteRepository.ObtenerPorId(id);
             if (docente == null) return NotFound(new { mensaje = "Docente no encontrado" });
 
             var partesApellidos = dto.Apellidos.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -194,8 +199,7 @@ namespace School_System.Controllers
                 var resultadoPassword = await _userManager.ResetPasswordAsync(usuario, token, passwordNueva);
 
                 if (!resultadoPassword.Succeeded) return BadRequest(resultadoPassword.Errors);
-            }
-            ;
+            };
 
             docente.Nombres = dto.Nombres;
             docente.Apellidos = dto.Apellidos;
@@ -218,6 +222,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("dashboard")]
+        [Authorize(Roles = "Docente")]
         public async Task<IActionResult> ObtenerMiDashboard()
         {
             try
@@ -248,6 +253,7 @@ namespace School_System.Controllers
         }
 
         [HttpPost("notas")]
+        [Authorize(Roles = "Docente")]
         public async Task<IActionResult> LlenarNotas(int docenteId, [FromBody] List<CalificacionCreateDto> dto)
         {
             try
@@ -274,6 +280,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("curso/{cursoId}/seccion/{seccionId}/detalle")]
+        [Authorize(Roles = "Docente")]
         public async Task<IActionResult> ObtenerDetallesCurso(int cursoId, int seccionId)
         {
             try
@@ -293,6 +300,20 @@ namespace School_System.Controllers
                 return Ok(detalleCurso);
 
             }catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch("docenteId/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> ModificarEstado(int id, ActualizarEstadoDocenteDto dto)
+        {
+            try
+            {
+                await _docenteService.ActualizarEstadoAsync(id, dto);
+                return Ok(new {mensaje = "Estado del docente actualizado"});
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

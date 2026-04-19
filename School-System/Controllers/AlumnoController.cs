@@ -22,7 +22,7 @@ namespace School_System.Controllers
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IGradoRepository _gradoRepository;
         private readonly ISeccionRepository _seccionRepository;
-        public AlumnoController(
+        public AlumnoController( 
             IAlumnoRespository alumnoRespository, 
             UserManager<ApplicationUser> userManager, 
             IAlumnoService alumnoService,

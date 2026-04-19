@@ -13,13 +13,37 @@ namespace SchoolSystem.Application.Services
     public class AsignacionDocenteService : IAsignacionDocenteService
     {
         private readonly IAsignacionDocenteRepository _asignacionDocenteRepository;
-        public AsignacionDocenteService(IAsignacionDocenteRepository asignacionDocenteRepository)
+        private readonly IDocenteRepository _docenteRepository;
+
+        public AsignacionDocenteService(IAsignacionDocenteRepository asignacionDocenteRepository, IDocenteRepository docenteRepository)
         {
-            _asignacionDocenteRepository = asignacionDocenteRepository;  
+            _asignacionDocenteRepository = asignacionDocenteRepository;
+            _docenteRepository = docenteRepository;
+        }
+
+        public async Task ActualizarAsignacionAsync(int id, AsignacionDocenteDto dto)
+        {
+            var asiganacionExiste = await _asignacionDocenteRepository.ObtenerPorIdAsync(id);
+            if(asiganacionExiste == null)
+            {
+                throw new Exception("Registro de asignación no encontrado");
+            }
+
+            bool existe = await _asignacionDocenteRepository.ExisteAsignacionAsync(
+                    dto.DocenteId, dto.DocenteId, dto.SeccionId, dto.PeriodoAcademicoId);
+            if (existe) throw new Exception("El docente ya se encuentra asignado al curso en esta sección en el periodo actual");
+
+            asiganacionExiste.CursoId = dto.CursoId;
+            asiganacionExiste.GradoId = dto.GradoId;
+            asiganacionExiste.SeccionId = dto.SeccionId;
+            asiganacionExiste.PeriodoAcademicoId = dto.PeriodoAcademicoId;
+
+            await _asignacionDocenteRepository.ActualizarAsignacionAsync(id, asiganacionExiste);
+
         }
 
         public async Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto)
-        {
+        { 
             var resultado = new List<AsignacionDocenteDto>();
 
             foreach (var cursoId in dto.CursosIds)
@@ -27,6 +51,9 @@ namespace SchoolSystem.Application.Services
                 bool existe = await _asignacionDocenteRepository.ExisteAsignacionAsync(
                     dto.DocenteId, cursoId, dto.SeccionId, dto.PeriodoAcademicoId);
                 if (existe) throw new Exception($"El docente ya se encuentra asignado al curso {cursoId} en esta sección en el periodo actual");
+
+                var docenteActivo = await _docenteRepository.ObtenerActivoAsync(dto.DocenteId);
+                if (docenteActivo == null) throw new Exception("El docente no esta activo");
 
                 var nuevaAsignacion = new AsignacionDocente
                 {
@@ -58,11 +85,12 @@ namespace SchoolSystem.Application.Services
 
             return asignacion.Select(a => new GetAsignación
             {
-                NombreDocente = $"{a.Docente.Nombres} {a.Docente.Apellidos}",
+                Id = a.Id,
+                NombreDocente = $"{a.Docente!.Nombres} {a.Docente.Apellidos}",
                 Dni = a.Docente.Dni,
-                NombreCurso = a.Curso.Nombre,
-                NombreAula = $"{a.Grado.Nombre}{a.Seccion.Nombre}",
-                NombrePeriodo = a.PeriodoAcademico.Nombre,
+                NombreCurso = a.Curso!.Nombre,
+                NombreAula = $"{a.Grado!.Nombre}{a.Seccion!.Nombre}",
+                NombrePeriodo = a.PeriodoAcademico!.Nombre,
                 Estado = a.Docente.EsActivo.ToString()
             });
         }

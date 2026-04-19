@@ -13,6 +13,7 @@ namespace SchoolSystem.Application.Interfaces
         Task<IEnumerable<DocenteDto>> GetAllsync();
         Task<List<DashboardDocenteDto>> ObtenerMiDashboardAsync(string usuarioId);
         Task<DetalleCursoDto> ObtenerDetalleCursoAsync(int docenteId, int cursoId, int seccionId, int periodoId);
+        Task ActualizarEstadoAsync(int id, ActualizarEstadoDocenteDto dto);
     }
 }
  

@@ -21,7 +21,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository; 
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
          
-        public AlumnoService(  
+        public AlumnoService(   
             ApplicationDbContext context,
             IAlumnoRespository alumnoRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,  
@@ -76,7 +76,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Skip((pagina - 1) * cantidad)
                 .Take(cantidad)
                 .ToListAsync();
-
+             
             var totalPaginas = (int)Math.Ceiling(totalRegistro / (double)cantidad);
 
             return new PageResponseDto<AlumnoDto>
@@ -267,7 +267,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             } else
             {
                 throw new Exception("El estado enviado no es válido");
-            }
+            } 
 
             await _alumnoRepository.ActualizarAlumnoAsync(alumnoExiste);            
         }

@@ -17,12 +17,12 @@ namespace SchoolSystem.Infrastructure.Respositories
         public DocenteRepository(ApplicationDbContext context)
         {
             _context = context;
-        }
+        } 
 
         public async Task ActualizarDoncenteAsync(Docente docente)
         {
             _context.Docentes.Update(docente);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
         }
 
         public async Task<Docente> CrearDocenteAsync(Docente docente)
@@ -36,10 +36,20 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Docentes.FirstOrDefaultAsync(d => d.Dni == dni);
         }
+
+        public async Task<Docente?> ObtenerPorId(int id)
+        {
+            return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id);
+        }
          
         public async Task<Docente?> ObtenerPorUsuarioAsync(string usuarioId)
         {
             return await _context.Docentes.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId && u.EsActivo);
+        }
+
+        public async Task<Docente?> ObtenerActivoAsync(int id)
+        {
+            return await _context.Docentes.Where(d => d.Id == id && d.EsActivo).FirstOrDefaultAsync();
         }
     }
 }

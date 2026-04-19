@@ -11,6 +11,7 @@ namespace SchoolSystem.Application.Interfaces
     {
         Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto);
         Task<IEnumerable<GetAsignación>> obtenerDocentesAsignadosAsync();
+        Task ActualizarAsignacionAsync(int id, AsignacionDocenteDto dto);
     }
 }
  

@@ -19,11 +19,22 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context = context;
         }
 
-        public async Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto)
+        public async Task ActualizarAsignacionAsync(int id, AsignacionDocente asignacion)
         {
+            _context.AsignacionDocentes.Update(asignacion);
+            await _context.SaveChangesAsync(); 
+        }
+
+        public async Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto)
+        { 
              _context.AsignacionDocentes.Add(dto); 
             await _context.SaveChangesAsync();
             return dto; 
+        }
+
+        public async Task EliminarAsignacionAsync(int id)
+        {
+            await _context.AsignacionDocentes.Where(a =>  a.Id == id).ExecuteDeleteAsync();
         }
 
         public async Task<bool> ExisteAsignacionAsync(int docenteId, int cursoId, int seccionId, int periodoId)
@@ -39,7 +50,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                             .Include(a => a.Grado)
                             .Include(a => a.Seccion)
                             .Include(a => a.PeriodoAcademico)
-                            .Where(a => a.PeriodoAcademico.EstadoActivo)
+                            .Where(a => a.PeriodoAcademico!.EstadoActivo)
                             .ToListAsync();
         }
 
@@ -52,6 +63,11 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Include(a => a.Seccion)
                 .Where(a => a.DocenteId == docenteId && a.PeriodoAcademicoId == periodoId)
                 .ToListAsync();
+        }
+
+        public async Task<AsignacionDocente?> ObtenerPorIdAsync(int id)
+        {
+            return await _context.AsignacionDocentes.FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<List<AsignacionDocente>> ObtenerPorSeccionPeriodoAsync(int seccionId, int periodoId)

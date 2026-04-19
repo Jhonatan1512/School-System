@@ -17,10 +17,10 @@ namespace SchoolSystem.Application.Services
 
         public CursoService(ICursoRepository cursoRepository, IGradoRepository gradoRepository)
         {
-            _cursoRepository = cursoRepository;
+            _cursoRepository = cursoRepository; 
             _gradoRepository = gradoRepository;
-        } 
-
+        }  
+          
         public async Task<bool> ActualizarCursoCompetenciaAsync(int id, CursoCompetenciaDto dto)
         {
             var cursoExiste = await _cursoRepository.ObtenerPorIdAsync(id);
@@ -86,16 +86,29 @@ namespace SchoolSystem.Application.Services
             {
                 Id = c.Id,
                 NombreCompetencia = c.Nombre,
+                NombreCurso = c.Curso!.Nombre,
                 CursoId = curso.Id,
+                GradoId = curso.GradoId,
+                NombreGrado = curso.Grado!.Nombre,
             }).ToList();
             return cursoDto;
         }
 
-        public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerTodosAsync()
+        public async Task<PageResponseDto<CursoCompetenciaDto>> ObtenerTodosAsync(int pagina, int cantidad)
         {
             var cursos = await _cursoRepository.ObtenerCursosAsync();
 
-            var cursosDto = cursos.Select(curso => new CursoCompetenciaDto
+            var totalRegistros = cursos.Count();
+
+            var items = cursos
+                .OrderBy(c => c.GradoId)
+                .Skip((pagina - 1) * cantidad)
+                .Take(cantidad)
+                .ToList();
+
+            var totalPagina = (int)Math.Ceiling(totalRegistros / (double)cantidad);
+
+            var cursosDto = items.Select(curso => new CursoCompetenciaDto
             {
                 Id = curso.Id, 
                 Nombre = curso.Nombre,
@@ -103,7 +116,52 @@ namespace SchoolSystem.Application.Services
                 GradoId = curso.GradoId,
                 Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
                 {
-                    //Id = comp.Id,
+                    Nombre = comp.Nombre,
+                }).ToList()
+            }).ToList();
+
+            return new PageResponseDto<CursoCompetenciaDto>
+            {
+                Items = cursosDto,
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                TotalPaginas = totalPagina
+            };
+        }
+
+        public async Task ActualuzarAsync(int id, CursoActualizarDto dto)
+        {
+            var cursoExiste = await _cursoRepository.ObtenerPorIdAsync(id);
+            if(cursoExiste is null)
+            {
+                throw new Exception("El curso no existe");
+            }
+
+            cursoExiste.Nombre = dto.Nombre;
+            await _cursoRepository.ActualizarCursoAsync(cursoExiste);
+        }
+
+        public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerPorGrado(int gradoId, int seccionId, int periodoId)
+        {
+            var gradoExiste = await _gradoRepository.ObtenerPorId(gradoId);
+            if(gradoExiste is null)
+            {
+                throw new Exception("El grado no existe");
+            }
+
+            var cursos = await _cursoRepository.ObtenerPorGrado(gradoId);
+
+            var cursosOcupado = await _cursoRepository.ObtenerPorGradoSeccionAsync(gradoId, seccionId, periodoId);
+
+            var cursosDto = cursos.Select(curso => new CursoCompetenciaDto
+            {
+                Id = curso.Id,
+                Nombre= curso.Nombre,
+                NombreAula = curso.Grado?.Nombre ?? "Sin Grado",
+                GradoId = curso.GradoId,
+                EstaOcupado = cursosOcupado.Contains(curso.Id),
+                Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
+                {
                     Nombre = comp.Nombre,
                 }).ToList()
             }).ToList();

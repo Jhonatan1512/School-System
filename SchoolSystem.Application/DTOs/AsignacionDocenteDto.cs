@@ -12,14 +12,14 @@ namespace SchoolSystem.Application.DTOs
         public int DocenteId { get; set; }
         public int CursoId { get; set; }
         public int SeccionId { get; set; }
-        public int GradoId { get; set; }
+        public int GradoId { get; set; } 
         public int PeriodoAcademicoId { get; set; }
 
     } 
     public class AsignacionDocenteCreateDto  
     {
         public int DocenteId { get; set; }
-        public List<int> CursosIds { get; set; }
+        public List<int> CursosIds { get; set; } = [];
         public int GradoId { get; set; }
         public int SeccionId { get; set; }
         public int PeriodoAcademicoId { get; set; }
@@ -27,6 +27,7 @@ namespace SchoolSystem.Application.DTOs
 
     public class GetAsignación
     {
+        public int Id { get; set; }
         public string NombreDocente { get; set; } = string.Empty;
         public string Dni {  get; set; } = string.Empty ;
         public string NombreCurso { get; set; } = string.Empty;

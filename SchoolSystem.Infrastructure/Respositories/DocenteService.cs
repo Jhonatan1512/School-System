@@ -20,7 +20,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly ICursoRepository _cursoRepository;
          
-        public DocenteService(
+        public DocenteService(  
             ApplicationDbContext context, 
             IMatriculaRepository matriculaRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,
@@ -41,19 +41,19 @@ namespace SchoolSystem.Infrastructure.Respositories
             var datos = from docente in _context.Docentes
                         join usuarios in _context.Users
                         on docente.UsuarioId equals usuarios.Id
-                        where docente.EsActivo == true
                         select new DocenteDto
                         {
                             Id = docente.Id,
                             Nombres = docente.Nombres,
                             Apellidos = docente.Apellidos,
                             Dni = docente.Dni,
-                            Email = usuarios.Email,
+                            Email = usuarios.Email!,
+                            EsActivo = docente.EsActivo,
                         };
             return await datos.ToListAsync();
         }
         
-        public async Task<DocenteDto> GetByDniAsync(string dni)
+        public async Task<DocenteDto?> GetByDniAsync(string dni)
         {
             var datos = from docente in _context.Docentes
                         join usuarios in _context.Users
@@ -65,7 +65,8 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Nombres = docente.Nombres,
                             Apellidos = docente.Apellidos,
                             Dni = docente.Dni,
-                            Email = usuarios.Email,
+                            Email = usuarios.Email!,
+                            EsActivo = docente.EsActivo
                         };
             return await datos.FirstOrDefaultAsync();
         }
@@ -172,6 +173,18 @@ namespace SchoolSystem.Infrastructure.Respositories
                 };
             }).ToList();
             return dashboard;                  
+        }
+
+        public async Task ActualizarEstadoAsync(int id, ActualizarEstadoDocenteDto dto)
+        {
+            var docenteExiste = await _docenteRepository.ObtenerPorId(id);
+            if (docenteExiste == null)
+            {
+                throw new Exception("El docente no existe");
+            }
+
+            docenteExiste.EsActivo = dto.Estado;
+            await _docenteRepository.ActualizarDoncenteAsync(docenteExiste);
         }
     }
 }

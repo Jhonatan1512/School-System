@@ -16,4 +16,10 @@ namespace SchoolSystem.Application.DTOs
         public string Email { get; set; } = string.Empty;
         public string UsuarioId { get; set; } = string.Empty; 
     }
+
+    public class ActualizarEstadoDocenteDto
+    {
+        public int Id { get; set; }
+        public bool Estado { get; set; }
+    }
 }

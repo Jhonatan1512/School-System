@@ -12,6 +12,7 @@ namespace SchoolSystem.Application.DTOs
         public string Nombre { get; set; } = string.Empty;
         public string NombreAula {  get; set; } = string.Empty;
         public int GradoId { get; set; }
+        public bool EstaOcupado { get; set; }
         public List<CrearCompetenciaDto> Competencias { get; set; } = new List<CrearCompetenciaDto>();
     }
      
@@ -19,12 +20,16 @@ namespace SchoolSystem.Application.DTOs
     {
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
-    }
+        public int CursoId { get; set; }
+    } 
 
     public class CompetenciasCursoDto
     {
         public int Id { get; set; }
         public string NombreCompetencia {  get; set; } = string.Empty;
+        public string NombreCurso {  get; set; } = string.Empty;
         public int CursoId { get; set; }
+        public int GradoId { get; set; }
+        public string NombreGrado {  get; set; } = string.Empty;
     }
 }

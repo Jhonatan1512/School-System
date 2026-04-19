@@ -231,6 +231,43 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "ActualizarAsignacion",
+    "RelativePath": "api/AsignacionDocente/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.AsignacionDocenteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "Eliminar",
+    "RelativePath": "api/AsignacionDocente/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "School_System.Controllers.AuthController",
     "Method": "Login",
     "RelativePath": "api/Auth/login",
@@ -257,6 +294,59 @@
       {
         "Name": "modelo",
         "Type": "SchoolSystem.Application.DTOs.RegistrarUsuarioDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CompetenciaController",
+    "Method": "CrearCompetencia",
+    "RelativePath": "api/Competencia",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CrearCompetenciaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CompetenciaController",
+    "Method": "Actualizar",
+    "RelativePath": "api/Competencia/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CrearCompetenciaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CompetenciaController",
+    "Method": "Eliminar",
+    "RelativePath": "api/Competencia/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
@@ -400,16 +490,6 @@
   },
   {
     "ContainingType": "School_System.Controllers.CursoController",
-    "Method": "ObtenerCursos",
-    "RelativePath": "api/Curso",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "School_System.Controllers.CursoController",
     "Method": "ActualizarCurso",
     "RelativePath": "api/Curso/{id}",
     "HttpMethod": "PUT",
@@ -441,6 +521,69 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CursoController",
+    "Method": "ActualizarCurso",
+    "RelativePath": "api/Curso/cursoId/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CursoActualizarDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CursoController",
+    "Method": "GetByGrado",
+    "RelativePath": "api/Curso/gradoId/{gradoId}/seccionId/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CursoController",
+    "Method": "ObtenerCursos",
+    "RelativePath": "api/Curso/lista-cursos",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pagina",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -495,14 +638,14 @@
   {
     "ContainingType": "School_System.Controllers.DocenteController",
     "Method": "ModificarDocente",
-    "RelativePath": "api/Docente/{dni}",
+    "RelativePath": "api/Docente/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dni",
-        "Type": "System.String",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       },
       {
@@ -555,6 +698,27 @@
       {
         "Name": "dni",
         "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "ModificarEstado",
+    "RelativePath": "api/Docente/docenteId/{id}",
+    "HttpMethod": "PATCH",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarEstadoDocenteDto",
         "IsRequired": true
       }
     ],

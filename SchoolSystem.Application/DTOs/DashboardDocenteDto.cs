@@ -16,7 +16,7 @@ namespace SchoolSystem.Application.DTOs
         public List<CompetenciaDto> Competencias { get; set; } = new List<CompetenciaDto>();
         public List<AlumnoBasicoDto> AlumnosMatriculados = new List<AlumnoBasicoDto>();
     }
-
+     
     public class CompetenciaDto  
     {
         public int Id { get; set; }

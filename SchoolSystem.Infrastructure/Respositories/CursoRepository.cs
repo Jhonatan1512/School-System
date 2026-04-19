@@ -17,12 +17,12 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
-
+         
         public async Task ActualizarCursoAsync(Curso curso)
         {
-            _context.Cursos.Update(curso);
+            _context.Cursos.Update(curso); 
             await _context.SaveChangesAsync();
-        }
+        } 
 
         public async Task AgregarCursoAsync(Curso curso)
         {
@@ -39,10 +39,24 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<List<Curso>> ObtenerPorGrado(int gradoId)
         {
-            return await _context.Cursos.Where(c => c.GradoId == gradoId).ToListAsync();
+            return await _context.Cursos
+                .Include(c => c.Competencias)
+                .Include(c => c.Grado)
+                .Where(c => c.GradoId == gradoId).ToListAsync();
         }
 
-        public async Task<Curso?> ObtenerPorIdAsync(int id)
+        public async Task<List<int>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId, int periodoId)
+        {
+            return await _context.AsignacionDocentes
+               .Where(a => a.GradoId == gradoId &&
+                           a.SeccionId == seccionId &&
+                           a.PeriodoAcademicoId == periodoId &&
+                           a.DocenteId > 0)
+               .Select(a => a.CursoId)
+               .ToListAsync();
+        }
+
+        public async Task<Curso?> ObtenerPorIdAsync(int id) 
         {
             return await _context.Cursos.Include(c => c.Competencias)
                 .Include(c => c.Grado)

@@ -13,14 +13,16 @@ namespace School_System.Controllers
 
     public class CursoController : ControllerBase
     {
-        private readonly ICursoRepository _cursoRepository;
+        private readonly ICursoRepository _cursoRepository; 
         private readonly IGradoRepository _gradoRepository;
         private readonly ICursoService _cursoService;
-        public CursoController(ICursoRepository cursoRepository, IGradoRepository gradoRepository, ICursoService cursoService)
+        private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        public CursoController(ICursoRepository cursoRepository, IGradoRepository gradoRepository, ICursoService cursoService, IPeriodoAcademicoRepository periodoAcademicoRepository)
         {
             _cursoRepository = cursoRepository;
             _gradoRepository = gradoRepository;
             _cursoService = cursoService;
+            _periodoAcademicoRepository = periodoAcademicoRepository;
         }
 
         //POST :api/curso
@@ -45,10 +47,13 @@ namespace School_System.Controllers
         }
 
         //GET :api/curso
-        [HttpGet]
-        public async Task<IActionResult> ObtenerCursos()
+        [HttpGet("lista-cursos")]
+        public async Task<IActionResult> ObtenerCursos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
         {
-            var cursos = await _cursoService.ObtenerTodosAsync();
+            if (pagina < 1) pagina = 1;
+            if (cantidad > 20) cantidad = 20;
+
+            var cursos = await _cursoService.ObtenerTodosAsync(pagina, cantidad);
             return Ok(cursos);
         }
 
@@ -77,6 +82,35 @@ namespace School_System.Controllers
             {
                 var resultado = await _cursoService.ObtenerPorIdAsync(id);
                 return Ok(new { mensaje = "Competencias del Curso", data = resultado });
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("cursoId/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> ActualizarCurso(int id, CursoActualizarDto dto)
+        {
+            try
+            {
+                await _cursoService.ActualuzarAsync(id, dto);
+                return Ok(new { mensaje = "Curso actualizado" });
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("gradoId/{gradoId:int}/seccionId/{seccionId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetByGrado(int gradoId, int seccionId)
+        {
+            var periodActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+            try
+            {
+                var result = await _cursoService.ObtenerPorGrado(gradoId, seccionId, periodActivo!.Id); 
+                return Ok(result);
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
