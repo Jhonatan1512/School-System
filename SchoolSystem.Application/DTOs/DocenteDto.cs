@@ -11,13 +11,15 @@ namespace SchoolSystem.Application.DTOs
         public int Id { get; set; }
         public string Nombres { get; set; } = string.Empty;
         public string Apellidos { get; set; } = string.Empty; 
-        public string Dni {  get; set; } = string.Empty;
+        public string Dni {  get; set; } = string.Empty; 
+        public int HorasAsignadas { get; set; }
+        public int HorasRestantes { get; set; }
         public bool EsActivo { get; set; } = true;
         public string Email { get; set; } = string.Empty;
         public string UsuarioId { get; set; } = string.Empty; 
     }
 
-    public class ActualizarEstadoDocenteDto
+    public class ActualizarEstadoDocenteDto 
     {
         public int Id { get; set; }
         public bool Estado { get; set; }

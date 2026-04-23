@@ -23,7 +23,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context.Cursos.Update(curso); 
             await _context.SaveChangesAsync();
         } 
-
+         
         public async Task AgregarCursoAsync(Curso curso)
         {
             await _context.Cursos.AddAsync(curso);
@@ -45,15 +45,20 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Where(c => c.GradoId == gradoId).ToListAsync();
         }
 
-        public async Task<List<int>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId, int periodoId)
+        public async Task<Dictionary<int, int>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId, int periodoId)
         {
             return await _context.AsignacionDocentes
-               .Where(a => a.GradoId == gradoId &&
-                           a.SeccionId == seccionId &&
-                           a.PeriodoAcademicoId == periodoId &&
-                           a.DocenteId > 0)
-               .Select(a => a.CursoId)
-               .ToListAsync();
+                .Where(a => a.GradoId == gradoId &&
+                            a.SeccionId == seccionId &&
+                            a.PeriodoAcademicoId == periodoId &&
+                            a.DocenteId > 0)
+                .GroupBy(a => a.CursoId)
+                .Select(g => new
+                {
+                    CursoId = g.Key,
+                    TotalHoras = g.Sum(c => c.HorasAsignadas)
+                })
+                .ToDictionaryAsync(h => h.CursoId, h => h.TotalHoras);
         }
 
         public async Task<Curso?> ObtenerPorIdAsync(int id) 

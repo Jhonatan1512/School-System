@@ -23,7 +23,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             return _context.SaveChangesAsync();
         }
          
-        public async Task AgregaratriculaAsync(Matricula matricula)
+        public async Task AgregaratriculaAsync(Matricula matricula) 
         {
             await _context.Matriculas.AddAsync(matricula);
             await _context.SaveChangesAsync(); 
@@ -57,9 +57,11 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task<Matricula?> ObtenerPorAlumnoPeriodoAsync(int alumnoId, int periodoId)
         {
             return await _context.Matriculas
+                .Include(m => m.Grado)
+                .Include(m => m.Seccion)
                 .Include(m => m.DetallesMatriculas)
-                .ThenInclude(d => d.Curso)
-                .ThenInclude(c => c!.Competencias)
+                    .ThenInclude(d => d.Curso)
+                    .ThenInclude(c => c!.Competencias)
                 .FirstOrDefaultAsync(m => m.AlumnoId == alumnoId && m.PeriodoAcademicoId == periodoId);
         }
 

@@ -12,7 +12,19 @@ namespace SchoolSystem.Domain.Entities
         public string Nombre { get; set; } = string.Empty;
         public int GradoId { get; set; }
         public Grado? Grado { get; set; }
-        public ICollection<Competencia> Competencias { get; set; } = new List<Competencia>(); 
-    }  
+        public int HorasSemanales { get; set; } 
+        public int HorasMaximasPorDia { get; set; } 
+        public int DuracionBloque { get; set; } 
+
+        public PrioridadCurso Prioridad { get; set; }
+        public ICollection<Competencia> Competencias { get; set; } = new List<Competencia>();  
+    }
+     
+    public enum PrioridadCurso
+    {
+        Alta = 1,   
+        Media = 2,  
+        Baja = 3    
+    }
 }
  

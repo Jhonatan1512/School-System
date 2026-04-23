@@ -380,10 +380,32 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/AsignacionDocente/lista-paginada": {
       "get": {
         "tags": [
           "AsignacionDocente"
+        ],
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "cantidad",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -440,6 +462,38 @@
         "parameters": [
           {
             "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/AsignacionDocente/gradoId/{gradoId}/seccionId/{seccionId}": {
+      "get": {
+        "tags": [
+          "AsignacionDocente"
+        ],
+        "parameters": [
+          {
+            "name": "gradoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "seccionId",
             "in": "path",
             "required": true,
             "schema": {
@@ -1015,6 +1069,29 @@
         }
       }
     },
+    "/api/Curso/gradoId/{gradoId}": {
+      "get": {
+        "tags": [
+          "Curso"
+        ],
+        "parameters": [
+          {
+            "name": "gradoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Docente": {
       "post": {
         "tags": [
@@ -1044,10 +1121,32 @@
             "description": "OK"
           }
         }
-      },
+      }
+    },
+    "/api/Docente/lista-docentes": {
       "get": {
         "tags": [
           "Docente"
+        ],
+        "parameters": [
+          {
+            "name": "pagina",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "cantidad",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -1328,6 +1427,18 @@
         }
       }
     },
+    "/api/Docente/perfil-docente": {
+      "get": {
+        "tags": [
+          "Docente"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Grado/{id}": {
       "get": {
         "tags": [
@@ -1445,6 +1556,50 @@
       "get": {
         "tags": [
           "Grado"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Horarios": {
+      "post": {
+        "tags": [
+          "Horarios"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Horarios/ver/{gradoId}/{seccionId}": {
+      "get": {
+        "tags": [
+          "Horarios"
+        ],
+        "parameters": [
+          {
+            "name": "gradoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "seccionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
         ],
         "responses": {
           "200": {
@@ -2124,8 +2279,7 @@
           "cursosIds": {
             "type": "array",
             "items": {
-              "type": "integer",
-              "format": "int32"
+              "$ref": "#/components/schemas/CursoAsignadoDto"
             },
             "nullable": true
           },
@@ -2168,6 +2322,10 @@
             "format": "int32"
           },
           "periodoAcademicoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasAsignadas": {
             "type": "integer",
             "format": "int32"
           }
@@ -2357,6 +2515,21 @@
           "grado": {
             "$ref": "#/components/schemas/Grado"
           },
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prioridad": {
+            "$ref": "#/components/schemas/PrioridadCurso"
+          },
           "competencias": {
             "type": "array",
             "items": {
@@ -2381,6 +2554,20 @@
         },
         "additionalProperties": false
       },
+      "CursoAsignadoDto": {
+        "type": "object",
+        "properties": {
+          "cursoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasAsignadas": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "CursoCompetenciaDto": {
         "type": "object",
         "properties": {
@@ -2400,8 +2587,25 @@
             "type": "integer",
             "format": "int32"
           },
-          "estaOcupado": {
-            "type": "boolean"
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasRestantes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prioridad": {
+            "type": "integer",
+            "format": "int32"
           },
           "competencias": {
             "type": "array",
@@ -2431,6 +2635,14 @@
           "dni": {
             "type": "string",
             "nullable": true
+          },
+          "horasAsignadas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasRestantes": {
+            "type": "integer",
+            "format": "int32"
           },
           "esActivo": {
             "type": "boolean"
@@ -2569,6 +2781,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "PrioridadCurso": {
+        "enum": [
+          1,
+          2,
+          3
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "RegistrarUsuarioDto": {
         "type": "object",

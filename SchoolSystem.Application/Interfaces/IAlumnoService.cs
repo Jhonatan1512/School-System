@@ -14,8 +14,8 @@ namespace SchoolSystem.Application.Interfaces
         Task<AlumnoDto?> GetByIdAsync(int id);
         Task<AlumnoDto?> GetByDniAsync(string dni);
         Task<List<DashboardAlumnoDto>> ObtenerMisCursos(string usuarioId);
-        Task<DetalleCursoAlumnoDto> ObtenerDetalleCursoAsync(int lumnoId, int cursoId, int periodoId); 
+        Task<DetalleCursoAlumnoDto> ObtenerDetalleCursoAsync(int alumnoId, int cursoId, int periodoId); 
         Task<IEnumerable<AlumnoDto>> AlumnosSeccionAsync(int gradoId, int seccionId, int periodoId);
-        Task ActualizarEstadoAsync(int id, ActualizarEstadoDto dto);
+        Task ActualizarEstadoAsync(int id, ActualizarEstadoDto dto); 
     }
 }

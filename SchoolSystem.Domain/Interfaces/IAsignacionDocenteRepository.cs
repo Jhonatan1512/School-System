@@ -17,5 +17,9 @@ namespace SchoolSystem.Domain.Interfaces
         Task ActualizarAsignacionAsync(int id, AsignacionDocente asignacion);
         Task<AsignacionDocente?> ObtenerPorIdAsync(int id);
         Task EliminarAsignacionAsync(int id);
+        Task<IEnumerable<AsignacionDocente>> ObtenerPorGradoSeccion(int gradoId, int seccionId);
+        Task<IEnumerable<AsignacionDocente>> ObtenerPorPeriodoAsync(int periodoId);
+        Task<int> ObtenerHorasCubiertasCursoAsyn(int cursoId, int gradoId, int seccionId, int periodoId, int excluirId);
+        Task<int> ObtenerHorasTotalesDocenteAsync(int docenteId, int periodoId, int excluirId);
     }
 } 

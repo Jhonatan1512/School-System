@@ -19,11 +19,11 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context = context;
         } 
 
-        public async Task ActualizarDoncenteAsync(Docente docente)
+        public async Task ActualizarDoncenteAsync(Docente docente) 
         {
             _context.Docentes.Update(docente);
             await _context.SaveChangesAsync(); 
-        }
+        } 
 
         public async Task<Docente> CrearDocenteAsync(Docente docente)
         {
@@ -41,7 +41,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Docentes.FirstOrDefaultAsync(d => d.Id == id);
         }
-         
+        
         public async Task<Docente?> ObtenerPorUsuarioAsync(string usuarioId)
         {
             return await _context.Docentes.FirstOrDefaultAsync(u => u.UsuarioId == usuarioId && u.EsActivo);
@@ -51,5 +51,12 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Docentes.Where(d => d.Id == id && d.EsActivo).FirstOrDefaultAsync();
         }
+
+        public async Task<Docente?> PerfilDocenteAsync(string usuarioId)
+        {
+            return await _context.Docentes.FirstOrDefaultAsync(d => d.UsuarioId == usuarioId);
+        }
+
+        
     }
 }

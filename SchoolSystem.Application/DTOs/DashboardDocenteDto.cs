@@ -35,6 +35,7 @@ namespace SchoolSystem.Application.DTOs
     {
         public int competenciaId { get; set; }
         public string Nota { get; set; } = string.Empty;
+        public int TrimestreId { get; set; }
     }
     public class DetalleCursoDto
     {

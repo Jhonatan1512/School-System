@@ -9,11 +9,13 @@ namespace SchoolSystem.Domain.Interfaces
 {
     public interface IDocenteRepository
     {
-        Task<Docente> CrearDocenteAsync(Docente docente);
+        Task<Docente> CrearDocenteAsync(Docente docente); 
         Task<Docente?> ObtenerPorDniAsync(string dni);
         Task ActualizarDoncenteAsync(Docente docente); 
         Task<Docente?> ObtenerPorUsuarioAsync(string usuarioId);
         Task<Docente?> ObtenerPorId(int id);
-        Task<Docente?> ObtenerActivoAsync(int id);
+        Task<Docente?> ObtenerActivoAsync(int id); 
+        Task<Docente?> PerfilDocenteAsync(string usuarioId);
+        
     }
 }

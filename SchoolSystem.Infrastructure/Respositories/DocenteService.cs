@@ -6,6 +6,7 @@ using SchoolSystem.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -19,14 +20,14 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly ICursoRepository _cursoRepository;
-         
-        public DocenteService(  
+           
+        public DocenteService(   
             ApplicationDbContext context, 
             IMatriculaRepository matriculaRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,
             IAsignacionDocenteRepository asignacionDocenteRepository,
-            IDocenteRepository docenteRepository,
-            ICursoRepository cursoRepository) 
+            IDocenteRepository docenteRepository, 
+            ICursoRepository cursoRepository)  
         {
             _context = context;
             _matriculaRepository = matriculaRepository;
@@ -36,11 +37,16 @@ namespace SchoolSystem.Infrastructure.Respositories
             _cursoRepository = cursoRepository;
         }
 
-        public async Task<IEnumerable<DocenteDto>> GetAllsync()
+        public async Task<PageResponseDto<DocenteDto>> GetAllsync(int pagina, int cantidad)
         {
             var datos = from docente in _context.Docentes
                         join usuarios in _context.Users
                         on docente.UsuarioId equals usuarios.Id
+                        
+                        let horasOcupadas = _context.AsignacionDocentes
+                            .Where(a => a.DocenteId == docente.Id && a.PeriodoAcademico!.EstadoActivo)
+                            .Sum(a => (int?)a.HorasAsignadas) ?? 0
+
                         select new DocenteDto
                         {
                             Id = docente.Id,
@@ -48,9 +54,28 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Apellidos = docente.Apellidos,
                             Dni = docente.Dni,
                             Email = usuarios.Email!,
+                            HorasAsignadas = horasOcupadas,
+                            HorasRestantes = docente.MaxHorasLectivas - horasOcupadas,
                             EsActivo = docente.EsActivo,
                         };
-            return await datos.ToListAsync();
+
+            var totalRegistros = await datos.CountAsync();
+
+            var items = await datos
+                        .OrderBy(d => d.Apellidos)
+                        .Skip((pagina - 1) * cantidad)
+                        .Take(cantidad)
+                        .ToListAsync();
+
+            var totalPaginas = (int)Math.Ceiling(totalRegistros / (double)cantidad);
+
+            return new PageResponseDto<DocenteDto>
+            {
+                Items = items,
+                TotalRegistros = totalRegistros,
+                PaginaActual = pagina,
+                TotalPaginas = totalPaginas
+            };
         }
         
         public async Task<DocenteDto?> GetByDniAsync(string dni)
@@ -58,7 +83,12 @@ namespace SchoolSystem.Infrastructure.Respositories
             var datos = from docente in _context.Docentes
                         join usuarios in _context.Users
                         on docente.UsuarioId equals usuarios.Id
-                        where docente.Dni == dni 
+                        where docente.Dni == dni
+
+                        let horasOcupadas = _context.AsignacionDocentes
+                            .Where(a => a.DocenteId == docente.Id && a.PeriodoAcademico!.EstadoActivo)
+                            .Sum(a => (int?)a.HorasAsignadas) ?? 0
+
                         select new DocenteDto
                         {
                             Id = docente.Id,
@@ -66,6 +96,8 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Apellidos = docente.Apellidos,
                             Dni = docente.Dni,
                             Email = usuarios.Email!,
+                            HorasAsignadas = horasOcupadas,
+                            HorasRestantes = docente.MaxHorasLectivas - horasOcupadas,
                             EsActivo = docente.EsActivo
                         };
             return await datos.FirstOrDefaultAsync();
@@ -79,8 +111,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             var curso = await _context.Cursos
                 .Include(c => c.Competencias)
                 .FirstOrDefaultAsync(c => c.Id == cursoId);
-
-            if (curso == null) throw new Exception("Curso no encontrado"); 
+            if (curso == null) throw new Exception("Curso no encontrado");
 
             var matriculas = await _context.Matriculas
                 .Include(m => m.Alumno)
@@ -88,7 +119,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Include(m => m.Seccion)
                 .Include(m => m.DetallesMatriculas)
                     .ThenInclude(d => d.Calificaciones)
-                .Where(m => m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId)
+                .Where(m => m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId && m.Alumno!.Estado == Domain.Enums.AlumnoEnum.Activo)
                 .ToListAsync();
 
             var trimestre = await _context.Trimestres.FirstOrDefaultAsync(t => t.EstadoActivo);
@@ -111,6 +142,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                         {
                             competenciaId = c.CompetenciaId,
                             Nota = c.Nota,
+                            TrimestreId = c.TrimestreId,
                         }).ToList(),
                         Trimestre = nombreTrimestreActivo
                     };
@@ -120,7 +152,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             {
                 Competencias = curso.Competencias.Select(c => new CompetenciaDto
                 {
-                    Id = c.Id,
+                    Id = c.Id, 
                     Nombre = c.Nombre
                 }).ToList(),
                 Alumnos = alumnosDto,
@@ -185,6 +217,24 @@ namespace SchoolSystem.Infrastructure.Respositories
 
             docenteExiste.EsActivo = dto.Estado;
             await _docenteRepository.ActualizarDoncenteAsync(docenteExiste);
+        }
+
+        public async Task<DocenteDto?> GetPerfilAsyn(string usuarioId)
+        {
+            var datos = from docente in _context.Docentes
+                        join usuarios in _context.Users
+                        on docente.UsuarioId equals usuarios.Id
+                        where usuarios.Id == usuarioId
+                        select new DocenteDto
+                        {
+                            Id = docente.Id,
+                            Nombres = docente.Nombres,
+                            Apellidos = docente.Apellidos,
+                            Dni = docente.Dni,
+                            Email = usuarios.Email!,
+                            EsActivo = docente.EsActivo
+                        };
+            return await datos.FirstOrDefaultAsync();
         }
     }
 }

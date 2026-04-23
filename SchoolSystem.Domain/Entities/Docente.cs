@@ -14,7 +14,8 @@ namespace SchoolSystem.Domain.Entities
         public string Dni {  get; set; } = string.Empty;
         public bool EsActivo { get; set; } = true;
         public string UsuarioId { get; set; } = string.Empty ;
-        public ICollection<AsignacionDocente> Asignaciones { get; set; } = new List<AsignacionDocente>(); 
-
+        public int MaxHorasLectivas { get; set; } = 30;
+        public ICollection<AsignacionDocente> Asignaciones { get; set; } = new List<AsignacionDocente>();  
+         
     }
 }

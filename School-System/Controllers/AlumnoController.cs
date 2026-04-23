@@ -19,7 +19,7 @@ namespace School_System.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAlumnoService _alumnoService; 
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager; 
         private readonly IGradoRepository _gradoRepository;
         private readonly ISeccionRepository _seccionRepository;
         public AlumnoController( 
@@ -268,14 +268,14 @@ namespace School_System.Controllers
                 var dashboard = await _alumnoService.ObtenerMisCursos(usuarioId);
 
                 return Ok(dashboard);
-            }
+            } 
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
 
-        [HttpGet("mis-cursos/{cursoId}/detalle")]
+        [HttpGet("mis-cursos/{cursoId}/detalle")] 
         [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> ObtenerDetalleCursos(int cursoId)
         {

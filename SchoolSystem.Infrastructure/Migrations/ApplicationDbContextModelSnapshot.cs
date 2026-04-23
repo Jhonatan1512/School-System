@@ -236,6 +236,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("GradoId")
                         .HasColumnType("int");
 
+                    b.Property<int>("HorasAsignadas")
+                        .HasColumnType("int");
+
                     b.Property<int>("PeriodoAcademicoId")
                         .HasColumnType("int");
 
@@ -351,12 +354,24 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("DuracionBloque")
+                        .HasColumnType("int");
+
                     b.Property<int>("GradoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HorasMaximasPorDia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HorasSemanales")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Prioridad")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -407,6 +422,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<bool>("EsActivo")
                         .HasColumnType("bit");
 
+                    b.Property<int>("MaxHorasLectivas")
+                        .HasColumnType("int");
+
                     b.Property<string>("Nombres")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -442,6 +460,39 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.ToTable("Grados");
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.HoraLectiva", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("EsProductiva")
+                        .HasColumnType("bit");
+
+                    b.Property<TimeSpan>("HoraFin")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("HoraInicio")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Orden")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Turno")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("HorasLectivas");
+                });
+
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Horario", b =>
                 {
                     b.Property<int>("Id")
@@ -457,15 +508,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<TimeSpan>("HoraFin")
-                        .HasColumnType("time");
-
-                    b.Property<TimeSpan>("HoraInicio")
-                        .HasColumnType("time");
+                    b.Property<int>("HoraLectivaId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AsignacionDocenteId");
+
+                    b.HasIndex("HoraLectivaId");
 
                     b.ToTable("Horario");
                 });
@@ -860,7 +910,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SchoolSystem.Domain.Entities.HoraLectiva", "HoraLectiva")
+                        .WithMany()
+                        .HasForeignKey("HoraLectivaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("AsignacionDocente");
+
+                    b.Navigation("HoraLectiva");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Matricula", b =>

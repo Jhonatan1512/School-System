@@ -43,6 +43,9 @@ builder.Services.AddScoped<IConfiguracionRepository, ConfiguracionRepository>();
 builder.Services.AddScoped<IConfiguracionService, ConfiguracionGradoSeccionService>();
 builder.Services.AddScoped<ICompetenciaService, CompetenciaService>();
 builder.Services.AddScoped<ICompetenciaRepository, CompetenciaRepository>();
+builder.Services.AddScoped<IHoraLectivaRepository, HoraLectivaRepository>();
+builder.Services.AddScoped<IHorarioRepository, HorarioRepository>();
+builder.Services.AddScoped<IHorarioService, HorarioService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

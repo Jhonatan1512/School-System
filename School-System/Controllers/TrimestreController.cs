@@ -20,7 +20,7 @@ namespace School_System.Controllers
             this.trimestreRepository = trimestreRepository;
         }
 
-        [HttpPost]
+        [HttpPost] 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CrearTrimestre([FromBody] TrimestreCreadoDto dto)
         {
@@ -35,7 +35,6 @@ namespace School_System.Controllers
         }
 
         [HttpGet("periodo")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerPoPeriodo()
         {
             try

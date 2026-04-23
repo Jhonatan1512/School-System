@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration : Migration
+    public partial class CreacionBd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -67,13 +67,33 @@ namespace SchoolSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "HorasLectivas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
+                    HoraFin = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EsProductiva = table.Column<bool>(type: "bit", nullable: false),
+                    Orden = table.Column<int>(type: "int", nullable: false),
+                    Turno = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HorasLectivas", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "PeriodoAcademicos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EstadoActivo = table.Column<bool>(type: "bit", nullable: false)
+                    EstadoActivo = table.Column<bool>(type: "bit", nullable: false),
+                    FechaInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaCierre = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -234,7 +254,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Apellidos = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Dni = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EsActivo = table.Column<bool>(type: "bit", nullable: false),
-                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UsuarioId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    MaxHorasLectivas = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -254,7 +275,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    GradoId = table.Column<int>(type: "int", nullable: false)
+                    GradoId = table.Column<int>(type: "int", nullable: false),
+                    HorasSemanales = table.Column<int>(type: "int", nullable: false),
+                    HorasMaximasPorDia = table.Column<int>(type: "int", nullable: false),
+                    DuracionBloque = table.Column<int>(type: "int", nullable: false),
+                    Prioridad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -286,6 +311,40 @@ namespace SchoolSystem.Infrastructure.Migrations
                         name: "FK_Trimestres_PeriodoAcademicos_PeriodoAcademicoId",
                         column: x => x.PeriodoAcademicoId,
                         principalTable: "PeriodoAcademicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ConfiguracionGradoSecciones",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GradoId = table.Column<int>(type: "int", nullable: false),
+                    SeccionId = table.Column<int>(type: "int", nullable: false),
+                    PeriodoacademicoId = table.Column<int>(type: "int", nullable: false),
+                    CapacidadMax = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfiguracionGradoSecciones", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ConfiguracionGradoSecciones_Grados_GradoId",
+                        column: x => x.GradoId,
+                        principalTable: "Grados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConfiguracionGradoSecciones_PeriodoAcademicos_PeriodoacademicoId",
+                        column: x => x.PeriodoacademicoId,
+                        principalTable: "PeriodoAcademicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ConfiguracionGradoSecciones_Secciones_SeccionId",
+                        column: x => x.SeccionId,
+                        principalTable: "Secciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -340,7 +399,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     CursoId = table.Column<int>(type: "int", nullable: false),
                     GradoId = table.Column<int>(type: "int", nullable: false),
                     SeccionId = table.Column<int>(type: "int", nullable: false),
-                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false)
+                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false),
+                    HorasAsignadas = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -431,8 +491,7 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AsignacionDocenteId = table.Column<int>(type: "int", nullable: false),
                     DiaSemana = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HoraInicio = table.Column<TimeSpan>(type: "time", nullable: false),
-                    HoraFin = table.Column<TimeSpan>(type: "time", nullable: false)
+                    HoraLectivaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -443,6 +502,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         principalTable: "AsignacionDocentes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Horario_HorasLectivas_HoraLectivaId",
+                        column: x => x.HoraLectivaId,
+                        principalTable: "HorasLectivas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -585,6 +650,21 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "CursoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ConfiguracionGradoSecciones_GradoId",
+                table: "ConfiguracionGradoSecciones",
+                column: "GradoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfiguracionGradoSecciones_PeriodoacademicoId",
+                table: "ConfiguracionGradoSecciones",
+                column: "PeriodoacademicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ConfiguracionGradoSecciones_SeccionId",
+                table: "ConfiguracionGradoSecciones",
+                column: "SeccionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cursos_GradoId",
                 table: "Cursos",
                 column: "GradoId");
@@ -614,6 +694,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_Horario_AsignacionDocenteId",
                 table: "Horario",
                 column: "AsignacionDocenteId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Horario_HoraLectivaId",
+                table: "Horario",
+                column: "HoraLectivaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Matriculas_AlumnoId",
@@ -663,6 +748,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Calificaciones");
 
             migrationBuilder.DropTable(
+                name: "ConfiguracionGradoSecciones");
+
+            migrationBuilder.DropTable(
                 name: "Horario");
 
             migrationBuilder.DropTable(
@@ -679,6 +767,9 @@ namespace SchoolSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AsignacionDocentes");
+
+            migrationBuilder.DropTable(
+                name: "HorasLectivas");
 
             migrationBuilder.DropTable(
                 name: "Matriculas");

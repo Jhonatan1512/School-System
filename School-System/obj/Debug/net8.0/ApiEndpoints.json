@@ -222,16 +222,6 @@
   },
   {
     "ContainingType": "School_System.Controllers.AsignacionDocenteController",
-    "Method": "getAll",
-    "RelativePath": "api/AsignacionDocente",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
     "Method": "ActualizarAsignacion",
     "RelativePath": "api/AsignacionDocente/{id}",
     "HttpMethod": "PUT",
@@ -263,6 +253,48 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "getByGradoSeccion",
+    "RelativePath": "api/AsignacionDocente/gradoId/{gradoId}/seccionId/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "getAll",
+    "RelativePath": "api/AsignacionDocente/lista-paginada",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pagina",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": []
@@ -549,6 +581,22 @@
   {
     "ContainingType": "School_System.Controllers.CursoController",
     "Method": "GetByGrado",
+    "RelativePath": "api/Curso/gradoId/{gradoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CursoController",
+    "Method": "GetByGradoSeccion",
     "RelativePath": "api/Curso/gradoId/{gradoId}/seccionId/{seccionId}",
     "HttpMethod": "GET",
     "IsController": true,
@@ -602,16 +650,6 @@
         "IsRequired": true
       }
     ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "School_System.Controllers.DocenteController",
-    "Method": "obtenerTodos",
-    "RelativePath": "api/Docente",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -726,6 +764,27 @@
   },
   {
     "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "obtenerTodos",
+    "RelativePath": "api/Docente/lista-docentes",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pagina",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
     "Method": "LlenarNotas",
     "RelativePath": "api/Docente/notas",
     "HttpMethod": "POST",
@@ -759,6 +818,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "GetPerfil",
+    "RelativePath": "api/Docente/perfil-docente",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -835,6 +904,37 @@
       {
         "Name": "grado",
         "Type": "SchoolSystem.Domain.Entities.Grado",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.HorariosController",
+    "Method": "Generar",
+    "RelativePath": "api/Horarios",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.HorariosController",
+    "Method": "VerHorario",
+    "RelativePath": "api/Horarios/ver/{gradoId}/{seccionId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "gradoId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "seccionId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

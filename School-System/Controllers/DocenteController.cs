@@ -15,7 +15,7 @@ namespace School_System.Controllers
     [ApiController]
     [Authorize]
     public class DocenteController : ControllerBase
-    {  
+    {   
         private readonly IDocenteRepository _docenteRepository; 
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDocenteService _docenteService; 
@@ -96,12 +96,20 @@ namespace School_System.Controllers
         }
 
         //GET :api/docente
-        [HttpGet]
+        [HttpGet("lista-docentes")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> obtenerTodos()
+        public async Task<IActionResult> obtenerTodos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
         {
-            var docentes = await _docenteService.GetAllsync();
-            return Ok(docentes);
+            if(pagina < 1) pagina = 1;
+            if(cantidad > 20) cantidad = 20;
+            try
+            {
+                var docentes = await _docenteService.GetAllsync(pagina, cantidad);
+                return Ok(docentes);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //GET :api:docente
@@ -313,6 +321,30 @@ namespace School_System.Controllers
             {
                 await _docenteService.ActualizarEstadoAsync(id, dto);
                 return Ok(new {mensaje = "Estado del docente actualizado"});
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("perfil-docente")]
+        [Authorize(Roles = "Docente")]
+        public async Task<ActionResult> GetPerfil()
+        {
+            try
+            {
+                var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if(string.IsNullOrEmpty(usuarioId))
+                {
+                    return NotFound();  
+                }
+
+                var perfil = await _docenteService.GetPerfilAsyn(usuarioId);
+                if(perfil == null)
+                {
+                    return NotFound("Perfil no encontrado");
+                }
+                return Ok(perfil);
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

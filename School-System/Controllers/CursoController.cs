@@ -44,7 +44,7 @@ namespace School_System.Controllers
             {
                 return BadRequest(ex);
             }
-        }
+        } 
 
         //GET :api/curso
         [HttpGet("lista-cursos")]
@@ -104,14 +104,30 @@ namespace School_System.Controllers
 
         [HttpGet("gradoId/{gradoId:int}/seccionId/{seccionId:int}")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult> GetByGrado(int gradoId, int seccionId)
+        public async Task<ActionResult> GetByGradoSeccion(int gradoId, int seccionId)
         {
             var periodActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
             try
             {
-                var result = await _cursoService.ObtenerPorGrado(gradoId, seccionId, periodActivo!.Id); 
+                var result = await _cursoService.ObtenerPorGradoSeccionAsyn(gradoId, seccionId, periodActivo!.Id); 
                 return Ok(result);
-            } catch (Exception ex)
+            } catch (Exception ex) 
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("gradoId/{gradoId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> GetByGrado(int gradoId)
+        {
+            var periodActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+            try
+            {
+                var result = await _cursoService.ObtenerPorGrado(gradoId);
+                return Ok(result);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

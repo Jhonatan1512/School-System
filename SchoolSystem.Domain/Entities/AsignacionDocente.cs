@@ -19,6 +19,7 @@ namespace SchoolSystem.Domain.Entities
         public Seccion? Seccion { get; set; }
         public int PeriodoAcademicoId { get; set; }
         public PeriodoAcademico? PeriodoAcademico { get; set; }
-        public ICollection<Horario> Horarios { get; set; } = new List<Horario>(); 
+        public int HorasAsignadas { get; set; }
+        public ICollection<Horario> Horarios { get; set; } = new List<Horario>();  
     }
 }

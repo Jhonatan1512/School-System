@@ -18,7 +18,7 @@ namespace SchoolSystem.Application.Services
         private readonly IDetalleMatriculaRepository _detalleMatriculaRepository;
         public CalificacionService(
             ICalificacionRepository calificacionRepository,  
-            ITrimestreRepository trimestreRepository, 
+            ITrimestreRepository trimestreRepository,  
             IAsignacionDocenteRepository asignacionDocenteRepository,
             IDetalleMatriculaRepository detalleMatriculaRepository)
         {

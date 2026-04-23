@@ -19,7 +19,7 @@ namespace School_System.Controllers
             _asignacionDocenteService = asignacionDocenteService;
             _asignacionDocenteRepository = asignacionDocenteRepository;
         }
-
+         
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AsignarCurso([FromBody] AsignacionDocenteCreateDto dto)
@@ -43,13 +43,15 @@ namespace School_System.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpGet("lista-paginada")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> getAll()
+        public async Task<IActionResult> getAll([FromQuery] int pagina = 1, [FromQuery] int cantidad = 10)
         {
+            if (pagina < 1) pagina = 1;
+            if(cantidad > 20) cantidad = 20;
             try
             {
-                var datos = await _asignacionDocenteService.obtenerDocentesAsignadosAsync();
+                var datos = await _asignacionDocenteService.obtenerDocentesAsignadosAsync(pagina, cantidad);
                 return Ok(datos);
 
 
@@ -85,6 +87,20 @@ namespace School_System.Controllers
             {
                 await _asignacionDocenteRepository.EliminarAsignacionAsync(id);
                 return NoContent();
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("gradoId/{gradoId:int}/seccionId/{seccionId:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> getByGradoSeccion(int gradoId, int seccionId)
+        {
+            try
+            {
+                var result = await _asignacionDocenteService.ObtenerPorGradoSeccionAsync(gradoId, seccionId);
+                return Ok(result);
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

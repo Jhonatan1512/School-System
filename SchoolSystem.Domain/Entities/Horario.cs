@@ -11,8 +11,8 @@ namespace SchoolSystem.Domain.Entities
         public int Id { get; set; }
         public int AsignacionDocenteId {  get; set; }
         public AsignacionDocente? AsignacionDocente { get; set; }
-        public string DiaSemana { get; set; } = string.Empty;
-        public TimeSpan HoraInicio { get; set; }
-        public TimeSpan HoraFin {  get; set; }
+        public string DiaSemana { get; set; } = string.Empty; 
+        public int HoraLectivaId { get; set; }
+        public HoraLectiva? HoraLectiva { get; set; }
     }
 }

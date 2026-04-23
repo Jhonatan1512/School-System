@@ -18,7 +18,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
-
+         
         public async Task ActualizarAsignacionAsync(int id, AsignacionDocente asignacion)
         {
             _context.AsignacionDocentes.Update(asignacion);
@@ -65,15 +65,56 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<AsignacionDocente>> ObtenerPorGradoSeccion(int gradoId, int seccionId)
+        {
+            return await _context.AsignacionDocentes.Include(a => a.Docente)
+                        .Include(a => a.Curso)
+                        .Include(a => a.Grado)
+                        .Include(a => a.Seccion)
+                        .Include(a => a.PeriodoAcademico)
+                        .Where(a => a.GradoId == gradoId && a.SeccionId == seccionId && a.PeriodoAcademico!.EstadoActivo)
+                        .ToListAsync();
+        }
+
         public async Task<AsignacionDocente?> ObtenerPorIdAsync(int id)
         {
             return await _context.AsignacionDocentes.FirstOrDefaultAsync(a => a.Id == id);
+        }
+
+        public async Task<IEnumerable<AsignacionDocente>> ObtenerPorPeriodoAsync(int periodoId)
+        {
+            return await _context.AsignacionDocentes.Include(a => a.Curso)
+                           .Include(a => a.Docente)
+                           .Include(a => a.Seccion)
+                           .Where(a => a.PeriodoAcademicoId == periodoId)
+                           .ToListAsync();
         }
 
         public async Task<List<AsignacionDocente>> ObtenerPorSeccionPeriodoAsync(int seccionId, int periodoId)
         {
             return await _context.AsignacionDocentes.Include(a => a.Docente)
                 .Where(a => a.SeccionId == seccionId && a.PeriodoAcademicoId == periodoId).ToListAsync();
+        }
+
+        public async Task<int> ObtenerHorasCubiertasCursoAsyn(int cursoId, int gradoId, int seccionId, int periodoId, int excluirId)
+        {
+            return await _context.AsignacionDocentes
+                .Where(a => a.CursoId == cursoId &&
+                            a.GradoId == gradoId &&
+                            a.SeccionId == seccionId &&
+                            a.PeriodoAcademicoId == periodoId &&
+                            a.Id != excluirId)
+                .SumAsync(a => a.HorasAsignadas);
+
+        }
+
+        public async Task<int> ObtenerHorasTotalesDocenteAsync(int docenteId, int periodoId, int excluirId)
+        {
+            return await _context.AsignacionDocentes
+                .Where(a => a.DocenteId == docenteId &&
+                            a.PeriodoAcademicoId == periodoId &&
+                            a.Id != excluirId)
+                .SumAsync(a => a.HorasAsignadas);
         }
     }
 }
