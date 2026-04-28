@@ -22,7 +22,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         public async Task ActualizarDoncenteAsync(Docente docente) 
         {
             _context.Docentes.Update(docente);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();  
         } 
 
         public async Task<Docente> CrearDocenteAsync(Docente docente)

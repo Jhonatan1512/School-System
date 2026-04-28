@@ -14,3 +14,4 @@ namespace SchoolSystem.Application.Interfaces
         Task<List<HorarioSeccionDto>> ObtenerHorariosPorGradoSeccion(int gradoId, int seccionId, int periodoId);
     }
 }
+ 

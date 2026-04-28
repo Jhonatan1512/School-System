@@ -23,7 +23,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context.Grados.Update(grado);
             await _context.SaveChangesAsync();
 
-        }
+        } 
 
         public async Task<Grado> CrearGrado(Grado grado)
         {  

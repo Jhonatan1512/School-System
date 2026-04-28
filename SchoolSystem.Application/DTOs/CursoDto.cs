@@ -6,16 +6,9 @@ using System.Threading.Tasks;
 
 namespace SchoolSystem.Application.DTOs
 {
-    public class CursoDto
-    {
-        public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-        public int? GradoId { get; set; }
-    }
-
     public class CursoActualizarDto
     {
         public int Id { get; set; }
-        public string Nombre { get; set; } = string.Empty;
-    }
+        public string Nombre { get; set; } = string.Empty; 
+    } 
 }

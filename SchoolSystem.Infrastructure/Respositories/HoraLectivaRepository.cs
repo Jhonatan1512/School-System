@@ -18,9 +18,9 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
-        public async Task<IEnumerable<HoraLectiva>> GetAllAsync()
+        public async Task<List<HoraLectiva>> GetAllAsync()
         {
-            return await _context.HorasLectivas.ToListAsync();
+            return await _context.HorasLectivas.ToListAsync(); 
         }
     }
 }

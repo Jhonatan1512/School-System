@@ -26,7 +26,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .FirstOrDefaultAsync();
 
             return await _context.Grados
-                .Select(g => new GradoDto
+                .Select(g => new GradoDto 
                 {
                     Id = g.Id,
                     Nombre = g.Nombre,

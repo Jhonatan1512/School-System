@@ -13,7 +13,9 @@ namespace SchoolSystem.Domain.Entities
         public TimeSpan HoraInicio { get; set; } 
         public TimeSpan HoraFin { get; set; }    
         public bool EsProductiva { get; set; }
-        public int Orden { get; set; }
+        public int Orden { get; set; } 
         public string Turno { get; set; } = "Mañana";
+        public bool AplicaJER { get; set; }
+        public bool AplicaJEC { get; set; }
     }
 }

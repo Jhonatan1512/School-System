@@ -13,6 +13,6 @@ namespace SchoolSystem.Domain.Entities
         public AsignacionDocente? AsignacionDocente { get; set; }
         public string DiaSemana { get; set; } = string.Empty; 
         public int HoraLectivaId { get; set; }
-        public HoraLectiva? HoraLectiva { get; set; }
+        public HoraLectiva? HoraLectiva { get; set; }  
     }
 }

@@ -878,17 +878,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CursoCompetenciaDto"
+                "$ref": "#/components/schemas/CrearCursoComptenciasDto"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/CursoCompetenciaDto"
+                "$ref": "#/components/schemas/CrearCursoComptenciasDto"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/CursoCompetenciaDto"
+                "$ref": "#/components/schemas/CrearCursoComptenciasDto"
               }
             }
           }
@@ -1841,6 +1841,78 @@
         }
       }
     },
+    "/api/PlanEstudio": {
+      "post": {
+        "tags": [
+          "PlanEstudio"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearPlanEstudioDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearPlanEstudioDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearPlanEstudioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/PlanEstudio/{id}": {
+      "put": {
+        "tags": [
+          "PlanEstudio"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPlanEstudioDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPlanEstudioDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarPlanEstudioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Seccion": {
       "post": {
         "tags": [
@@ -2158,6 +2230,35 @@
         },
         "additionalProperties": false
       },
+      "ActualizarPlanEstudioDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cursoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jornada": {
+            "$ref": "#/components/schemas/TipoJornada"
+          },
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "ActualizarTrimestreDto": {
         "type": "object",
         "properties": {
@@ -2269,6 +2370,62 @@
         },
         "additionalProperties": false
       },
+      "AsignacionDocente": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "docenteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "docente": {
+            "$ref": "#/components/schemas/Docente"
+          },
+          "planEstudioId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "planEstudio": {
+            "$ref": "#/components/schemas/PlanEstudio"
+          },
+          "gradoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "grado": {
+            "$ref": "#/components/schemas/Grado"
+          },
+          "seccionId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "seccion": {
+            "$ref": "#/components/schemas/Seccion"
+          },
+          "periodoAcademicoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoAcademico": {
+            "$ref": "#/components/schemas/PeriodoAcademico"
+          },
+          "horasAsignadas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horarios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Horario"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "AsignacionDocenteCreateDto": {
         "type": "object",
         "properties": {
@@ -2276,10 +2433,10 @@
             "type": "integer",
             "format": "int32"
           },
-          "cursosIds": {
+          "planesEstudio": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CursoAsignadoDto"
+              "$ref": "#/components/schemas/PlanEstudioAsignadoDto"
             },
             "nullable": true
           },
@@ -2309,7 +2466,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "cursoId": {
+          "planEstudioId": {
             "type": "integer",
             "format": "int32"
           },
@@ -2497,6 +2654,84 @@
         },
         "additionalProperties": false
       },
+      "CrearCursoComptenciasDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "gradoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "prioridad": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "competencias": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrearCompetenciaDto"
+            },
+            "nullable": true
+          },
+          "planEstudios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CrearPlanBasicoDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearPlanBasicoDto": {
+        "type": "object",
+        "properties": {
+          "jornada": {
+            "$ref": "#/components/schemas/TipoJornada"
+          },
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CrearPlanEstudioDto": {
+        "type": "object",
+        "properties": {
+          "cursoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "jornada": {
+            "$ref": "#/components/schemas/TipoJornada"
+          },
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "Curso": {
         "type": "object",
         "properties": {
@@ -2515,18 +2750,6 @@
           "grado": {
             "$ref": "#/components/schemas/Grado"
           },
-          "horasSemanales": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "horasMaximasPorDia": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "duracionBloque": {
-            "type": "integer",
-            "format": "int32"
-          },
           "prioridad": {
             "$ref": "#/components/schemas/PrioridadCurso"
           },
@@ -2534,6 +2757,13 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Competencia"
+            },
+            "nullable": true
+          },
+          "planEstudios": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanEstudio"
             },
             "nullable": true
           }
@@ -2550,20 +2780,6 @@
           "nombre": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "CursoAsignadoDto": {
-        "type": "object",
-        "properties": {
-          "cursoId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "horasAsignadas": {
-            "type": "integer",
-            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -2611,6 +2827,46 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CrearCompetenciaDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Docente": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombres": {
+            "type": "string",
+            "nullable": true
+          },
+          "apellidos": {
+            "type": "string",
+            "nullable": true
+          },
+          "dni": {
+            "type": "string",
+            "nullable": true
+          },
+          "esActivo": {
+            "type": "boolean"
+          },
+          "usuarioId": {
+            "type": "string",
+            "nullable": true
+          },
+          "maxHorasLectivas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asignaciones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AsignacionDocente"
             },
             "nullable": true
           }
@@ -2675,6 +2931,73 @@
               "$ref": "#/components/schemas/Curso"
             },
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "HoraLectiva": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nombre": {
+            "type": "string",
+            "nullable": true
+          },
+          "horaInicio": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "horaFin": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "esProductiva": {
+            "type": "boolean"
+          },
+          "orden": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "turno": {
+            "type": "string",
+            "nullable": true
+          },
+          "aplicaJER": {
+            "type": "boolean"
+          },
+          "aplicaJEC": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Horario": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asignacionDocenteId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "asignacionDocente": {
+            "$ref": "#/components/schemas/AsignacionDocente"
+          },
+          "diaSemana": {
+            "type": "string",
+            "nullable": true
+          },
+          "horaLectivaId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horaLectiva": {
+            "$ref": "#/components/schemas/HoraLectiva"
           }
         },
         "additionalProperties": false
@@ -2782,6 +3105,66 @@
         },
         "additionalProperties": false
       },
+      "PlanEstudio": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cursoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "curso": {
+            "$ref": "#/components/schemas/Curso"
+          },
+          "jornada": {
+            "$ref": "#/components/schemas/TipoJornada"
+          },
+          "horasSemanales": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasMaximasPorDia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "duracionBloque": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoAcademicoId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "periodoAcademico": {
+            "$ref": "#/components/schemas/PeriodoAcademico"
+          },
+          "asignaciones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AsignacionDocente"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlanEstudioAsignadoDto": {
+        "type": "object",
+        "properties": {
+          "planEstudioId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "horasAsignadas": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "PrioridadCurso": {
         "enum": [
           1,
@@ -2836,6 +3219,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "TipoJornada": {
+        "enum": [
+          1,
+          2
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "TrimestreCreadoDto": {
         "type": "object",

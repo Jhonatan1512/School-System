@@ -18,12 +18,12 @@ namespace School_System.Controllers
             _horarioService = horarioService;
             _periodoAcademicoRepository = periodoAcademicoRepository;
         }
-
+          
         [HttpPost]
         public async Task<IActionResult> Generar()
         {
-            var periodoActivo = _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
-            var result = await _horarioService.GenerarHorarioAsync(periodoActivo.Id);
+            var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+            var result = await _horarioService.GenerarHorarioAsync(periodoActivo!.Id);
             if(!result.Exito) return BadRequest(result);
             return Ok(result);
         }

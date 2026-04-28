@@ -10,6 +10,7 @@ using System.Text;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Application.Services;
 using SchoolSystem.Api.BackgroundService;
+using SchoolSystem.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<IAlumnoRespository, AlumnoRepository>();
-builder.Services.AddScoped<IAlumnoService, AlumnoService>();
+builder.Services.AddScoped<IAlumnoService, AlumnoService>(); 
 builder.Services.AddScoped<IDocenteRepository, DocenteRepository>();
 builder.Services.AddScoped<IDocenteService, DocenteService>();
 builder.Services.AddScoped<IGradoRepository, GradoRepository>();
@@ -46,6 +47,8 @@ builder.Services.AddScoped<ICompetenciaRepository, CompetenciaRepository>();
 builder.Services.AddScoped<IHoraLectivaRepository, HoraLectivaRepository>();
 builder.Services.AddScoped<IHorarioRepository, HorarioRepository>();
 builder.Services.AddScoped<IHorarioService, HorarioService>();
+builder.Services.AddScoped<IPlanEstudioRepository, PlanEstudioRepository>(); 
+builder.Services.AddScoped<IPlaEstudiosService, PlanEstudioService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

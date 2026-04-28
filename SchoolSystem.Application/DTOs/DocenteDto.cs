@@ -14,7 +14,7 @@ namespace SchoolSystem.Application.DTOs
         public string Dni {  get; set; } = string.Empty; 
         public int HorasAsignadas { get; set; }
         public int HorasRestantes { get; set; }
-        public bool EsActivo { get; set; } = true;
+        public bool EsActivo { get; set; } = true; 
         public string Email { get; set; } = string.Empty;
         public string UsuarioId { get; set; } = string.Empty; 
     }

@@ -154,6 +154,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "admin-user-seed-id",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -227,9 +234,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CursoId")
-                        .HasColumnType("int");
-
                     b.Property<int>("DocenteId")
                         .HasColumnType("int");
 
@@ -242,18 +246,21 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("PeriodoAcademicoId")
                         .HasColumnType("int");
 
+                    b.Property<int>("PlanEstudioId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SeccionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CursoId");
 
                     b.HasIndex("DocenteId");
 
                     b.HasIndex("GradoId");
 
                     b.HasIndex("PeriodoAcademicoId");
+
+                    b.HasIndex("PlanEstudioId");
 
                     b.HasIndex("SeccionId");
 
@@ -354,16 +361,7 @@ namespace SchoolSystem.Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DuracionBloque")
-                        .HasColumnType("int");
-
                     b.Property<int>("GradoId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HorasMaximasPorDia")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HorasSemanales")
                         .HasColumnType("int");
 
                     b.Property<string>("Nombre")
@@ -467,6 +465,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("AplicaJEC")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("AplicaJER")
+                        .HasColumnType("bit");
 
                     b.Property<bool>("EsProductiva")
                         .HasColumnType("bit");
@@ -577,6 +581,41 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PeriodoAcademicos");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.PlanEstudio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DuracionBloque")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HorasMaximasPorDia")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HorasSemanales")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Jornada")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodoAcademicoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CursoId");
+
+                    b.HasIndex("PeriodoAcademicoId");
+
+                    b.ToTable("PlanEstudios");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Seccion", b =>
@@ -693,6 +732,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "admin-user-seed-id",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "92b5e9b1-b202-41bc-b58d-604e1f2c7cf2",
+                            Email = "admin@ejemplo.edu.pe",
+                            EmailConfirmed = true,
+                            EsActivo = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "ADMIN@EJEMPLO.EDU.PE",
+                            NormalizedUserName = "ADMIN@EJEMPLO.EDU.PE",
+                            PasswordHash = "AQAAAAIAAYagAAAAELWV8eg0B2GN/i8GlPvN7EBCI+eA2qxgRbFQ1O8+nQMGACT4ZCyI647Scc6hD1WMUQ==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "4bd23b24-dc0b-4e32-978c-ee651415b755",
+                            TwoFactorEnabled = false,
+                            UserName = "admin@ejemplo.edu.pe"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -757,12 +815,6 @@ namespace SchoolSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.AsignacionDocente", b =>
                 {
-                    b.HasOne("SchoolSystem.Domain.Entities.Curso", "Curso")
-                        .WithMany()
-                        .HasForeignKey("CursoId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("SchoolSystem.Domain.Entities.Docente", "Docente")
                         .WithMany("Asignaciones")
                         .HasForeignKey("DocenteId")
@@ -781,19 +833,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("SchoolSystem.Domain.Entities.PlanEstudio", "PlanEstudio")
+                        .WithMany("Asignaciones")
+                        .HasForeignKey("PlanEstudioId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("SchoolSystem.Domain.Entities.Seccion", "Seccion")
                         .WithMany()
                         .HasForeignKey("SeccionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Curso");
-
                     b.Navigation("Docente");
 
                     b.Navigation("Grado");
 
                     b.Navigation("PeriodoAcademico");
+
+                    b.Navigation("PlanEstudio");
 
                     b.Navigation("Seccion");
                 });
@@ -956,6 +1014,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Navigation("Seccion");
                 });
 
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.PlanEstudio", b =>
+                {
+                    b.HasOne("SchoolSystem.Domain.Entities.Curso", "Curso")
+                        .WithMany("PlanEstudios")
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
+                        .WithMany()
+                        .HasForeignKey("PeriodoAcademicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("PeriodoAcademico");
+                });
+
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>
                 {
                     b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
@@ -980,6 +1057,8 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Curso", b =>
                 {
                     b.Navigation("Competencias");
+
+                    b.Navigation("PlanEstudios");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.DetalleMatricula", b =>
@@ -1000,6 +1079,11 @@ namespace SchoolSystem.Infrastructure.Migrations
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Matricula", b =>
                 {
                     b.Navigation("DetallesMatriculas");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.PlanEstudio", b =>
+                {
+                    b.Navigation("Asignaciones");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>

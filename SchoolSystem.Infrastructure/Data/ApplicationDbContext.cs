@@ -1,15 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using SchoolSystem.Domain.Entities;
 using SchoolSystem.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
-
-
 
 namespace SchoolSystem.Infrastructure.Data
 {
@@ -22,19 +16,17 @@ namespace SchoolSystem.Infrastructure.Data
         public DbSet<PeriodoAcademico> PeriodoAcademicos => Set<PeriodoAcademico>();
         public DbSet<Grado> Grados => Set<Grado>();
         public DbSet<Seccion> Secciones => Set<Seccion>();
-
         public DbSet<Curso> Cursos => Set<Curso>();
         public DbSet<Competencia> Competencias => Set<Competencia>();
-
         public DbSet<Matricula> Matriculas => Set<Matricula>();
         public DbSet<AsignacionDocente> AsignacionDocentes => Set<AsignacionDocente>();
         public DbSet<Calificacion> Calificaciones => Set<Calificacion>();
         public DbSet<DetalleMatricula> DetalleMatriculas => Set<DetalleMatricula>();
-
-        public DbSet<Horario> Horario => Set<Horario>();    
+        public DbSet<Horario> Horario => Set<Horario>();
         public DbSet<Trimestre> Trimestres => Set<Trimestre>();
         public DbSet<ConfiguracionGradoSeccion> ConfiguracionGradoSecciones => Set<ConfiguracionGradoSeccion>();
         public DbSet<HoraLectiva> HorasLectivas => Set<HoraLectiva>();
+        public DbSet<PlanEstudio> PlanEstudios => Set<PlanEstudio>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -45,55 +37,58 @@ namespace SchoolSystem.Infrastructure.Data
             string roleAlumnoId = "3";
 
             builder.Entity<IdentityRole>().HasData(
-                new IdentityRole
+                new IdentityRole { Id = roleAdminId, Name = "Admin", NormalizedName = "ADMIN" },
+                new IdentityRole { Id = roleDocenteId, Name = "Docente", NormalizedName = "DOCENTE" },
+                new IdentityRole { Id = roleAlumnoId, Name = "Alumno", NormalizedName = "ALUMNO" }
+            );
+
+            string adminUserId = "admin-user-seed-id"; 
+            var adminUser = new ApplicationUser
+            {
+                Id = adminUserId,
+                UserName = "admin@ejemplo.edu.pe",
+                NormalizedUserName = "ADMIN@EJEMPLO.EDU.PE",
+                Email = "admin@ejemplo.edu.pe",
+                NormalizedEmail = "ADMIN@EJEMPLO.EDU.PE",
+                EmailConfirmed = true,
+            };
+
+            PasswordHasher<ApplicationUser> ph = new PasswordHasher<ApplicationUser>();
+            adminUser.PasswordHash = ph.HashPassword(adminUser, "Admin1*");
+
+            builder.Entity<ApplicationUser>().HasData(adminUser);
+
+            builder.Entity<IdentityUserRole<string>>().HasData(
+                new IdentityUserRole<string>
                 {
-                    Id = roleAdminId,
-                    Name = "Admin",
-                    NormalizedName = "ADMIN"
-                },
-                new IdentityRole
-                {
-                    Id = roleDocenteId,
-                    Name = "Docente",
-                    NormalizedName = "DOCENTE"
-                },
-                new IdentityRole
-                {
-                    Id = roleAlumnoId,
-                    Name = "Alumno",
-                    NormalizedName = "ALUMNO"
+                    RoleId = roleAdminId,
+                    UserId = adminUserId
                 }
             );
 
             builder.Entity<Alumno>().HasIndex(a => a.Dni).IsUnique();
-
+            builder.Entity<Docente>().HasIndex(d => d.Dni).IsUnique();
             builder.Entity<Calificacion>().Property(c => c.Nota).HasMaxLength(2);
 
+            // Relaciones de Matrícula
             builder.Entity<Matricula>().HasOne(m => m.PeriodoAcademico).WithMany().HasForeignKey(m => m.PeriodoAcademicoId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Matricula>().HasOne(m => m.Grado).WithMany().HasForeignKey(m => m.GradoId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Matricula>().HasOne(m => m.Seccion).WithMany().HasForeignKey(m => m.SeccionId).OnDelete(DeleteBehavior.Restrict);
 
-            builder.Entity<AsignacionDocente>().HasOne(a => a.Curso).WithMany().HasForeignKey(a => a.CursoId).OnDelete(DeleteBehavior.Restrict);
-
+            // Relaciones de Asignación Docente 
+            builder.Entity<AsignacionDocente>().HasOne(a => a.PlanEstudio).WithMany(p => p.Asignaciones).HasForeignKey(a => a.PlanEstudioId).OnDelete(DeleteBehavior.Restrict);
             builder.Entity<AsignacionDocente>().HasOne(a => a.Seccion).WithMany().HasForeignKey(a => a.SeccionId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<AsignacionDocente>().HasOne(a => a.PeriodoAcademico).WithMany().HasForeignKey(a => a.PeriodoAcademicoId).OnDelete(DeleteBehavior.Restrict);
 
+            // Relaciones de Identidad (Identity)
             builder.Entity<Docente>().HasOne<ApplicationUser>().WithMany().HasForeignKey(e => e.UsuarioId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Alumno>().HasOne<ApplicationUser>().WithMany().HasForeignKey(e => e.UsuarioId).OnDelete(DeleteBehavior.Restrict);
 
+            // Otras relaciones
             builder.Entity<Calificacion>().HasOne(c => c.DetalleMatricula).WithMany(d => d.Calificaciones).HasForeignKey(c => c.DetalleMatriculaId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Calificacion>().HasOne(c => c.Competencia).WithMany().HasForeignKey(c => c.CompetenciaId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<DetalleMatricula>().HasOne(d => d.Curso).WithMany().HasForeignKey(d => d.CursoId).OnDelete(DeleteBehavior.Restrict);
-
             builder.Entity<Horario>().HasOne(a => a.AsignacionDocente).WithMany(a => a.Horarios).HasForeignKey(h => h.AsignacionDocenteId).OnDelete(DeleteBehavior.Restrict);
-
-            builder.Entity<Docente>().HasIndex(d => d.Dni).IsUnique();
         }
     }
 }

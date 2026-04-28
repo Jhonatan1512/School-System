@@ -9,6 +9,6 @@ namespace SchoolSystem.Domain.Interfaces
 {
     public interface IHoraLectivaRepository
     {
-        Task<IEnumerable<HoraLectiva>> GetAllAsync();
+        Task<List<HoraLectiva>> GetAllAsync();
     }
 }

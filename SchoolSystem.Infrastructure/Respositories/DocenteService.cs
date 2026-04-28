@@ -6,8 +6,6 @@ using SchoolSystem.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.Infrastructure.Respositories
@@ -20,14 +18,14 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly ICursoRepository _cursoRepository;
-           
-        public DocenteService(   
-            ApplicationDbContext context, 
-            IMatriculaRepository matriculaRepository, 
+
+        public DocenteService(
+            ApplicationDbContext context,
+            IMatriculaRepository matriculaRepository,
             IPeriodoAcademicoRepository periodoAcademicoRepository,
             IAsignacionDocenteRepository asignacionDocenteRepository,
-            IDocenteRepository docenteRepository, 
-            ICursoRepository cursoRepository)  
+            IDocenteRepository docenteRepository,
+            ICursoRepository cursoRepository)
         {
             _context = context;
             _matriculaRepository = matriculaRepository;
@@ -42,7 +40,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             var datos = from docente in _context.Docentes
                         join usuarios in _context.Users
                         on docente.UsuarioId equals usuarios.Id
-                        
+
                         let horasOcupadas = _context.AsignacionDocentes
                             .Where(a => a.DocenteId == docente.Id && a.PeriodoAcademico!.EstadoActivo)
                             .Sum(a => (int?)a.HorasAsignadas) ?? 0
@@ -77,7 +75,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 TotalPaginas = totalPaginas
             };
         }
-        
+
         public async Task<DocenteDto?> GetByDniAsync(string dni)
         {
             var datos = from docente in _context.Docentes
@@ -152,7 +150,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             {
                 Competencias = curso.Competencias.Select(c => new CompetenciaDto
                 {
-                    Id = c.Id, 
+                    Id = c.Id,
                     Nombre = c.Nombre
                 }).ToList(),
                 Alumnos = alumnosDto,
@@ -168,7 +166,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             if (periodActivo == null) throw new Exception("No hay Periodo Académico Activo");
 
             var asignaciones = await _asignacionDocenteRepository.ObtenerAsignacionCompletaDocenteAsync(docente.Id, periodActivo.Id);
-            if(!asignaciones.Any()) return new List<DashboardDocenteDto>();
+            if (!asignaciones.Any()) return new List<DashboardDocenteDto>();
 
             var seccionesIds = asignaciones.Select(a => a.SeccionId).Distinct().ToList();
 
@@ -176,11 +174,14 @@ namespace SchoolSystem.Infrastructure.Respositories
 
             var dashboard = asignaciones.Select(asignacion =>
             {
+                var cursoId = asignacion.PlanEstudio!.CursoId;
+                var curso = asignacion.PlanEstudio!.Curso!;
+
                 var alumnosCurso = matriculas.Where(m => m.SeccionId == asignacion.SeccionId &&
-                m.DetallesMatriculas.Any(d => d.CursoId == asignacion.CursoId))
+                m.DetallesMatriculas.Any(d => d.CursoId == cursoId))
                 .Select(m =>
                 {
-                    var detallesCurso = m.DetallesMatriculas.First(d => d.CursoId == asignacion.CursoId);
+                    var detallesCurso = m.DetallesMatriculas.First(d => d.CursoId == cursoId);
 
                     return new AlumnoBasicoDto
                     {
@@ -189,14 +190,15 @@ namespace SchoolSystem.Infrastructure.Respositories
                         DetalleMatriculaId = detallesCurso.Id,
                     };
                 }).ToList();
+
                 return new DashboardDocenteDto
                 {
-                    CursoId = asignacion.CursoId,
-                    NombreCurso = asignacion.Curso!.Nombre,
+                    CursoId = cursoId,
+                    NombreCurso = curso.Nombre,
                     SeccionId = asignacion.SeccionId,
-                    Aula = $"{asignacion.Curso.Grado?.Nombre ?? "Sin Grado"}{asignacion.Seccion?.Nombre ?? "Sin Sección"}",
+                    Aula = $"{curso.Grado?.Nombre ?? "Sin Grado"} {asignacion.Seccion?.Nombre ?? "Sin Sección"}",
                     PeriodoTrimestre = periodActivo.Nombre,
-                    Competencias = asignacion.Curso.Competencias.Select(c => new CompetenciaDto
+                    Competencias = curso.Competencias.Select(c => new CompetenciaDto
                     {
                         Id = c.Id,
                         Nombre = c.Nombre,
@@ -204,7 +206,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                     AlumnosMatriculados = alumnosCurso
                 };
             }).ToList();
-            return dashboard;                  
+            return dashboard;
         }
 
         public async Task ActualizarEstadoAsync(int id, ActualizarEstadoDocenteDto dto)

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace SchoolSystem.Infrastructure.Respositories
 {
     public class AlumnoService : IAlumnoService
-    {
+    { 
         private readonly ApplicationDbContext _context;
         public readonly IAlumnoRespository _alumnoRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
@@ -169,7 +169,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
             var dashboard = matricula.DetallesMatriculas.Select(d =>
             {
-                var asignacionDocente = asignaciones.Where(a => a.CursoId == d.CursoId).ToList();
+                var asignacionDocente = asignaciones.Where(a => a.PlanEstudio!.CursoId == d.CursoId).ToList();
 
                 return new DashboardAlumnoDto
                 {
@@ -202,7 +202,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
             var asignacion = await _context.AsignacionDocentes
                 .Include(a => a.Docente)
-                .FirstOrDefaultAsync(a => a.CursoId == cursoId && a.SeccionId == matriculas.SeccionId && a.PeriodoAcademicoId == periodoId);
+                .FirstOrDefaultAsync(a => a.PlanEstudio!.CursoId == cursoId && a.SeccionId == matriculas.SeccionId && a.PeriodoAcademicoId == periodoId);
 
             var trimestre = await _context.Trimestres.Where(t => t.PeriodoAcademicoId == periodoId).OrderBy(t => t.Id)
                 .ToListAsync();

@@ -19,15 +19,15 @@ namespace School_System.Controllers
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         public CursoController(ICursoRepository cursoRepository, IGradoRepository gradoRepository, ICursoService cursoService, IPeriodoAcademicoRepository periodoAcademicoRepository)
         {
-            _cursoRepository = cursoRepository;
+            _cursoRepository = cursoRepository; 
             _gradoRepository = gradoRepository;
-            _cursoService = cursoService;
+            _cursoService = cursoService; 
             _periodoAcademicoRepository = periodoAcademicoRepository;
         }
 
         //POST :api/curso
         [HttpPost]
-        public async Task<IActionResult> Crearcurso([FromBody] CursoCompetenciaDto curso)
+        public async Task<IActionResult> Crearcurso([FromBody] CrearCursoComptenciasDto curso)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace School_System.Controllers
             }
             catch (Exception ex) 
             {
-                return BadRequest(ex);
+                return BadRequest(ex.Message);
             }
         } 
 
@@ -94,7 +94,7 @@ namespace School_System.Controllers
         {
             try
             {
-                await _cursoService.ActualuzarAsync(id, dto);
+                await _cursoService.ActualizarNombreAsync(id, dto);
                 return Ok(new { mensaje = "Curso actualizado" });
             } catch (Exception ex)
             {

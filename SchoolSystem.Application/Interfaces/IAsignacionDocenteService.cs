@@ -12,7 +12,7 @@ namespace SchoolSystem.Application.Interfaces
         Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto);
         Task<PageResponseDto<GetAsignación>> obtenerDocentesAsignadosAsync(int pagina, int cantidad);
         Task ActualizarAsignacionAsync(int id, AsignacionDocenteDto dto);
-        Task<IEnumerable<GetAsignación>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId);
+        Task<IEnumerable<GetAsignación>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId); 
     } 
 }
  

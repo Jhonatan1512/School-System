@@ -514,7 +514,7 @@
     "Parameters": [
       {
         "Name": "curso",
-        "Type": "SchoolSystem.Application.DTOs.CursoCompetenciaDto",
+        "Type": "SchoolSystem.Application.DTOs.CrearCursoComptenciasDto",
         "IsRequired": true
       }
     ],
@@ -1079,6 +1079,43 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PlanEstudioController",
+    "Method": "CrearPla",
+    "RelativePath": "api/PlanEstudio",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CrearPlanEstudioDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PlanEstudioController",
+    "Method": "ActualizarPlan",
+    "RelativePath": "api/PlanEstudio/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarPlanEstudioDto",
+        "IsRequired": true
+      },
+      {
+        "Name": "id",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

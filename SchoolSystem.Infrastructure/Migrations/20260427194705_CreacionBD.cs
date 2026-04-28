@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionBd : Migration
+    public partial class CreacionBD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -77,7 +77,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     HoraFin = table.Column<TimeSpan>(type: "time", nullable: false),
                     EsProductiva = table.Column<bool>(type: "bit", nullable: false),
                     Orden = table.Column<int>(type: "int", nullable: false),
-                    Turno = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Turno = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AplicaJER = table.Column<bool>(type: "bit", nullable: false),
+                    AplicaJEC = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -276,9 +278,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Nombre = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GradoId = table.Column<int>(type: "int", nullable: false),
-                    HorasSemanales = table.Column<int>(type: "int", nullable: false),
-                    HorasMaximasPorDia = table.Column<int>(type: "int", nullable: false),
-                    DuracionBloque = table.Column<int>(type: "int", nullable: false),
                     Prioridad = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -390,54 +389,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AsignacionDocentes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DocenteId = table.Column<int>(type: "int", nullable: false),
-                    CursoId = table.Column<int>(type: "int", nullable: false),
-                    GradoId = table.Column<int>(type: "int", nullable: false),
-                    SeccionId = table.Column<int>(type: "int", nullable: false),
-                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false),
-                    HorasAsignadas = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AsignacionDocentes", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_AsignacionDocentes_Cursos_CursoId",
-                        column: x => x.CursoId,
-                        principalTable: "Cursos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AsignacionDocentes_Docentes_DocenteId",
-                        column: x => x.DocenteId,
-                        principalTable: "Docentes",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AsignacionDocentes_Grados_GradoId",
-                        column: x => x.GradoId,
-                        principalTable: "Grados",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_AsignacionDocentes_PeriodoAcademicos_PeriodoAcademicoId",
-                        column: x => x.PeriodoAcademicoId,
-                        principalTable: "PeriodoAcademicos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_AsignacionDocentes_Secciones_SeccionId",
-                        column: x => x.SeccionId,
-                        principalTable: "Secciones",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Competencias",
                 columns: table => new
                 {
@@ -451,6 +402,29 @@ namespace SchoolSystem.Infrastructure.Migrations
                     table.PrimaryKey("PK_Competencias", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Competencias_Cursos_CursoId",
+                        column: x => x.CursoId,
+                        principalTable: "Cursos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlanEstudios",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CursoId = table.Column<int>(type: "int", nullable: false),
+                    Jornada = table.Column<int>(type: "int", nullable: false),
+                    HorasSemanales = table.Column<int>(type: "int", nullable: false),
+                    HorasMaximasPorDia = table.Column<int>(type: "int", nullable: false),
+                    DuracionBloque = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlanEstudios", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlanEstudios_Cursos_CursoId",
                         column: x => x.CursoId,
                         principalTable: "Cursos",
                         principalColumn: "Id",
@@ -484,30 +458,51 @@ namespace SchoolSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Horario",
+                name: "AsignacionDocentes",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AsignacionDocenteId = table.Column<int>(type: "int", nullable: false),
-                    DiaSemana = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    HoraLectivaId = table.Column<int>(type: "int", nullable: false)
+                    DocenteId = table.Column<int>(type: "int", nullable: false),
+                    PlanEstudioId = table.Column<int>(type: "int", nullable: false),
+                    GradoId = table.Column<int>(type: "int", nullable: false),
+                    SeccionId = table.Column<int>(type: "int", nullable: false),
+                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false),
+                    HorasAsignadas = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Horario", x => x.Id);
+                    table.PrimaryKey("PK_AsignacionDocentes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Horario_AsignacionDocentes_AsignacionDocenteId",
-                        column: x => x.AsignacionDocenteId,
-                        principalTable: "AsignacionDocentes",
+                        name: "FK_AsignacionDocentes_Docentes_DocenteId",
+                        column: x => x.DocenteId,
+                        principalTable: "Docentes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AsignacionDocentes_Grados_GradoId",
+                        column: x => x.GradoId,
+                        principalTable: "Grados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AsignacionDocentes_PeriodoAcademicos_PeriodoAcademicoId",
+                        column: x => x.PeriodoAcademicoId,
+                        principalTable: "PeriodoAcademicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Horario_HorasLectivas_HoraLectivaId",
-                        column: x => x.HoraLectivaId,
-                        principalTable: "HorasLectivas",
+                        name: "FK_AsignacionDocentes_PlanEstudios_PlanEstudioId",
+                        column: x => x.PlanEstudioId,
+                        principalTable: "PlanEstudios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AsignacionDocentes_Secciones_SeccionId",
+                        column: x => x.SeccionId,
+                        principalTable: "Secciones",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -544,6 +539,33 @@ namespace SchoolSystem.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Horario",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AsignacionDocenteId = table.Column<int>(type: "int", nullable: false),
+                    DiaSemana = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    HoraLectivaId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Horario", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Horario_AsignacionDocentes_AsignacionDocenteId",
+                        column: x => x.AsignacionDocenteId,
+                        principalTable: "AsignacionDocentes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Horario_HorasLectivas_HoraLectivaId",
+                        column: x => x.HoraLectivaId,
+                        principalTable: "HorasLectivas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -553,6 +575,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                     { "2", null, "Docente", "DOCENTE" },
                     { "3", null, "Alumno", "ALUMNO" }
                 });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUsers",
+                columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "EsActivo", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
+                values: new object[] { "admin-user-seed-id", 0, "2bab1d64-d625-4a40-8b33-a80a0d0e8bd6", "admin@ejemplo.edu.pe", true, true, false, null, "ADMIN@EJEMPLO.EDU.PE", "ADMIN@EJEMPLO.EDU.PE", "AQAAAAIAAYagAAAAEPuDqTTMo2oPVxmSwg+0L0acsBlkHgbrht0eptmMWh7KbjfQuTLWnkcnTTUTZgiC6Q==", null, false, "0f70bf8f-dc87-4156-a520-d19515ff8c15", false, "admin@ejemplo.edu.pe" });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[] { "1", "admin-user-seed-id" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Alumnos_Dni",
@@ -564,11 +596,6 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_Alumnos_UsuarioId",
                 table: "Alumnos",
                 column: "UsuarioId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AsignacionDocentes_CursoId",
-                table: "AsignacionDocentes",
-                column: "CursoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AsignacionDocentes_DocenteId",
@@ -584,6 +611,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "IX_AsignacionDocentes_PeriodoAcademicoId",
                 table: "AsignacionDocentes",
                 column: "PeriodoAcademicoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AsignacionDocentes_PlanEstudioId",
+                table: "AsignacionDocentes",
+                column: "PlanEstudioId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AsignacionDocentes_SeccionId",
@@ -721,6 +753,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "SeccionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlanEstudios_CursoId",
+                table: "PlanEstudios",
+                column: "CursoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Trimestres_PeriodoAcademicoId",
                 table: "Trimestres",
                 column: "PeriodoAcademicoId");
@@ -775,10 +812,10 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Matriculas");
 
             migrationBuilder.DropTable(
-                name: "Cursos");
+                name: "Docentes");
 
             migrationBuilder.DropTable(
-                name: "Docentes");
+                name: "PlanEstudios");
 
             migrationBuilder.DropTable(
                 name: "Alumnos");
@@ -790,10 +827,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Secciones");
 
             migrationBuilder.DropTable(
-                name: "Grados");
+                name: "Cursos");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Grados");
         }
     }
 }

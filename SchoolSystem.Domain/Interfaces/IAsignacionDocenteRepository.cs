@@ -12,14 +12,15 @@ namespace SchoolSystem.Domain.Interfaces
         Task<List<AsignacionDocente>> ObtenerPorSeccionPeriodoAsync(int seccionId, int periodoId);
         Task<List<AsignacionDocente>> ObtenerAsignacionCompletaDocenteAsync(int docenteId, int periodoId);
         Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto);
-        Task<bool> ExisteAsignacionAsync(int docenteId, int cursoId, int seccionId, int periodoId);
+        Task<bool> ExisteAsignacionAsync(int docenteId, int planEstudioId, int seccionId, int periodoId);
         Task<IEnumerable<AsignacionDocente>> GetAllAsync();
         Task ActualizarAsignacionAsync(int id, AsignacionDocente asignacion);
         Task<AsignacionDocente?> ObtenerPorIdAsync(int id);
         Task EliminarAsignacionAsync(int id);
         Task<IEnumerable<AsignacionDocente>> ObtenerPorGradoSeccion(int gradoId, int seccionId);
         Task<IEnumerable<AsignacionDocente>> ObtenerPorPeriodoAsync(int periodoId);
-        Task<int> ObtenerHorasCubiertasCursoAsyn(int cursoId, int gradoId, int seccionId, int periodoId, int excluirId);
+        Task<int> ObtenerHorasCubiertasPlanEstudioAsync(int planEstudioId, int gradoId, int seccionId, int periodoId, int excluirId);
+
         Task<int> ObtenerHorasTotalesDocenteAsync(int docenteId, int periodoId, int excluirId);
     }
-} 
+}

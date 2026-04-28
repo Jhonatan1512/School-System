@@ -23,7 +23,7 @@ namespace School_System.Controllers
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
         private readonly RoleManager<IdentityRole> _roleManager;
         public DocenteController(
-            IDocenteRepository docenteRepository, 
+            IDocenteRepository docenteRepository,  
             UserManager<ApplicationUser> userManager, 
             IDocenteService docenteService, 
             ICalificacionService calificacionService,
