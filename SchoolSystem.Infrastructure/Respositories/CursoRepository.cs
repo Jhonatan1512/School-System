@@ -23,11 +23,16 @@ namespace SchoolSystem.Infrastructure.Respositories
             _context.Cursos.Update(curso);
             await _context.SaveChangesAsync();
         } 
-
+         
         public async Task AgregarCursoAsync(Curso curso)
         {
             await _context.Cursos.AddAsync(curso);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task EliminarCursoAsync(int id)
+        {
+            await _context.Cursos.Where(c => c.Id == id).ExecuteDeleteAsync();
         }
 
         public async Task<bool> ExisteCursoPorNombreYGrado(string nombre, int gradoId)
@@ -54,6 +59,9 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.Cursos
                 .Include(c => c.Competencias)
+                .Include(c => c.Grado)
+                .Include(c => c.PlanEstudios)
+                    .ThenInclude(p => p.PeriodoAcademico)
                 .Include(c => c.Grado)
                 .Where(c => c.GradoId == gradoId)
                 .ToListAsync();

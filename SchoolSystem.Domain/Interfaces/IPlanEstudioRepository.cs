@@ -17,5 +17,6 @@ namespace SchoolSystem.Domain.Interfaces
         Task ActualizarAsync(PlanEstudio planEstudio);
         Task EliminarAsync(int id);
         Task<bool> ExistePlanAsync(int cursoId, TipoJornada tipoJornada);
+        Task<IEnumerable<PlanEstudio>> ObtenerTodosAsync();
     }
 }

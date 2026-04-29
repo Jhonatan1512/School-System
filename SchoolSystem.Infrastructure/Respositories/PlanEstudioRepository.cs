@@ -62,5 +62,13 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.PlanEstudios.AnyAsync(p => p.CursoId == cursoId && p.Jornada == tipoJornada);
         }
+
+        public async Task<IEnumerable<PlanEstudio>> ObtenerTodosAsync()
+        {
+            return await _context.PlanEstudios
+                .Where(p => p.PeriodoAcademico!.EstadoActivo)
+                .Include(p => p.Curso)
+                .ToListAsync();
+        }
     }
 }

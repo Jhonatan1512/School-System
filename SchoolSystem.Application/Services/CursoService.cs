@@ -20,24 +20,12 @@ namespace SchoolSystem.Application.Services
             ICursoRepository cursoRepository,
             IGradoRepository gradoRepository,
             IPlanEstudioRepository planEstudioRepository,
-            IPeriodoAcademicoRepository periodo) 
+            IPeriodoAcademicoRepository periodo)
         {
             _cursoRepository = cursoRepository;
-            _gradoRepository = gradoRepository; 
-            _planEstudioRepository = planEstudioRepository;
+            _gradoRepository = gradoRepository;
+            _planEstudioRepository = planEstudioRepository;  
             _periodo = periodo;
-        }
-
-        public async Task<bool> ActualizarCursoCompetenciaAsync(int id, CursoCompetenciaDto dto)
-        {
-            var cursoExiste = await _cursoRepository.ObtenerPorIdAsync(id);
-            if (cursoExiste == null) return false;
-
-            cursoExiste.Nombre = dto.Nombre;
-            cursoExiste.GradoId = dto.GradoId;
-
-            await _cursoRepository.ActualizarCursoAsync(cursoExiste);
-            return true;
         }
 
         public async Task<Curso> CrearCursoCompetenciaAsync(CrearCursoComptenciasDto dto)
@@ -50,7 +38,7 @@ namespace SchoolSystem.Application.Services
             if (dto.PlanEstudios.Any())
             {
                 var jornadasDistintas = dto.PlanEstudios.Select(p => p.Jornada).Distinct().Count();
-                if(jornadasDistintas > 1)
+                if (jornadasDistintas > 1)
                 {
                     throw new Exception("Un curso no puede estar en 2 planes diferentes en el mismo año escolar");
                 }
@@ -61,7 +49,7 @@ namespace SchoolSystem.Application.Services
             bool jornadaDistinta = await _cursoRepository.ExistePlanPoPerido(jornadaSolicitada);
             if (jornadaDistinta)
             {
-                throw new Exception("La jornada que esta intentando registrar es distinta a los demás grados");
+                throw new Exception("La jornada que esta intentando registrar es distinta a los demás grados en el periodo actual");
             }
 
             bool cursoExiste = await _cursoRepository.ExisteCursoPorNombreYGrado(dto.Nombre, dto.GradoId);
@@ -155,6 +143,7 @@ namespace SchoolSystem.Application.Services
             if (cursoExiste is null) throw new Exception("El curso no existe");
 
             cursoExiste.Nombre = dto.Nombre;
+            cursoExiste.Prioridad = (PrioridadCurso)dto.Prioridad;
             await _cursoRepository.ActualizarCursoAsync(cursoExiste);
         }
 
@@ -162,34 +151,47 @@ namespace SchoolSystem.Application.Services
         {
             var cursos = await _cursoRepository.ObtenerPorGrado(gradoId);
 
-            return cursos.Select(curso => new CursoCompetenciaDto
+            return cursos.Select(curso =>
             {
-                Id = curso.Id,
-                Nombre = curso.Nombre,
-                NombreAula = curso.Grado?.Nombre ?? "Sin Grado",
-                GradoId = curso.GradoId,
-                Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
+                var ultimaAsignacion = curso.PlanEstudios
+                                            .OrderByDescending(p => p.Id)
+                                            .FirstOrDefault();
+
+                return new CursoCompetenciaDto
                 {
-                    Id = comp.Id,
-                    Nombre = comp.Nombre,
-                }).ToList()
+                    Id = curso.Id,
+                    Nombre = curso.Nombre,
+                    NombreAula = curso.Grado?.Nombre ?? "Sin Grado",
+                    GradoId = curso.GradoId,
+                    PlanId = ultimaAsignacion?.Id ?? 0,
+                    PeriodoId = ultimaAsignacion?.PeriodoAcademico?.Id ?? 0,
+
+                    Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
+                    {
+                        Id = comp.Id,
+                        Nombre = comp.Nombre,
+                    }).ToList()
+                };
             }).ToList();
         }
 
         public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerPorGradoSeccionAsyn(int gradoId, int seccionId, int periodoId)
         {
             var cursos = await _cursoRepository.ObtenerPorGrado(gradoId);
-
             var horasAsignadas = await _cursoRepository.ObtenerPorGradoSeccionAsync(gradoId, seccionId, periodoId);
 
             var listaDto = new List<CursoCompetenciaDto>();
 
+            var planes = await _planEstudioRepository.GetAllAsync();
+            var planesDelPeriodoActivo = planes.Where(p => p.PeriodoAcademicoId == periodoId).ToList();
+
             foreach (var curso in cursos)
             {
-                var planes = await _planEstudioRepository.GetAllAsync();
-                var planDelCurso = planes.FirstOrDefault(p => p.CursoId == curso.Id);
+                var planDelCurso = planesDelPeriodoActivo.FirstOrDefault(p => p.CursoId == curso.Id);
 
-                int horasTotalesDelPlan = planDelCurso?.HorasSemanales ?? 0;
+                if (planDelCurso == null) continue;
+
+                int horasTotalesDelPlan = planDelCurso.HorasSemanales;
                 int horasOcupadas = horasAsignadas.TryGetValue(curso.Id, out int ocupadas) ? ocupadas : 0;
                 int horasRestantes = horasTotalesDelPlan - horasOcupadas;
 
@@ -201,6 +203,7 @@ namespace SchoolSystem.Application.Services
                     GradoId = curso.GradoId,
                     HorasSemanales = horasTotalesDelPlan,
                     HorasRestantes = Math.Max(0, horasRestantes),
+                    PlanId = planDelCurso.Id, 
                     Competencias = curso.Competencias.Select(comp => new CrearCompetenciaDto
                     {
                         Id = comp.Id,

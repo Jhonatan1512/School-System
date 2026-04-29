@@ -10,7 +10,8 @@ namespace SchoolSystem.Application.Interfaces
 {
     public interface IPlaEstudiosService
     {
-        Task<PlanEstudiosDto> CrearPlanAsync(CrearPlanEstudioDto dto);
-        Task ActualizarPlanAsync(ActualizarPlanEstudioDto dto);
+        Task<List<PlanEstudiosDto>> CrearPlanAsync(CrearPlanEstudioDto dto);
+        Task ActualizarPlanAsync(int id, ActualizarPlanEstudioDto dto);
+        Task<PageResponseDto<PlanEstudiosDto>> GetPlanEstudiosAsync(int pagina, int cantidad); 
     }
 }

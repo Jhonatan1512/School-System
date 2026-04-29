@@ -23,15 +23,19 @@ namespace School_System.Controllers
             _gradoRepository = gradoRepository;
             _cursoService = cursoService; 
             _periodoAcademicoRepository = periodoAcademicoRepository;
-        }
+        } 
 
         //POST :api/curso
         [HttpPost]
         public async Task<IActionResult> Crearcurso([FromBody] CrearCursoComptenciasDto curso)
         {
+            if (curso == null)
+            {
+                return BadRequest("Todos los curso son obligartorios");
+            }
             try
             {
-                var cursoCreado = await _cursoService.CrearCursoCompetenciaAsync(curso);
+                var cursoCreado = await _cursoService.CrearCursoCompetenciaAsync(curso!);
                 return Ok(new
                 {
                     mensaje = "Curso y Competencias creados",
@@ -56,25 +60,7 @@ namespace School_System.Controllers
             var cursos = await _cursoService.ObtenerTodosAsync(pagina, cantidad);
             return Ok(cursos);
         }
-
-        //PUT :api/curso
-        [HttpPut("{id}")]
-        public async Task<IActionResult> ActualizarCurso(int id, [FromBody] CursoCompetenciaDto dto)
-        {
-            try
-            {
-                var resultado = await _cursoService.ActualizarCursoCompetenciaAsync(id, dto);
-
-                if (!resultado) return NotFound(new {mensaje = "Curso No Encontrado"});
-
-                return Ok(new { mesaje = "Datos del Curso Actualizados", datos = resultado});
-            }
-            catch (Exception ex) 
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-
+        
         [HttpGet("{id}")]
         public async Task<IActionResult> ObtenerPorId(int id)
         {
@@ -128,6 +114,25 @@ namespace School_System.Controllers
                 return Ok(result);
             }
             catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> EliminarCurso(int id)
+        {
+            var cursoExiste = await _cursoRepository.ObtenerPorIdAsync(id);
+            if(cursoExiste is null)
+            {
+                return BadRequest("Curso no encontrado");
+            }
+            try
+            {
+                await _cursoRepository.EliminarCursoAsync(id);
+                return NoContent();
+            } catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

@@ -15,9 +15,10 @@ namespace SchoolSystem.Domain.Interfaces
         Task<IEnumerable<Curso>> ObtenerCursosAsync();
         Task ActualizarCursoAsync(Curso curso);
         Task<Dictionary<int, int>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId, int periodoId); 
-        Task<List<Curso>> ObtenerPorGrado(int gradoId);
+        Task<List<Curso>> ObtenerPorGrado(int gradoId); 
         Task<bool> ExisteCursoPorNombreYGrado(string nombre, int gradoId);
         Task<bool> ExistePlanPoPerido(TipoJornada jornada);
+        Task EliminarCursoAsync(int id);
     }
 }
  

@@ -12,8 +12,8 @@ using SchoolSystem.Infrastructure.Data;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260427194705_CreacionBD")]
-    partial class CreacionBD
+    [Migration("20260429145144_CreacionBd")]
+    partial class CreacionBd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -609,9 +609,14 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("Jornada")
                         .HasColumnType("int");
 
+                    b.Property<int>("PeriodoAcademicoId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CursoId");
+
+                    b.HasIndex("PeriodoAcademicoId");
 
                     b.ToTable("PlanEstudios");
                 });
@@ -736,16 +741,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         {
                             Id = "admin-user-seed-id",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2bab1d64-d625-4a40-8b33-a80a0d0e8bd6",
+                            ConcurrencyStamp = "34001048-a7d4-4fc5-b933-60e9ecd4f55c",
                             Email = "admin@ejemplo.edu.pe",
                             EmailConfirmed = true,
                             EsActivo = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EJEMPLO.EDU.PE",
                             NormalizedUserName = "ADMIN@EJEMPLO.EDU.PE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEPuDqTTMo2oPVxmSwg+0L0acsBlkHgbrht0eptmMWh7KbjfQuTLWnkcnTTUTZgiC6Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDhz6gTmhxnP+HF/sX6A4rlwAA9kfu+LZPHXKYzN3k24t+1lTroGSGZiARbCeNCL5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "0f70bf8f-dc87-4156-a520-d19515ff8c15",
+                            SecurityStamp = "f98daa92-2df2-4bfc-a807-9df8d4a10893",
                             TwoFactorEnabled = false,
                             UserName = "admin@ejemplo.edu.pe"
                         });
@@ -1020,7 +1025,15 @@ namespace SchoolSystem.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
+                        .WithMany()
+                        .HasForeignKey("PeriodoAcademicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Curso");
+
+                    b.Navigation("PeriodoAcademico");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Trimestre", b =>

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionBD : Migration
+    public partial class CreacionBd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -418,7 +418,8 @@ namespace SchoolSystem.Infrastructure.Migrations
                     Jornada = table.Column<int>(type: "int", nullable: false),
                     HorasSemanales = table.Column<int>(type: "int", nullable: false),
                     HorasMaximasPorDia = table.Column<int>(type: "int", nullable: false),
-                    DuracionBloque = table.Column<int>(type: "int", nullable: false)
+                    DuracionBloque = table.Column<int>(type: "int", nullable: false),
+                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -427,6 +428,12 @@ namespace SchoolSystem.Infrastructure.Migrations
                         name: "FK_PlanEstudios_Cursos_CursoId",
                         column: x => x.CursoId,
                         principalTable: "Cursos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PlanEstudios_PeriodoAcademicos_PeriodoAcademicoId",
+                        column: x => x.PeriodoAcademicoId,
+                        principalTable: "PeriodoAcademicos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -579,7 +586,7 @@ namespace SchoolSystem.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "EsActivo", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-seed-id", 0, "2bab1d64-d625-4a40-8b33-a80a0d0e8bd6", "admin@ejemplo.edu.pe", true, true, false, null, "ADMIN@EJEMPLO.EDU.PE", "ADMIN@EJEMPLO.EDU.PE", "AQAAAAIAAYagAAAAEPuDqTTMo2oPVxmSwg+0L0acsBlkHgbrht0eptmMWh7KbjfQuTLWnkcnTTUTZgiC6Q==", null, false, "0f70bf8f-dc87-4156-a520-d19515ff8c15", false, "admin@ejemplo.edu.pe" });
+                values: new object[] { "admin-user-seed-id", 0, "34001048-a7d4-4fc5-b933-60e9ecd4f55c", "admin@ejemplo.edu.pe", true, true, false, null, "ADMIN@EJEMPLO.EDU.PE", "ADMIN@EJEMPLO.EDU.PE", "AQAAAAIAAYagAAAAEDhz6gTmhxnP+HF/sX6A4rlwAA9kfu+LZPHXKYzN3k24t+1lTroGSGZiARbCeNCL5w==", null, false, "f98daa92-2df2-4bfc-a807-9df8d4a10893", false, "admin@ejemplo.edu.pe" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -758,6 +765,11 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "CursoId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlanEstudios_PeriodoAcademicoId",
+                table: "PlanEstudios",
+                column: "PeriodoAcademicoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Trimestres_PeriodoAcademicoId",
                 table: "Trimestres",
                 column: "PeriodoAcademicoId");
@@ -821,13 +833,13 @@ namespace SchoolSystem.Infrastructure.Migrations
                 name: "Alumnos");
 
             migrationBuilder.DropTable(
-                name: "PeriodoAcademicos");
-
-            migrationBuilder.DropTable(
                 name: "Secciones");
 
             migrationBuilder.DropTable(
                 name: "Cursos");
+
+            migrationBuilder.DropTable(
+                name: "PeriodoAcademicos");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

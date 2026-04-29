@@ -738,16 +738,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         {
                             Id = "admin-user-seed-id",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "92b5e9b1-b202-41bc-b58d-604e1f2c7cf2",
+                            ConcurrencyStamp = "34001048-a7d4-4fc5-b933-60e9ecd4f55c",
                             Email = "admin@ejemplo.edu.pe",
                             EmailConfirmed = true,
                             EsActivo = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EJEMPLO.EDU.PE",
                             NormalizedUserName = "ADMIN@EJEMPLO.EDU.PE",
-                            PasswordHash = "AQAAAAIAAYagAAAAELWV8eg0B2GN/i8GlPvN7EBCI+eA2qxgRbFQ1O8+nQMGACT4ZCyI647Scc6hD1WMUQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDhz6gTmhxnP+HF/sX6A4rlwAA9kfu+LZPHXKYzN3k24t+1lTroGSGZiARbCeNCL5w==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4bd23b24-dc0b-4e32-978c-ee651415b755",
+                            SecurityStamp = "f98daa92-2df2-4bfc-a807-9df8d4a10893",
                             TwoFactorEnabled = false,
                             UserName = "admin@ejemplo.edu.pe"
                         });

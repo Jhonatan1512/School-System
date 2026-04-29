@@ -522,9 +522,9 @@
   },
   {
     "ContainingType": "School_System.Controllers.CursoController",
-    "Method": "ActualizarCurso",
+    "Method": "ObtenerPorId",
     "RelativePath": "api/Curso/{id}",
-    "HttpMethod": "PUT",
+    "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -532,20 +532,15 @@
         "Name": "id",
         "Type": "System.Int32",
         "IsRequired": true
-      },
-      {
-        "Name": "dto",
-        "Type": "SchoolSystem.Application.DTOs.CursoCompetenciaDto",
-        "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
     "ContainingType": "School_System.Controllers.CursoController",
-    "Method": "ObtenerPorId",
+    "Method": "EliminarCurso",
     "RelativePath": "api/Curso/{id}",
-    "HttpMethod": "GET",
+    "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -1106,17 +1101,48 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "dto",
-        "Type": "SchoolSystem.Application.DTOs.ActualizarPlanEstudioDto",
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       },
       {
-        "Name": "id",
-        "Type": "",
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarPlanEstudioDto",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PlanEstudioController",
+    "Method": "ObtenerTodos",
+    "RelativePath": "api/PlanEstudio/lista-paginada",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "pagina",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "cantidad",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "SchoolSystem.Application.DTOs.PageResponseDto\u00601[[SchoolSystem.Application.DTOs.PlanEstudiosDto, SchoolSystem.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   },
   {
     "ContainingType": "School_System.Controllers.SeccionController",

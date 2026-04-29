@@ -12,12 +12,14 @@ namespace SchoolSystem.Application.DTOs
         public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string NombreAula {  get; set; } = string.Empty;
-        public int GradoId { get; set; }
+        public int GradoId { get; set; } 
         public int HorasSemanales { get; set; }
         public int HorasMaximasPorDia { get; set; }
         public int HorasRestantes { get; set; }
         public int DuracionBloque {  get; set; } 
         public int Prioridad { get; set; }
+        public int PlanId { get; set; }
+        public int PeriodoId { get; set; }
         public List<CrearCompetenciaDto> Competencias { get; set; } = new List<CrearCompetenciaDto>();
     }
      

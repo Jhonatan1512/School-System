@@ -9,7 +9,7 @@ namespace SchoolSystem.Application.DTOs
 {
     public class CrearPlanEstudioDto
     {
-        public int CursoId { get; set; }
+        public List<int> CursosId { get; set; } = [];
         public TipoJornada Jornada { get; set; }
         public int HorasSemanales { get; set; }
         public int HorasMaximasPorDia { get; set; }
@@ -23,7 +23,7 @@ namespace SchoolSystem.Application.DTOs
         public TipoJornada Jornada { get; set; }
         public int HorasSemanales { get; set; }
         public int HorasMaximasPorDia { get; set; }
-        public int DuracionBloque { get; set; }
+        public int DuracionBloque { get; set; } 
     }
     public class PlanEstudiosDto
     {
@@ -35,5 +35,7 @@ namespace SchoolSystem.Application.DTOs
         public int HorasSemanales { get; set; }
         public int HorasMaximasPorDia { get; set; }
         public int DuracionBloque { get; set; }
+        public string NombrePeriodo {  get; set; } = string.Empty;
+        public int PeriodoId { get; set; }
     }
 }

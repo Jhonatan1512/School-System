@@ -27,8 +27,8 @@ namespace SchoolSystem.Application.Services
 
         public async Task ActualizarAsignacionAsync(int id, AsignacionDocenteDto dto)
         {
-            var asiganacionExiste = await _asignacionDocenteRepository.ObtenerPorIdAsync(id);
-            if (asiganacionExiste == null)
+            var asignacionExiste = await _asignacionDocenteRepository.ObtenerPorIdAsync(id);
+            if (asignacionExiste == null)
             {
                 throw new Exception("Registro de asignación no encontrado");
             }
@@ -39,12 +39,31 @@ namespace SchoolSystem.Application.Services
             var planEstudioInfo = await _planEstudioRepository.ObtenerPorIdAsync(dto.PlanEstudioId);
             if (planEstudioInfo == null) throw new Exception($"Plan de Estudio ID {dto.PlanEstudioId} no encontrado");
 
-            int horasAcumaladasDocente = await _asignacionDocenteRepository
+            if (planEstudioInfo.PeriodoAcademicoId != dto.PeriodoAcademicoId)
+            {
+                throw new Exception($"Inconsistencia detectada: El curso '{planEstudioInfo.Curso?.Nombre}' pertenece a un periodo distinto al actual. Operación rechazada.");
+            }
+
+            var asignacionesDelPeriodo = await _asignacionDocenteRepository.ObtenerPorPeriodoAsync(dto.PeriodoAcademicoId);
+
+            string jornadaActivaEnPeriodo = asignacionesDelPeriodo
+                .Where(a => a.Id != id && a.PlanEstudio != null)
+                .Select(a => a.PlanEstudio!.Jornada.ToString().Trim().ToUpper())
+                .FirstOrDefault(j => !string.IsNullOrEmpty(j)) ?? "";
+
+            string jornadaNuevaAsignacion = planEstudioInfo.Jornada.ToString().Trim().ToUpper() ?? "JER";
+
+            if (!string.IsNullOrEmpty(jornadaActivaEnPeriodo) && jornadaActivaEnPeriodo != jornadaNuevaAsignacion)
+            {
+                throw new Exception($"Conflicto de jornada: El periodo actual está configurado como {jornadaActivaEnPeriodo}. No puedes asignar un curso con jornada {jornadaNuevaAsignacion}.");
+            }
+
+            int horasAcumuladasDocente = await _asignacionDocenteRepository
                 .ObtenerHorasTotalesDocenteAsync(dto.DocenteId, dto.PeriodoAcademicoId, id);
 
-            if (horasAcumaladasDocente + dto.HorasAsignadas > docente.MaxHorasLectivas)
+            if (horasAcumuladasDocente + dto.HorasAsignadas > docente.MaxHorasLectivas)
             {
-                throw new Exception($"El docente {docente.Nombres} excedería su limite de {docente.MaxHorasLectivas}h. Ya tiene {horasAcumaladasDocente}h asignadas");
+                throw new Exception($"El docente {docente.Nombres} excedería su limite de {docente.MaxHorasLectivas}h. Ya tiene {horasAcumuladasDocente}h asignadas");
             }
 
             int horasYaCubiertasCurso = await _asignacionDocenteRepository
@@ -56,14 +75,14 @@ namespace SchoolSystem.Application.Services
                 throw new Exception($"El curso {planEstudioInfo.Curso!.Nombre} solo tiene {disponible}h no cubiertas en esta sección");
             }
 
-            asiganacionExiste.DocenteId = dto.DocenteId;
-            asiganacionExiste.PlanEstudioId = dto.PlanEstudioId;
-            asiganacionExiste.GradoId = dto.GradoId;
-            asiganacionExiste.SeccionId = dto.SeccionId;
-            asiganacionExiste.HorasAsignadas = dto.HorasAsignadas;
-            asiganacionExiste.PeriodoAcademicoId = dto.PeriodoAcademicoId;
+            asignacionExiste.DocenteId = dto.DocenteId;
+            asignacionExiste.PlanEstudioId = dto.PlanEstudioId;
+            asignacionExiste.GradoId = dto.GradoId;
+            asignacionExiste.SeccionId = dto.SeccionId;
+            asignacionExiste.HorasAsignadas = dto.HorasAsignadas;
+            asignacionExiste.PeriodoAcademicoId = dto.PeriodoAcademicoId;
 
-            await _asignacionDocenteRepository.ActualizarAsignacionAsync(id, asiganacionExiste);
+            await _asignacionDocenteRepository.ActualizarAsignacionAsync(id, asignacionExiste);
         }
 
         public async Task<List<AsignacionDocenteDto>> AsignarCursoAsync(AsignacionDocenteCreateDto dto)
@@ -83,10 +102,33 @@ namespace SchoolSystem.Application.Services
                 throw new Exception($"El docente {docente.Nombres} tiene {cargaActualDb}h y excedería el límite con esta asignación.");
             }
 
+            var asignacionesDelPeriodo = await _asignacionDocenteRepository.ObtenerPorPeriodoAsync(dto.PeriodoAcademicoId);
+            string jornadaActivaEnPeriodo = asignacionesDelPeriodo
+                .Where(a => a.PlanEstudio != null)
+                .Select(a => a.PlanEstudio!.Jornada.ToString().Trim().ToUpper())
+                .FirstOrDefault(j => !string.IsNullOrEmpty(j)) ?? "";
+
             foreach (var itemPlan in dto.PlanesEstudio)
             {
                 var planEstudioInfo = await _planEstudioRepository.ObtenerPorIdAsync(itemPlan.PlanEstudioId);
                 if (planEstudioInfo == null) throw new Exception($"Plan de Estudio ID {itemPlan.PlanEstudioId} no encontrado");
+
+                if (planEstudioInfo.PeriodoAcademicoId != dto.PeriodoAcademicoId)
+                {
+                    throw new Exception($"Inconsistencia detectada: El curso '{planEstudioInfo.Curso?.Nombre}' pertenece a un periodo inactivo/diferente. Operación rechazada.");
+                }
+
+                string jornadaPlanActual = planEstudioInfo.Jornada.ToString().Trim().ToUpper() ?? "JER";
+
+                if (!string.IsNullOrEmpty(jornadaActivaEnPeriodo) && jornadaActivaEnPeriodo != jornadaPlanActual)
+                {
+                    throw new Exception($"Conflicto de jornada: El periodo actual trabaja con jornada {jornadaActivaEnPeriodo}. No se puede asignar el curso '{planEstudioInfo.Curso!.Nombre}' porque tiene jornada {jornadaPlanActual}.");
+                }
+
+                if (string.IsNullOrEmpty(jornadaActivaEnPeriodo))
+                {
+                    jornadaActivaEnPeriodo = jornadaPlanActual;
+                }
 
                 int horasYaCubiertasEnSeccion = await _asignacionDocenteRepository
                     .ObtenerHorasCubiertasPlanEstudioAsync(itemPlan.PlanEstudioId, dto.GradoId, dto.SeccionId, dto.PeriodoAcademicoId, 0);
@@ -100,7 +142,7 @@ namespace SchoolSystem.Application.Services
                 var nuevaAsignacion = new AsignacionDocente
                 {
                     DocenteId = dto.DocenteId,
-                    PlanEstudioId = itemPlan.PlanEstudioId, 
+                    PlanEstudioId = itemPlan.PlanEstudioId,
                     GradoId = dto.GradoId,
                     SeccionId = dto.SeccionId,
                     PeriodoAcademicoId = dto.PeriodoAcademicoId,
@@ -113,7 +155,7 @@ namespace SchoolSystem.Application.Services
                 {
                     Id = creada.Id,
                     DocenteId = creada.DocenteId,
-                    PlanEstudioId = creada.PlanEstudioId, 
+                    PlanEstudioId = creada.PlanEstudioId,
                     GradoId = creada.GradoId,
                     SeccionId = creada.SeccionId,
                     PeriodoAcademicoId = creada.PeriodoAcademicoId,
