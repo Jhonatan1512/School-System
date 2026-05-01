@@ -16,7 +16,7 @@ namespace School_System.Controllers
     [Authorize]
     public class DocenteController : ControllerBase
     {   
-        private readonly IDocenteRepository _docenteRepository; 
+        private readonly IDocenteRepository _docenteRepository;  
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IDocenteService _docenteService; 
         private readonly ICalificacionService _calificacionService;
@@ -288,7 +288,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("curso/{cursoId}/seccion/{seccionId}/detalle")]
-        [Authorize(Roles = "Docente")]
+        [Authorize(Roles = "Docente")] 
         public async Task<IActionResult> ObtenerDetallesCurso(int cursoId, int seccionId)
         {
             try

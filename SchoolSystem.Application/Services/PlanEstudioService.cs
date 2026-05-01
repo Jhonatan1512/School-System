@@ -57,7 +57,7 @@ namespace SchoolSystem.Application.Services
                 }
             }
 
-            planExiste.CursoId = dto.CursoId;
+            //planExiste.CursoId = dto.CursoId;
             planExiste.Jornada = dto.Jornada;
             planExiste.HorasMaximasPorDia = dto.HorasMaximasPorDia;
             planExiste.HorasSemanales = dto.HorasSemanales;

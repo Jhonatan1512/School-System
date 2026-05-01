@@ -21,7 +21,7 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task ActualizarDoncenteAsync(Docente docente) 
         {
-            _context.Docentes.Update(docente);
+            _context.Docentes.Update(docente); 
             await _context.SaveChangesAsync();  
         } 
 

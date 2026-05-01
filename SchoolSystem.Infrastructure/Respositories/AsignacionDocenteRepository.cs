@@ -16,7 +16,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             _context = context;
         }
-
+         
         public async Task ActualizarAsignacionAsync(int id, AsignacionDocente asignacion)
         {
             _context.AsignacionDocentes.Update(asignacion);

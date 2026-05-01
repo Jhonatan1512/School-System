@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace SchoolSystem.Domain.Interfaces
 {
     public interface IAsignacionDocenteRepository
-    {
+    { 
         Task<List<AsignacionDocente>> ObtenerPorSeccionPeriodoAsync(int seccionId, int periodoId);
         Task<List<AsignacionDocente>> ObtenerAsignacionCompletaDocenteAsync(int docenteId, int periodoId);
         Task<AsignacionDocente> CrearAsignacionAsync(AsignacionDocente dto);

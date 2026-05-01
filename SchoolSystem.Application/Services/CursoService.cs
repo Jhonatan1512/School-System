@@ -149,13 +149,15 @@ namespace SchoolSystem.Application.Services
 
         public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerPorGrado(int gradoId)
         {
+            var periodoActivo = await _periodo.ObtenerPeriodoAcademicoActivo();
+
             var cursos = await _cursoRepository.ObtenerPorGrado(gradoId);
 
             return cursos.Select(curso =>
             {
                 var ultimaAsignacion = curso.PlanEstudios
-                                            .OrderByDescending(p => p.Id)
-                                            .FirstOrDefault();
+                                            .FirstOrDefault(p => periodoActivo != null &&
+                                            p.PeriodoAcademicoId == periodoActivo.Id);
 
                 return new CursoCompetenciaDto
                 {
@@ -172,7 +174,7 @@ namespace SchoolSystem.Application.Services
                         Nombre = comp.Nombre,
                     }).ToList()
                 };
-            }).ToList();
+            }).ToList(); 
         }
 
         public async Task<IEnumerable<CursoCompetenciaDto>> ObtenerPorGradoSeccionAsyn(int gradoId, int seccionId, int periodoId)

@@ -14,7 +14,7 @@ namespace SchoolSystem.Application.Services
         private readonly IHorarioRepository _horarioRepository;
         private readonly IAsignacionDocenteRepository _asignacionDocenteRepository;
         private readonly IHoraLectivaRepository _horaLectivaRepository;
-        private static readonly Random _random = new Random(); 
+        private static readonly Random _random = new Random();
 
         public HorarioService(
           IHorarioRepository horarioRepository,
@@ -22,7 +22,7 @@ namespace SchoolSystem.Application.Services
           IHoraLectivaRepository horaLectivaRepository)
         {
             _horarioRepository = horarioRepository;
-            _asignacionDocenteRepository = asignacionDocenteRepository; 
+            _asignacionDocenteRepository = asignacionDocenteRepository;
             _horaLectivaRepository = horaLectivaRepository;
         }
 
@@ -34,7 +34,7 @@ namespace SchoolSystem.Application.Services
 
             var asignacionesPriorizadas = asignaciones
               .OrderByDescending(a => a.PlanEstudio!.DuracionBloque)
-              .ThenByDescending(a => a.PlanEstudio!.HorasSemanales)
+              .ThenByDescending(a => a.HorasAsignadas)
               .ThenBy(a => (int)a.PlanEstudio!.Curso!.Prioridad)
               .ThenBy(a => a.GradoId)
               .ThenBy(a => a.SeccionId)
@@ -42,49 +42,77 @@ namespace SchoolSystem.Application.Services
 
             await _horarioRepository.LimpiarHorariosPeriodoAsync(periodoId);
 
-            var nuevosHorariosMemoria = new List<Horario>();
-            var horasAsignadasDocenteSemanales = new Dictionary<int, int>();
-            var advertencias = new List<string>();
             var dias = new[] { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes" };
 
-            // Ronda 1: Bloques de 2h, en horas aleatorias dentro de las primeras 6
-            await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertencias, periodoId, 2, tipoRonda: "Primeras6");
+            // --- MOTOR DE MÚLTIPLES INTENTOS ---
+            int maxIntentos = 15;
+            int menorFaltantes = int.MaxValue;
+            List<Horario> mejorHorarioMemoria = new List<Horario>();
+            List<string> mejoresAdvertencias = new List<string>();
 
-            // Ronda 2: Bloques de 2h, en cualquier hora aleatoria restante
-            await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertencias, periodoId, 2, tipoRonda: "Todas");
-
-            // Ronda 3: Bloques de 1h, prioridad en la hora que sobra (7ma hora)
-            await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertencias, periodoId, 1, tipoRonda: "Restantes");
-
-            // Ronda 4: Bloques de 1h, en cualquier espacio aleatorio
-            await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertencias, periodoId, 1, tipoRonda: "Todas");
-
-            // Ronda 5: Múltiples intentos de rescate con alta aleatoriedad para encajar los rebeldes
-            for (int i = 0; i < 5; i++)
+            for (int intento = 1; intento <= maxIntentos; intento++)
             {
-                await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertencias, periodoId, 1, tipoRonda: "Rescate");
-            }
+                var nuevosHorariosMemoria = new List<Horario>();
+                var horasAsignadasDocenteSemanales = new Dictionary<int, int>();
+                var advertenciasActuales = new List<string>();
+                int faltantesActuales = 0;
 
-            // Verificación final
-            foreach (var asig in asignaciones)
-            {
-                int horasYaAsignadas = nuevosHorariosMemoria.Count(m => m.AsignacionDocenteId == asig.Id);
-                int faltan = asig.PlanEstudio!.HorasSemanales - horasYaAsignadas;
+                // Ronda 1: Bloques de 2h, en horas aleatorias dentro de las primeras 6
+                await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertenciasActuales, periodoId, 2, tipoRonda: "Primeras6");
 
-                if (faltan > 0)
+                // Ronda 2: Bloques de 2h, en cualquier hora aleatoria restante
+                await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertenciasActuales, periodoId, 2, tipoRonda: "Todas");
+
+                // Ronda 3: Bloques de 1h, prioridad en la hora que sobra (7ma hora)
+                await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertenciasActuales, periodoId, 1, tipoRonda: "Restantes");
+
+                // Ronda 4: Bloques de 1h, en cualquier espacio aleatorio
+                await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertenciasActuales, periodoId, 1, tipoRonda: "Todas");
+
+                // Ronda 5: Múltiples intentos de rescate con alta aleatoriedad para encajar cursos sueltos
+                for (int i = 0; i < 5; i++)
                 {
-                    var jornadaStr = asig.PlanEstudio.Jornada.ToString() ?? "JER";
-                    string alerta = $"Incompleto: {asig.PlanEstudio.Curso!.Nombre} en {asig.Grado?.Nombre} {asig.Seccion?.Nombre} ({jornadaStr}). Faltaron {faltan}h.";
-                    if (!advertencias.Contains(alerta)) advertencias.Add(alerta);
+                    await ProcesarRondaAsync(asignacionesPriorizadas, dias, todosLosBloques, nuevosHorariosMemoria, horasAsignadasDocenteSemanales, advertenciasActuales, periodoId, 1, tipoRonda: "Rescate");
+                }
+
+                // Verificación final del intento actual
+                foreach (var asig in asignaciones)
+                {
+                    int horasYaAsignadas = nuevosHorariosMemoria.Count(m => m.AsignacionDocenteId == asig.Id);
+                    int faltan = asig.HorasAsignadas - horasYaAsignadas;
+
+                    if (faltan > 0)
+                    {
+                        faltantesActuales += faltan;
+                        var jornadaStr = asig.PlanEstudio!.Jornada.ToString() ?? "JER";
+                        string alerta = $"Incompleto: {asig.PlanEstudio.Curso!.Nombre} en {asig.Grado?.Nombre} {asig.Seccion?.Nombre} ({jornadaStr}). Faltaron {faltan}h.";
+                        if (!advertenciasActuales.Contains(alerta)) advertenciasActuales.Add(alerta);
+                    }
+                }
+
+                if (faltantesActuales < menorFaltantes)
+                {
+                    menorFaltantes = faltantesActuales;
+                    mejorHorarioMemoria = nuevosHorariosMemoria;
+                    mejoresAdvertencias = advertenciasActuales;
+                }
+
+                if (menorFaltantes == 0)
+                {
+                    break;
                 }
             }
 
-            await _horarioRepository.InsertarRangoAsync(nuevosHorariosMemoria);
+            await _horarioRepository.InsertarRangoAsync(mejorHorarioMemoria);
 
             result.Exito = true;
-            result.HorasAsignadas = nuevosHorariosMemoria.Count;
-            result.Advertencias = advertencias.Distinct().ToList();
-            result.Mensaje = "Horario generado exitosamente respetando Jornadas JER/JEC.";
+            result.HorasAsignadas = mejorHorarioMemoria.Count;
+            result.Advertencias = mejoresAdvertencias.Distinct().ToList();
+
+            if (menorFaltantes == 0)
+                result.Mensaje = "¡Éxito total! Horario generado exitosamente. Cero horas faltantes.";
+            else
+                result.Mensaje = $"Horario generado exitosamente. Se eligió el mejor resultado tras {maxIntentos} intentos (Faltaron {menorFaltantes}h en total).";
 
             return result;
         }
@@ -138,7 +166,7 @@ namespace SchoolSystem.Application.Services
                 foreach (var dia in diasAleatorios)
                 {
                     int horasYaAsignadas = nuevosHorariosMemoria.Count(m => m.AsignacionDocenteId == asig.Id);
-                    int horasRestantes = asig.PlanEstudio!.HorasSemanales - horasYaAsignadas;
+                    int horasRestantes = asig.HorasAsignadas - horasYaAsignadas;
 
                     if (horasRestantes < tamanoBloqueAColocar) break;
 
@@ -246,7 +274,7 @@ namespace SchoolSystem.Application.Services
         private string FormatearCelda(IEnumerable<Horario> horarios, string dia, int bloqueId)
         {
             var h = horarios.FirstOrDefault(x => x.DiaSemana == dia && x.HoraLectivaId == bloqueId);
-            return h == null ? "-" : $"{h.AsignacionDocente?.PlanEstudio?.Curso?.Nombre}\n({h.AsignacionDocente?.Docente?.Nombres})";
+            return h == null ? "-" : $"{h.AsignacionDocente?.PlanEstudio?.Curso?.Nombre}\n({h.AsignacionDocente?.Docente?.Nombres} {h.AsignacionDocente?.Docente?.Apellidos})";
         }
     }
 }

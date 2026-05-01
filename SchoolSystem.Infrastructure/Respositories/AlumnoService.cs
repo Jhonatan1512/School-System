@@ -21,7 +21,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly IMatriculaRepository _matriculaRepository; 
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
          
-        public AlumnoService(   
+        public AlumnoService(    
             ApplicationDbContext context, 
             IAlumnoRespository alumnoRepository, 
             IPeriodoAcademicoRepository periodoAcademicoRepository,  
@@ -38,13 +38,19 @@ namespace SchoolSystem.Infrastructure.Respositories
         }
         public async Task<PageResponseDto<AlumnoDto>> GetAll(int pagina, int cantidad)
         {
+            
             var query = from alumno in _context.Alumnos 
                         join usuario in _context.Users
                         on alumno.UsuarioId equals usuario.Id 
+                        
+                        
 
                         join matricula in _context.Matriculas 
                         on alumno.Id equals matricula.AlumnoId into matriculasGrupo
                         from m in matriculasGrupo.DefaultIfEmpty()
+
+                        join periodo in _context.PeriodoAcademicos.Where(p => p.EstadoActivo)
+                        on m.PeriodoAcademicoId equals periodo.Id
 
                         join grado in _context.Grados 
                         on m.GradoId equals grado.Id  into gradosGrupo
@@ -53,6 +59,8 @@ namespace SchoolSystem.Infrastructure.Respositories
                         join seccion in _context.Secciones
                         on m.SeccionId equals seccion.Id into seccionesGrupo 
                         from s in seccionesGrupo.DefaultIfEmpty()
+
+                        
 
                         select new AlumnoDto
                         {

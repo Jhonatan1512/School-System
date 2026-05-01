@@ -6,6 +6,7 @@ using SchoolSystem.Infrastructure.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace SchoolSystem.Infrastructure.Respositories
@@ -103,12 +104,26 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<DetalleCursoDto> ObtenerDetalleCursoAsync(int docenteId, int cursoId, int seccionId, int periodoId)
         {
-            bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(docenteId, cursoId, seccionId, periodoId);
-            if (!esSuProfesor) throw new Exception("Acceso Denegado a Esta Sección");
+            var planEstudio = await _context.PlanEstudios
+                .FirstOrDefaultAsync(p => p.CursoId == cursoId && p.PeriodoAcademicoId == periodoId);
+
+            if (planEstudio == null)
+                throw new Exception("No existe un plan de estudio configurado para este curso en el periodo actual.");
+
+            bool esSuProfesor = await _asignacionDocenteRepository.ExisteAsignacionAsync(
+                docenteId,
+                planEstudio.Id,
+                seccionId,
+                periodoId
+            );
+
+            if (!esSuProfesor)
+                throw new Exception("Acceso Denegado a Esta Sección: No se encontró una asignación vigente para este plan de estudios.");
 
             var curso = await _context.Cursos
                 .Include(c => c.Competencias)
                 .FirstOrDefaultAsync(c => c.Id == cursoId);
+
             if (curso == null) throw new Exception("Curso no encontrado");
 
             var matriculas = await _context.Matriculas
@@ -117,7 +132,9 @@ namespace SchoolSystem.Infrastructure.Respositories
                 .Include(m => m.Seccion)
                 .Include(m => m.DetallesMatriculas)
                     .ThenInclude(d => d.Calificaciones)
-                .Where(m => m.SeccionId == seccionId && m.PeriodoAcademicoId == periodoId && m.Alumno!.Estado == Domain.Enums.AlumnoEnum.Activo)
+                .Where(m => m.SeccionId == seccionId
+                         && m.PeriodoAcademicoId == periodoId
+                         && m.Alumno!.Estado == Domain.Enums.AlumnoEnum.Activo)
                 .ToListAsync();
 
             var trimestre = await _context.Trimestres.FirstOrDefaultAsync(t => t.EstadoActivo);
