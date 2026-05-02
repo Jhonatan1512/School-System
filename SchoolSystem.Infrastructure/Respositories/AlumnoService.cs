@@ -18,7 +18,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         private readonly ApplicationDbContext _context;
         public readonly IAlumnoRespository _alumnoRepository;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
-        private readonly IMatriculaRepository _matriculaRepository; 
+        private readonly IMatriculaRepository _matriculaRepository;  
         private readonly IAsignacionDocenteRepository _signacionDocenteRepository;
          
         public AlumnoService(    
@@ -37,13 +37,10 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         }
         public async Task<PageResponseDto<AlumnoDto>> GetAll(int pagina, int cantidad)
-        {
-            
+        {             
             var query = from alumno in _context.Alumnos 
                         join usuario in _context.Users
-                        on alumno.UsuarioId equals usuario.Id 
-                        
-                        
+                        on alumno.UsuarioId equals usuario.Id                 
 
                         join matricula in _context.Matriculas 
                         on alumno.Id equals matricula.AlumnoId into matriculasGrupo
@@ -54,13 +51,11 @@ namespace SchoolSystem.Infrastructure.Respositories
 
                         join grado in _context.Grados 
                         on m.GradoId equals grado.Id  into gradosGrupo
-                        from g in gradosGrupo.DefaultIfEmpty()
+                        from g in gradosGrupo.DefaultIfEmpty() 
 
                         join seccion in _context.Secciones
                         on m.SeccionId equals seccion.Id into seccionesGrupo 
-                        from s in seccionesGrupo.DefaultIfEmpty()
-
-                        
+                        from s in seccionesGrupo.DefaultIfEmpty()                   
 
                         select new AlumnoDto
                         {
@@ -123,7 +118,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                             Aula = (grado != null && secciones != null)
                                     ? $"{grado.Nombre}{secciones.Nombre}" : "Sin Aula",
 
-                            gradoId = grado != null ? grado.Id : 0,
+                            GradoId = grado != null ? grado.Id : 0,
 
                             FechaNacimiento = alumno.FechaNacimiento,
                             Sexo = alumno.Sexo,
@@ -294,6 +289,29 @@ namespace SchoolSystem.Infrastructure.Respositories
             } 
 
             await _alumnoRepository.ActualizarAlumnoAsync(alumnoExiste);            
+        }
+
+        public async Task<AlumnoDto?> GetPerfilAsync(string usuarioId)
+        {
+            var datos = from alumno in _context.Alumnos
+                         join usuario in _context.Users
+                         on alumno.UsuarioId equals usuario.Id
+                         join matricula in _context.Matriculas
+                         on alumno.Id equals matricula.AlumnoId
+                         where usuario.Id == usuarioId
+                         select new AlumnoDto
+                         {
+                             Id = alumno.Id,
+                             Nombre = alumno.Nombre,
+                             Apellidos = alumno.Apellidos,
+                             FechaNacimiento = alumno.FechaNacimiento,
+                             Dni = alumno.Dni,
+                             Sexo = alumno.Sexo,
+                             Email = usuario.Email!,
+                             GradoId = matricula.GradoId,
+                             SeccionId = matricula.SeccionId,
+                         };
+            return await datos.FirstOrDefaultAsync();
         }
     }
 }

@@ -12,6 +12,7 @@ namespace SchoolSystem.Application.Interfaces
     {
         Task<HorarioResultDto> GenerarHorarioAsync(int periodoId);
         Task<List<HorarioSeccionDto>> ObtenerHorariosPorGradoSeccion(int gradoId, int seccionId, int periodoId);
+        Task<List<HorarioSeccionDto>> ObtenerPorDocenteAsync(int docenteId, int periodoId);
     }
 }
  

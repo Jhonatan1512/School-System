@@ -191,7 +191,7 @@
   {
     "ContainingType": "School_System.Controllers.AlumnoController",
     "Method": "CambiarMiPassword",
-    "RelativePath": "api/Alumno/passowrd",
+    "RelativePath": "api/Alumno/password",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -202,6 +202,16 @@
         "IsRequired": true
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "GetPerfil",
+    "RelativePath": "api/Alumno/perfil-alumno",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
@@ -503,6 +513,22 @@
         "StatusCode": 200
       }
     ]
+  },
+  {
+    "ContainingType": "School_System.Controllers.CronogramaMatriculaController",
+    "Method": "CrearCronograma",
+    "RelativePath": "api/CronogramaMatricula",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.CronogramaMatriculaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
   },
   {
     "ContainingType": "School_System.Controllers.CursoController",
@@ -912,6 +938,22 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.HorariosController",
+    "Method": "HorarioDocente",
+    "RelativePath": "api/Horarios/horarioDocente/{docenteId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "docenteId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   },
   {

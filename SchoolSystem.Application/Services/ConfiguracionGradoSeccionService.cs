@@ -96,9 +96,9 @@ namespace SchoolSystem.Application.Services
 
             foreach(var l in configuracionFiltrada)
             {
-                var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(l.GradoId, l.SeccionId, l.PeriodoacademicoId);
+                //var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(l.GradoId, l.SeccionId, l.PeriodoacademicoId);
 
-                if(totalInscritos < l.CapacidadMax)
+                if(l.VacantesOcupadas < l.CapacidadMax)
                 {
                     listaDto.Add(new ConfiguracionDetalleDto
                     {
@@ -110,7 +110,7 @@ namespace SchoolSystem.Application.Services
                         SeccionId = l.Seccion.Id,
                         PeriodoId = l.PeriodoAcademico.Id,
                         Capacidad = l.CapacidadMax,
-                        TotalMatriculados = totalInscritos,
+                        VacantesOcupadas = l.VacantesOcupadas,
                     });
                 }
             }
@@ -129,7 +129,7 @@ namespace SchoolSystem.Application.Services
 
             foreach (var item in configuracion)
             {
-                var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(item.GradoId, item.SeccionId, item.PeriodoacademicoId);
+                //var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(item.GradoId, item.SeccionId, item.PeriodoacademicoId);
 
                 listaDtos.Add(new ConfiguracionDetalleDto
                 {
@@ -141,7 +141,7 @@ namespace SchoolSystem.Application.Services
                     SeccionId = item.Seccion.Id,
                     PeriodoId = item.PeriodoAcademico.Id,
                     Capacidad = item.CapacidadMax,
-                    TotalMatriculados = totalInscritos,
+                    VacantesOcupadas = item.VacantesOcupadas,
                 });
             }
 
@@ -159,7 +159,7 @@ namespace SchoolSystem.Application.Services
             var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(gradoId, seccionId, periodoActivo.Id);
             if (config is null) return null!;
 
-            int inscritos = await matriculaRepository.ContarMatrculadosAsync(gradoId, seccionId, periodoActivo.Id);
+            //int inscritos = await matriculaRepository.ContarMatrculadosAsync(gradoId, seccionId, periodoActivo.Id);
 
             return new ConfiguracionDetalleDto
             {
@@ -168,7 +168,7 @@ namespace SchoolSystem.Application.Services
                 NombreSeccion = config.Seccion!.Nombre,
                 PeriodoAcademico = config.PeriodoAcademico!.Nombre,
                 Capacidad = config.CapacidadMax,
-                TotalMatriculados = inscritos,
+                VacantesOcupadas = config.VacantesOcupadas,
             };
         }
     }

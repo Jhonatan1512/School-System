@@ -12,8 +12,8 @@ using SchoolSystem.Infrastructure.Data;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260429145144_CreacionBd")]
-    partial class CreacionBd
+    [Migration("20260502152122_CreaciónBD")]
+    partial class CreaciónBD
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -342,7 +342,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Property<int>("PeriodoacademicoId")
                         .HasColumnType("int");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
                     b.Property<int>("SeccionId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("VacantesOcupadas")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -354,6 +363,38 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.HasIndex("SeccionId");
 
                     b.ToTable("ConfiguracionGradoSecciones");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.CronogramaMatricula", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("EstadoActivo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("FechaHoraFin")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("FechaHoraInicio")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("GradoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeriodoAcademicoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GradoId");
+
+                    b.HasIndex("PeriodoAcademicoId");
+
+                    b.ToTable("CronogramaMatriculas");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Curso", b =>
@@ -741,16 +782,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                         {
                             Id = "admin-user-seed-id",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "34001048-a7d4-4fc5-b933-60e9ecd4f55c",
+                            ConcurrencyStamp = "2552d03c-bf25-48bd-9cbe-3fec8cd6dca8",
                             Email = "admin@ejemplo.edu.pe",
                             EmailConfirmed = true,
                             EsActivo = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EJEMPLO.EDU.PE",
                             NormalizedUserName = "ADMIN@EJEMPLO.EDU.PE",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDhz6gTmhxnP+HF/sX6A4rlwAA9kfu+LZPHXKYzN3k24t+1lTroGSGZiARbCeNCL5w==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEL/kJkF3gOL0EcOiEC3eGL1iL7QkipOK0ysXJYPhtspokwghHVGgQ8SUM29eVMTHGA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f98daa92-2df2-4bfc-a807-9df8d4a10893",
+                            SecurityStamp = "298f3b05-2527-4e9b-81f3-d380d84fb360",
                             TwoFactorEnabled = false,
                             UserName = "admin@ejemplo.edu.pe"
                         });
@@ -922,6 +963,25 @@ namespace SchoolSystem.Infrastructure.Migrations
                     b.Navigation("PeriodoAcademico");
 
                     b.Navigation("Seccion");
+                });
+
+            modelBuilder.Entity("SchoolSystem.Domain.Entities.CronogramaMatricula", b =>
+                {
+                    b.HasOne("SchoolSystem.Domain.Entities.Grado", "Grado")
+                        .WithMany()
+                        .HasForeignKey("GradoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SchoolSystem.Domain.Entities.PeriodoAcademico", "PeriodoAcademico")
+                        .WithMany()
+                        .HasForeignKey("PeriodoAcademicoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grado");
+
+                    b.Navigation("PeriodoAcademico");
                 });
 
             modelBuilder.Entity("SchoolSystem.Domain.Entities.Curso", b =>

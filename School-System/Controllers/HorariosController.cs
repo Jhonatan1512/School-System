@@ -20,6 +20,7 @@ namespace School_System.Controllers
         }
           
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Generar()
         {
             var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
@@ -29,6 +30,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("ver/{gradoId}/{seccionId}")]
+        [Authorize]
         public async Task<IActionResult> VerHorario(int gradoId, int seccionId)
         {
             var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
@@ -36,6 +38,23 @@ namespace School_System.Controllers
             var result = await _horarioService.ObtenerHorariosPorGradoSeccion(gradoId, seccionId, periodoActivo!.Id);
 
             return Ok(result);
+        }
+
+        [HttpGet("horarioDocente/{docenteId:int}")]
+        [Authorize(Roles = "Docente")]
+        public async Task<IActionResult> HorarioDocente(int docenteId)
+        {
+            try
+            {
+                var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+
+                var result = await _horarioService.ObtenerPorDocenteAsync(docenteId, periodoActivo!.Id);
+                return Ok(result);
+
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

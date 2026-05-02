@@ -24,7 +24,7 @@ namespace SchoolSystem.Infrastructure.Repositories
                 .AnyAsync(h => h.DiaSemana == dia &&
                                h.HoraLectivaId == horaLectiva &&
                                h.AsignacionDocente!.DocenteId == docenteId && 
-                               h.AsignacionDocente.PeriodoAcademicoId == periodoId);
+                               h.AsignacionDocente.PeriodoAcademicoId == periodoId); 
         }
 
         public async Task<bool> ExisteCruceSeccion(int seccionId, string dia, int horaLectivaId, int periodoId)
@@ -63,6 +63,22 @@ namespace SchoolSystem.Infrastructure.Repositories
                 _context.Horario.RemoveRange(horariosExiste);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task<List<Horario>> ObtenerPorDocentePeriodoAsync(int docenteId, int periodoId)
+        {
+            return await _context.Horario
+                .Include(h => h.AsignacionDocente)
+                    .ThenInclude(a => a!.PlanEstudio!.Curso)
+                .Include(h => h.AsignacionDocente)
+                    .ThenInclude(a => a!.Docente)
+                .Include(h => h.AsignacionDocente)
+                    .ThenInclude(a => a!.Grado)
+                .Include(h => h.AsignacionDocente)
+                    .ThenInclude(a => a!.Seccion)
+                .Where(h => h.AsignacionDocente!.DocenteId == docenteId &&
+                            h.AsignacionDocente.PeriodoAcademicoId == periodoId)
+                .ToListAsync();
         }
 
         public async Task<List<Horario>> ObtenerPorGradoSeccionPeriodo(int gradoId, int seccionId, int periodoId)

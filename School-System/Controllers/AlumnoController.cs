@@ -47,7 +47,7 @@ namespace School_System.Controllers
         {
             if(pagina < 1) pagina = 1;
             if(cantidad > 20) cantidad = 20;
-            var alumnos = await _alumnoService.GetAll(pagina, cantidad);
+            var alumnos = await _alumnoService.GetAll(pagina, cantidad); 
             return Ok(alumnos);  
         }
 
@@ -223,7 +223,7 @@ namespace School_System.Controllers
             });
         }
 
-        [HttpPut("passowrd")]
+        [HttpPut("password")]
         [Authorize(Roles = "Alumno")]
         public async Task<IActionResult> CambiarMiPassword([FromBody] UserResetPasswordDto alumnoResetPasswordDto)
         {
@@ -340,6 +340,26 @@ namespace School_System.Controllers
 
                 await _alumnoService.ActualizarEstadoAsync(id, dto);
                 return Ok(new { mensaje = "Estado del alumno actualizado"});
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("perfil-alumno")]
+        [Authorize(Roles = "Alumno")]
+        public async Task<IActionResult> GetPerfil()
+        {
+            try
+            {
+                var usuarioId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrWhiteSpace(usuarioId))
+                {
+                    return NotFound();
+                }
+
+                var perfil = await _alumnoService.GetPerfilAsync(usuarioId);
+                return Ok(perfil);
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

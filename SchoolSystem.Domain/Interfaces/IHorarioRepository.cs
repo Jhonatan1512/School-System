@@ -13,6 +13,7 @@ namespace SchoolSystem.Domain.Interfaces
         Task<bool> ExisteCruceSeccion(int seccionId, string dia, int horaLectivaId, int periodoId);
         Task InsertarRangoAsync(IEnumerable<Horario> horarios);
         Task LimpiarHorariosPeriodoAsync(int periodoId);
-        Task<List<Horario>> ObtenerPorGradoSeccionPeriodo(int gradoId, int seccionId, int periodoId);
+        Task<List<Horario>> ObtenerPorGradoSeccionPeriodo(int gradoId, int seccionId, int periodoId); 
+        Task<List<Horario>> ObtenerPorDocentePeriodoAsync(int docenteId,  int periodoId);
     }
 }

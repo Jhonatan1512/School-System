@@ -27,6 +27,7 @@ namespace SchoolSystem.Infrastructure.Data
         public DbSet<ConfiguracionGradoSeccion> ConfiguracionGradoSecciones => Set<ConfiguracionGradoSeccion>();
         public DbSet<HoraLectiva> HorasLectivas => Set<HoraLectiva>();
         public DbSet<PlanEstudio> PlanEstudios => Set<PlanEstudio>();
+        public DbSet<CronogramaMatricula> CronogramaMatriculas => Set<CronogramaMatricula>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

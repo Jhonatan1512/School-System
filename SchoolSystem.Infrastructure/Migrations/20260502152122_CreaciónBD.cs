@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SchoolSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class CreacionBd : Migration
+    public partial class CreaciónBD : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -292,6 +292,35 @@ namespace SchoolSystem.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CronogramaMatriculas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    PeriodoAcademicoId = table.Column<int>(type: "int", nullable: false),
+                    GradoId = table.Column<int>(type: "int", nullable: false),
+                    FechaHoraInicio = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FechaHoraFin = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EstadoActivo = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CronogramaMatriculas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CronogramaMatriculas_Grados_GradoId",
+                        column: x => x.GradoId,
+                        principalTable: "Grados",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CronogramaMatriculas_PeriodoAcademicos_PeriodoAcademicoId",
+                        column: x => x.PeriodoAcademicoId,
+                        principalTable: "PeriodoAcademicos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Trimestres",
                 columns: table => new
                 {
@@ -323,7 +352,9 @@ namespace SchoolSystem.Infrastructure.Migrations
                     GradoId = table.Column<int>(type: "int", nullable: false),
                     SeccionId = table.Column<int>(type: "int", nullable: false),
                     PeriodoacademicoId = table.Column<int>(type: "int", nullable: false),
-                    CapacidadMax = table.Column<int>(type: "int", nullable: false)
+                    CapacidadMax = table.Column<int>(type: "int", nullable: false),
+                    VacantesOcupadas = table.Column<int>(type: "int", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -586,7 +617,7 @@ namespace SchoolSystem.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "EsActivo", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-seed-id", 0, "34001048-a7d4-4fc5-b933-60e9ecd4f55c", "admin@ejemplo.edu.pe", true, true, false, null, "ADMIN@EJEMPLO.EDU.PE", "ADMIN@EJEMPLO.EDU.PE", "AQAAAAIAAYagAAAAEDhz6gTmhxnP+HF/sX6A4rlwAA9kfu+LZPHXKYzN3k24t+1lTroGSGZiARbCeNCL5w==", null, false, "f98daa92-2df2-4bfc-a807-9df8d4a10893", false, "admin@ejemplo.edu.pe" });
+                values: new object[] { "admin-user-seed-id", 0, "2552d03c-bf25-48bd-9cbe-3fec8cd6dca8", "admin@ejemplo.edu.pe", true, true, false, null, "ADMIN@EJEMPLO.EDU.PE", "ADMIN@EJEMPLO.EDU.PE", "AQAAAAIAAYagAAAAEL/kJkF3gOL0EcOiEC3eGL1iL7QkipOK0ysXJYPhtspokwghHVGgQ8SUM29eVMTHGA==", null, false, "298f3b05-2527-4e9b-81f3-d380d84fb360", false, "admin@ejemplo.edu.pe" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
@@ -704,6 +735,16 @@ namespace SchoolSystem.Infrastructure.Migrations
                 column: "SeccionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CronogramaMatriculas_GradoId",
+                table: "CronogramaMatriculas",
+                column: "GradoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CronogramaMatriculas_PeriodoAcademicoId",
+                table: "CronogramaMatriculas",
+                column: "PeriodoAcademicoId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Cursos_GradoId",
                 table: "Cursos",
                 column: "GradoId");
@@ -798,6 +839,9 @@ namespace SchoolSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "ConfiguracionGradoSecciones");
+
+            migrationBuilder.DropTable(
+                name: "CronogramaMatriculas");
 
             migrationBuilder.DropTable(
                 name: "Horario");

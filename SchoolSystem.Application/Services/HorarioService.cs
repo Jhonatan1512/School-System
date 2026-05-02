@@ -276,5 +276,72 @@ namespace SchoolSystem.Application.Services
             var h = horarios.FirstOrDefault(x => x.DiaSemana == dia && x.HoraLectivaId == bloqueId);
             return h == null ? "-" : $"{h.AsignacionDocente?.PlanEstudio?.Curso?.Nombre}\n({h.AsignacionDocente?.Docente?.Nombres} {h.AsignacionDocente?.Docente?.Apellidos})";
         }
+
+        public async Task<List<HorarioSeccionDto>> ObtenerPorDocenteAsync(int docenteId, int periodoId)
+        {
+            var horarios = await _horarioRepository.ObtenerPorDocentePeriodoAsync(docenteId, periodoId);
+            var todasHoras = await _horaLectivaRepository.GetAllAsync();
+
+            // Determinamos la jornada (JER o JEC) basándonos en la primera asignación
+            var jornadaEnum = horarios.FirstOrDefault()?.AsignacionDocente?.PlanEstudio?.Jornada;
+            var jornadaSeccion = jornadaEnum != null ? jornadaEnum.ToString()!.Trim().ToUpper() : "JER";
+
+            var bloquesFiltrados = todasHoras
+                .Where(b => (jornadaSeccion == "JER" && b.AplicaJER) || (jornadaSeccion == "JEC" && b.AplicaJEC))
+                .OrderBy(b => b.Orden)
+                .ToList();
+
+            // Como el docente tiene varios grados/secciones, la cabecera generalizamos a la Jornada
+            string tituloCabecera = $"Horario Docente - {jornadaSeccion}";
+
+            var tablaDto = new List<HorarioSeccionDto>();
+
+            foreach (var bloque in bloquesFiltrados)
+            {
+                var fila = new HorarioSeccionDto
+                {
+                    HoraLectivaId = bloque.Id,
+                    Bloque = bloque.Nombre,
+                    RangoHora = $"{bloque.HoraInicio:hh\\:mm} - {bloque.HoraFin:hh\\:mm}",
+                    EsProductiva = bloque.EsProductiva,
+                    GradoSeccion = tituloCabecera // O puedes omitir este campo si no lo usas en el frontend para docentes
+                };
+
+                if (!bloque.EsProductiva)
+                {
+                    fila.Lunes = fila.Martes = fila.Miercoles = fila.Jueves = fila.Viernes = "RECREO";
+                }
+                else
+                {
+                    // Pasamos los horarios completos, el día de la semana y el ID del bloque
+                    fila.Lunes = FormatearCeldaDocente(horarios, "Lunes", bloque.Id);
+                    fila.Martes = FormatearCeldaDocente(horarios, "Martes", bloque.Id);
+                    fila.Miercoles = FormatearCeldaDocente(horarios, "Miércoles", bloque.Id);
+                    fila.Jueves = FormatearCeldaDocente(horarios, "Jueves", bloque.Id);
+                    fila.Viernes = FormatearCeldaDocente(horarios, "Viernes", bloque.Id);
+                }
+                tablaDto.Add(fila);
+            }
+            return tablaDto;
+        }
+
+        // === MÉTODO CLAVE PARA EXTRAER EL CURSO Y AULA ===
+        private string FormatearCeldaDocente(List<Horario> horarios, string diaSemana, int horaLectivaId)
+        {
+            // Buscamos si el docente tiene una clase asignada ese día en esa hora
+            var clase = horarios.FirstOrDefault(h => h.DiaSemana == diaSemana && h.HoraLectivaId == horaLectivaId);
+
+            // Si no hay clase, devolvemos un guion o "Libre"
+            if (clase == null || clase.AsignacionDocente == null)
+                return "---";
+
+            // Extraemos los datos navegando por las relaciones que incluiste en tu Repositorio
+            var curso = clase.AsignacionDocente.PlanEstudio?.Curso?.Nombre ?? "Curso Desconocido";
+            var grado = clase.AsignacionDocente.Grado?.Nombre ?? "";
+            var seccion = clase.AsignacionDocente.Seccion?.Nombre ?? "";
+
+            // Retornamos el formato: "Matemática (3ro A)"
+            return $"{curso} ({grado} {seccion})".Trim();
+        }
     }
 }

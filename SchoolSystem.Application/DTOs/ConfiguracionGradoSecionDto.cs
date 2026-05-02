@@ -28,9 +28,9 @@ namespace SchoolSystem.Application.DTOs
         public string NombreSeccion { get; set; } = string.Empty;
         public int SeccionId { get; set; }
         public string PeriodoAcademico { get; set; } = string.Empty;
-        public int PeriodoId { get; set; }
+        public int PeriodoId { get; set; } 
         public int Capacidad { get; set; }
-        public int TotalMatriculados { get; set; }
-        public int CuposDisponible => Capacidad - TotalMatriculados;
+        public int VacantesOcupadas { get; set; }
+        public int CuposDisponible => Capacidad - VacantesOcupadas;
     }
 }

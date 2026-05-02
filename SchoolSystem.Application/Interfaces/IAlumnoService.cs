@@ -17,5 +17,6 @@ namespace SchoolSystem.Application.Interfaces
         Task<DetalleCursoAlumnoDto> ObtenerDetalleCursoAsync(int alumnoId, int cursoId, int periodoId); 
         Task<IEnumerable<AlumnoDto>> AlumnosSeccionAsync(int gradoId, int seccionId, int periodoId);
         Task ActualizarEstadoAsync(int id, ActualizarEstadoDto dto); 
+        Task<AlumnoDto?> GetPerfilAsync(string usuarioId);
     }
 }

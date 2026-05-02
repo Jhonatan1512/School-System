@@ -49,6 +49,9 @@ builder.Services.AddScoped<IHorarioRepository, HorarioRepository>();
 builder.Services.AddScoped<IHorarioService, HorarioService>();
 builder.Services.AddScoped<IPlanEstudioRepository, PlanEstudioRepository>(); 
 builder.Services.AddScoped<IPlaEstudiosService, PlanEstudioService>();
+builder.Services.AddScoped<ICronogramaRepository, CronogramaRepository>();
+builder.Services.AddScoped<ICronogramaRepository, CronogramaRepository>();
+builder.Services.AddScoped<ICronogramaMatriculaService, CronogramaMatriculaService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(options =>

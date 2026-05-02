@@ -24,7 +24,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             ApplicationDbContext context,
             IMatriculaRepository matriculaRepository,
             IPeriodoAcademicoRepository periodoAcademicoRepository,
-            IAsignacionDocenteRepository asignacionDocenteRepository,
+            IAsignacionDocenteRepository asignacionDocenteRepository, 
             IDocenteRepository docenteRepository,
             ICursoRepository cursoRepository)
         {
@@ -209,7 +209,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                 }).ToList();
 
                 return new DashboardDocenteDto
-                {
+                { 
                     CursoId = cursoId,
                     NombreCurso = curso.Nombre,
                     SeccionId = asignacion.SeccionId,

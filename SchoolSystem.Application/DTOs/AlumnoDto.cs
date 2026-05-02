@@ -13,7 +13,8 @@ namespace SchoolSystem.Application.DTOs
         public string Apellidos { get; set; } = string.Empty;
         public string Dni { get; set; } = string.Empty;
         public string Aula {  get; set; } = string.Empty;
-        public int gradoId { get; set; }
+        public int GradoId { get; set; }
+        public int SeccionId { get; set; }
         public DateTime FechaNacimiento { get; set; }
         public string Sexo { get; set; } = string.Empty;
         public string Estado {  get; set; } = string.Empty;

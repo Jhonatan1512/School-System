@@ -18,13 +18,15 @@ namespace SchoolSystem.Application.Services
         private readonly ICursoRepository _cursoRepository;
         private readonly IUsuarioRepository _ussuarioRepository;
         private readonly IConfiguracionRepository configuracionRepository;
+        private readonly ICronogramaRepository _cronogramaRepository;
 
         public MatriculaService( 
             IMatriculaRepository matriculaRepository,  
             IPeriodoAcademicoRepository periodoAcademico,  
             ICursoRepository cursoRepository,
             IUsuarioRepository usuarioRepository,
-            IConfiguracionRepository configuracionRepository
+            IConfiguracionRepository configuracionRepository,
+            ICronogramaRepository cronogramaRepository
             ) 
         { 
             _matriculaRepository = matriculaRepository;
@@ -32,6 +34,7 @@ namespace SchoolSystem.Application.Services
             _cursoRepository = cursoRepository; 
             _ussuarioRepository = usuarioRepository;
             this.configuracionRepository = configuracionRepository;
+            _cronogramaRepository = cronogramaRepository;
         }
 
         public async Task<bool> ActualizarMatricula(int matriculaId, ActualizarMatriculaDto dto)
@@ -77,7 +80,7 @@ namespace SchoolSystem.Application.Services
             return true;
         }
 
-        public async Task<bool> AgregarMatriculaDetallerAsync(MatriculaDto dto)
+        public async Task<bool> AgregarMatriculaDetallerAsync(MatriculaDto dto, bool esAdmin)
         {
             var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
             if (periodoActivo == null)
@@ -87,17 +90,29 @@ namespace SchoolSystem.Application.Services
             if (matriculaExiste != null)
                 throw new Exception("El alumno ya esta matriculado en el periodo académico actual");
 
+            if (!esAdmin)
+            {
+                var ahora = DateTime.Now;
+                var cronograma = await _cronogramaRepository.ObtenerActivoPorGradoAsync(dto.GradoId, periodoActivo.Id);
+
+                if(cronograma == null || !cronograma.EstadoActivo || ahora < cronograma.FechaHoraInicio || ahora > cronograma.FechaHoraFin)
+                {
+                    throw new Exception("El periodo de matricula para tu grado no esta activo en este momento");
+                }
+            }
+
             var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(periodoActivo.Id, dto.GradoId, dto.SeccionId);
             if (config is null)
             {
                 throw new Exception("Aún no hay cupos definidos para esta aula");
             }
 
-            var TotalInscriotos = await _matriculaRepository.ContarMatrculadosAsync(dto.GradoId, dto.SeccionId, periodoActivo.Id);
-            if (TotalInscriotos >= config.CapacidadMax)
+            if(config.VacantesOcupadas >= config.CapacidadMax)
             {
-                throw new Exception($"Cupos agotados, la sección solo permite {config.CapacidadMax} alumnos");
+                throw new Exception("Cupos para esta sección");
             }
+
+            config.VacantesOcupadas += 1;
 
             var cursosGrado = await _cursoRepository.ObtenerPorGrado(dto.GradoId);
             if (!cursosGrado.Any())

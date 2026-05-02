@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Application.Interfaces;
+using System.Security.Claims;
 
 namespace School_System.Controllers
 {
@@ -17,12 +18,18 @@ namespace School_System.Controllers
         }
           
         //POST :api/matricula
-        [HttpPost] 
+        [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AgregarMatricula([FromBody] MatriculaDto dto)
         {
             try
             {
-                await _matriculaService.AgregarMatriculaDetallerAsync(dto);
+                bool esAdmin = User.IsInRole("Admin");
+                if (!esAdmin)
+                {
+                    var currenUser = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                }
+                await _matriculaService.AgregarMatriculaDetallerAsync(dto, esAdmin);
                 return Ok(new { mensaje = "Alumno matriculado exitosamente" });
             }
             catch (Exception ex)
@@ -33,6 +40,7 @@ namespace School_System.Controllers
 
         //PUT :api/matricula/id
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ActualizarMatricula(int id, [FromBody] ActualizarMatriculaDto dto)
         {
             try
