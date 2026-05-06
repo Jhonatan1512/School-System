@@ -16,7 +16,7 @@ namespace School_System.Controllers
         {
             _cronulaService = cronogramaMatriculaService;
         }
-
+         
         [HttpPost]
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult> CrearCronograma(CronogramaMatriculaDto dto)
@@ -30,5 +30,34 @@ namespace School_System.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet]
+        //[Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAll()
+        {
+            try
+            {
+                var reult = await _cronulaService.GetAllAsync();
+                return Ok(reult);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPut("actualizar/{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Actualizar(int id, ActualizarCronogramaDto dto)
+        {
+            try
+            {
+                await _cronulaService.ActualizarCronogramaAsync(id, dto);
+                return Ok(new { message = "Datos actualizados" });
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }

@@ -96,7 +96,6 @@ namespace SchoolSystem.Application.Services
 
             foreach(var l in configuracionFiltrada)
             {
-                //var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(l.GradoId, l.SeccionId, l.PeriodoacademicoId);
 
                 if(l.VacantesOcupadas < l.CapacidadMax)
                 {
@@ -129,8 +128,6 @@ namespace SchoolSystem.Application.Services
 
             foreach (var item in configuracion)
             {
-                //var totalInscritos = await matriculaRepository.ContarMatrculadosAsync(item.GradoId, item.SeccionId, item.PeriodoacademicoId);
-
                 listaDtos.Add(new ConfiguracionDetalleDto
                 {
                     id = item.Id,
@@ -153,21 +150,22 @@ namespace SchoolSystem.Application.Services
             var periodoActivo = await periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
             if(periodoActivo is null)
             {
-                throw new Exception("No hay periodo académico activo");
+                throw new Exception("No hay periodo académico activo"); 
             }
 
-            var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(gradoId, seccionId, periodoActivo.Id);
+            var config = await configuracionRepository.ObtenerConfiguracionEspecificaAsync(periodoActivo.Id, gradoId, seccionId);
             if (config is null) return null!;
-
-            //int inscritos = await matriculaRepository.ContarMatrculadosAsync(gradoId, seccionId, periodoActivo.Id);
 
             return new ConfiguracionDetalleDto
             {
                 id = config.Id,
                 NombreGrado = config.Grado!.Nombre,
                 NombreSeccion = config.Seccion!.Nombre,
+                PeriodoId = periodoActivo.Id,
                 PeriodoAcademico = config.PeriodoAcademico!.Nombre,
                 Capacidad = config.CapacidadMax,
+                GradoId = config.GradoId,
+                SeccionId = config.SeccionId,
                 VacantesOcupadas = config.VacantesOcupadas,
             };
         }

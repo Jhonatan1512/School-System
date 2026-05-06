@@ -11,5 +11,9 @@ namespace SchoolSystem.Application.Interfaces
     public interface ICronogramaMatriculaService
     {
         Task<CronogramaMatricula> CreateAsync(CronogramaMatriculaDto dto);
+        Task<IEnumerable<GetCronogramaDto>> GetAllAsync();
+        Task ActualizarCronogramaAsync(int id, ActualizarCronogramaDto dto);
+
+
     }
 }

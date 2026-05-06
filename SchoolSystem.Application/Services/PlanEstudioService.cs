@@ -25,7 +25,7 @@ namespace SchoolSystem.Application.Services
         } 
 
         public async Task ActualizarPlanAsync(int id, ActualizarPlanEstudioDto dto)
-        {
+        { 
             var planExiste = await _planEstudioRepository.ObtenerPorIdAsync(id);
             if (planExiste == null)
                 throw new Exception("El plan no existe");
@@ -163,12 +163,13 @@ namespace SchoolSystem.Application.Services
                 Id = p.Id,
                 CursoId = p.CursoId,
                 NombreCurso = p.Curso!.Nombre,
-                Jornada = p.Jornada,
+                Jornada = p.Jornada, 
                 HorasSemanales = p.HorasSemanales,
                 HorasMaximasPorDia = p.HorasMaximasPorDia,
                 DuracionBloque = p.DuracionBloque,
                 NombrePeriodo = periodoActivo!.Nombre,
-                PeriodoId = periodoActivo.Id,
+                PeriodoId = periodoActivo.Id, 
+                NombreGrado = p.Curso!.Grado!.Nombre,
             });
 
             return new PageResponseDto<PlanEstudiosDto>

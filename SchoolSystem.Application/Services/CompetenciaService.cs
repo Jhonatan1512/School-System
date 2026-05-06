@@ -22,7 +22,7 @@ namespace SchoolSystem.Application.Services
             this.cursoRepository = cursoRepository;
             this.gradoRepository = gradoRepository;
         }
-        public async Task ActualizarCompetenciaAsync(int id, CrearCompetenciaDto dto)
+        public async Task ActualizarCompetenciaAsync(int id, CrearCompetenciaDto dto) 
         {
             var competenciaExiste = await competenciaRepository.BuscarPorIdAsync(id);
             if (competenciaExiste == null)

@@ -9,12 +9,14 @@ namespace SchoolSystem.Application.DTOs
 {
     public class DashboardAlumnoDto
     {
+        public int AlumnoId { get; set; }
         public int cursoId { get; set; } 
         public string NombreCurso { get; set; } = string.Empty;
         public List<DocentesCusroDto> Docentes { get; set; } = [];
         public int gradoId { get; set; }
         public int seccionId { get; set; }
-        public string NombreAula { get; set; } = string.Empty;
+        public int matriculaId { get; set; }
+        public string NombreAula { get; set; } = string.Empty; 
     }
 
     public class DocentesCusroDto

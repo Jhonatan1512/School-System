@@ -39,7 +39,6 @@ namespace School_System.Controllers
 
         //GET :api/seccion
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObetenerTodos()
         {
             var secciones = await _seccionRepository.ObtenerTodosAsync();

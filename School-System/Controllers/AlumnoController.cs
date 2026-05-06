@@ -51,6 +51,25 @@ namespace School_System.Controllers
             return Ok(alumnos);  
         }
 
+        [HttpGet("ultima-Matricula/{id:int}")]
+        [Authorize(Roles = "Alumno")]
+        public async Task<IActionResult> UltimaMatricula(int id)
+        {
+            try
+            {
+                var result = await _alumnoService.UltimaMatricula(id);
+                if(result == null)
+                {
+                    return NoContent();
+                }
+
+                return Ok(result);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         //POST :api/alumno
         [HttpPost]
         [Authorize(Roles = "Admin")]
@@ -267,7 +286,7 @@ namespace School_System.Controllers
 
                 var dashboard = await _alumnoService.ObtenerMisCursos(usuarioId);
 
-                return Ok(dashboard);
+                return Ok(dashboard); 
             } 
             catch (Exception ex)
             {

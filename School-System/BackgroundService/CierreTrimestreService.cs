@@ -17,7 +17,7 @@ namespace SchoolSystem.Api.BackgroundService
         {
             _scopeFactory = scopeFactory;
         }
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken) 
         {
             while (!stoppingToken.IsCancellationRequested)
             {

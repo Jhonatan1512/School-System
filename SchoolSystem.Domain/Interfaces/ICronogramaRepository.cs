@@ -11,7 +11,7 @@ namespace SchoolSystem.Domain.Interfaces
     {
         Task CrearCronogramaAsync(CronogramaMatricula cronograma);
         Task ActualizarCronogramaAsync(CronogramaMatricula cronograma);
-        Task<CronogramaMatricula?> ObtenerActivoPorGradoAsync(int gradoId, int periodoId);
+        Task<CronogramaMatricula?> ObtenerActivoPorGradoAsync(int gradoId, int periodoId); 
         Task<IEnumerable<CronogramaMatricula>> ObtenerTodosAsync();
         Task<CronogramaMatricula?> ObtenerPorIdAsync(int id);
     }

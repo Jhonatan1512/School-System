@@ -60,7 +60,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         
         public async Task<bool> ExistePlanAsync(int cursoId, TipoJornada tipoJornada)
         {
-            return await _context.PlanEstudios.AnyAsync(p => p.CursoId == cursoId && p.Jornada == tipoJornada);
+            return await _context.PlanEstudios.AnyAsync(p => p.CursoId == cursoId && p.Jornada == tipoJornada && p.PeriodoAcademico!.EstadoActivo);
         }
 
         public async Task<IEnumerable<PlanEstudio>> ObtenerTodosAsync()
@@ -68,6 +68,7 @@ namespace SchoolSystem.Infrastructure.Respositories
             return await _context.PlanEstudios
                 .Where(p => p.PeriodoAcademico!.EstadoActivo)
                 .Include(p => p.Curso)
+                    .ThenInclude(c => c!.Grado)
                 .ToListAsync();
         }
     }

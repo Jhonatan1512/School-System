@@ -54,6 +54,29 @@
         }
       }
     },
+    "/api/Alumno/ultima-Matricula/{id}": {
+      "get": {
+        "tags": [
+          "Alumno"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Alumno": {
       "post": {
         "tags": [
@@ -901,6 +924,58 @@
             "application/*+json": {
               "schema": {
                 "$ref": "#/components/schemas/CronogramaMatriculaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "CronogramaMatricula"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/CronogramaMatricula/actualizar/{id}": {
+      "put": {
+        "tags": [
+          "CronogramaMatricula"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarCronogramaDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarCronogramaDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarCronogramaDto"
               }
             }
           }
@@ -1959,6 +2034,27 @@
             "description": "OK"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "PlanEstudio"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
       }
     },
     "/api/PlanEstudio/lista-paginada": {
@@ -2286,6 +2382,20 @@
   },
   "components": {
     "schemas": {
+      "ActualizarCronogramaDto": {
+        "type": "object",
+        "properties": {
+          "nuevaFechaHoraInicio": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nuevaFechaHoraCierre": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "ActualizarEstadoDocenteDto": {
         "type": "object",
         "properties": {
@@ -3301,6 +3411,10 @@
           "periodoId": {
             "type": "integer",
             "format": "int32"
+          },
+          "nombreGrado": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

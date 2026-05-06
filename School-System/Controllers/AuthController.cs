@@ -75,6 +75,7 @@ namespace School_System.Controllers
 
             var roles = await _userManager.GetRolesAsync(usuario);
             string nombreToke = "Usuario";
+            int alumnoId = 0;
 
             if (roles.Contains("Admin"))
             {
@@ -85,6 +86,7 @@ namespace School_System.Controllers
                 if(alumno != null)
                 {
                     nombreToke = $"{alumno.Nombre} {alumno.Apellidos}";
+                    alumnoId = alumno.Id;
                 }
                 else
                 {
@@ -92,18 +94,18 @@ namespace School_System.Controllers
                     if(docente != null)
                     {
                         nombreToke = $"{docente.Nombres} {docente.Apellidos}";
+                        
                     }
                 }
             }
-
-
-            
+                        
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, usuario.Id),
                 new Claim(JwtRegisteredClaimNames.Email, usuario.Email!),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim("nombre", nombreToke)
+                new Claim("nombre", nombreToke),
+                new Claim("id", alumnoId.ToString())
             };
 
             foreach (var role in roles)

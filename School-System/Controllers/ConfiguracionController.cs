@@ -56,7 +56,6 @@ namespace School_System.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<ConfiguracionDetalleDto>>> getAll()
         {
             try

@@ -18,5 +18,6 @@ namespace SchoolSystem.Application.Interfaces
         Task<IEnumerable<AlumnoDto>> AlumnosSeccionAsync(int gradoId, int seccionId, int periodoId);
         Task ActualizarEstadoAsync(int id, ActualizarEstadoDto dto); 
         Task<AlumnoDto?> GetPerfilAsync(string usuarioId);
+        Task<AlumnoDto?> UltimaMatricula(int id);
     }
 }

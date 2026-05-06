@@ -22,7 +22,7 @@ namespace SchoolSystem.Application.Services
             IPlanEstudioRepository planEstudioRepository,
             IPeriodoAcademicoRepository periodo)
         {
-            _cursoRepository = cursoRepository;
+            _cursoRepository = cursoRepository; 
             _gradoRepository = gradoRepository;
             _planEstudioRepository = planEstudioRepository;  
             _periodo = periodo;

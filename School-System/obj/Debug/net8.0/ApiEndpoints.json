@@ -215,6 +215,22 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "School_System.Controllers.AlumnoController",
+    "Method": "UltimaMatricula",
+    "RelativePath": "api/Alumno/ultima-Matricula/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "School_System.Controllers.AsignacionDocenteController",
     "Method": "AsignarCurso",
     "RelativePath": "api/AsignacionDocente",
@@ -525,6 +541,37 @@
       {
         "Name": "dto",
         "Type": "SchoolSystem.Application.DTOs.CronogramaMatriculaDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CronogramaMatriculaController",
+    "Method": "GetAll",
+    "RelativePath": "api/CronogramaMatricula",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.CronogramaMatriculaController",
+    "Method": "Actualizar",
+    "RelativePath": "api/CronogramaMatricula/actualizar/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "dto",
+        "Type": "SchoolSystem.Application.DTOs.ActualizarCronogramaDto",
         "IsRequired": true
       }
     ],
@@ -1150,6 +1197,22 @@
       {
         "Name": "dto",
         "Type": "SchoolSystem.Application.DTOs.ActualizarPlanEstudioDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.PlanEstudioController",
+    "Method": "Delete",
+    "RelativePath": "api/PlanEstudio/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],

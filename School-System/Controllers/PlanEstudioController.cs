@@ -14,11 +14,13 @@ namespace School_System.Controllers
     {
         private readonly IPlaEstudiosService _planEstudioService;
         private readonly IPeriodoAcademicoRepository _periodoAcademicoRepository;
+        private readonly IPlanEstudioRepository _planEstudioRepository;
 
-        public PlanEstudioController(IPlaEstudiosService plaEstudiosService,  IPeriodoAcademicoRepository periodoAcademicoRepository)
+        public PlanEstudioController(IPlaEstudiosService plaEstudiosService,  IPeriodoAcademicoRepository periodoAcademicoRepository, IPlanEstudioRepository planEstudioRepository)
         {
             _planEstudioService = plaEstudiosService;
             _periodoAcademicoRepository = periodoAcademicoRepository;
+            _planEstudioRepository = planEstudioRepository;
         } 
 
         [HttpPost]
@@ -50,7 +52,7 @@ namespace School_System.Controllers
         }
 
         [HttpGet("lista-paginada")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")] 
         public async Task<ActionResult<PageResponseDto<PlanEstudiosDto>>> ObtenerTodos([FromQuery] int pagina = 1, [FromQuery] int cantidad = 20)
         {
             if (pagina < 1) pagina = 1;
@@ -65,6 +67,26 @@ namespace School_System.Controllers
             {
                 var reult = await _planEstudioService.GetPlanEstudiosAsync(pagina, cantidad);
                 return Ok(reult);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            try
+            {
+                var existeRegistro = await _planEstudioRepository.ObtenerPorIdAsync(id);
+                if (existeRegistro == null)
+                {
+                    return NotFound();
+                }
+
+                await _planEstudioRepository.EliminarAsync(id);
+                return NoContent();
             } catch (Exception ex)
             {
                 return BadRequest(ex.Message);

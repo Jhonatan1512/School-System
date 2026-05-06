@@ -54,7 +54,6 @@ namespace School_System.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObtenerTodos()
         {
             var grados = await _gradoSevice.GetAllAsync();

@@ -37,5 +37,6 @@ namespace SchoolSystem.Application.DTOs
         public int DuracionBloque { get; set; }
         public string NombrePeriodo {  get; set; } = string.Empty;
         public int PeriodoId { get; set; }
+        public string NombreGrado { get; set; } = string.Empty;
     }
 }

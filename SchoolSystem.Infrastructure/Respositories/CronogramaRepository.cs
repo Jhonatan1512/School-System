@@ -35,7 +35,7 @@ namespace SchoolSystem.Infrastructure.Respositories
         {
             return await _context.CronogramaMatriculas
                          .Where(c => c.GradoId == gradoId && c.PeriodoAcademicoId == periodoId)
-                         .FirstOrDefaultAsync();
+                         .FirstOrDefaultAsync(); 
         }
 
         public async Task<CronogramaMatricula?> ObtenerPorIdAsync(int id)
@@ -45,7 +45,10 @@ namespace SchoolSystem.Infrastructure.Respositories
 
         public async Task<IEnumerable<CronogramaMatricula>> ObtenerTodosAsync()
         {
-            return await _context.CronogramaMatriculas.ToListAsync();
+            return await _context.CronogramaMatriculas
+                .Include(c => c.Grado)
+                .Where(c => c.PeriodoAcademico!.EstadoActivo)
+                .ToListAsync();
         }
     }
 }

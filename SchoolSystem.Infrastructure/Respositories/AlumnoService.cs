@@ -23,7 +23,7 @@ namespace SchoolSystem.Infrastructure.Respositories
          
         public AlumnoService(    
             ApplicationDbContext context, 
-            IAlumnoRespository alumnoRepository, 
+            IAlumnoRespository alumnoRepository,  
             IPeriodoAcademicoRepository periodoAcademicoRepository,  
             IMatriculaRepository matriculaRepository,  
             IAsignacionDocenteRepository signacionDocenteRepository,
@@ -176,13 +176,14 @@ namespace SchoolSystem.Infrastructure.Respositories
 
                 return new DashboardAlumnoDto
                 {
+                    AlumnoId = alumno.Id,
                     cursoId = d.CursoId,
                     NombreCurso = d.Curso!.Nombre,
                     Docentes = asignacionDocente.Select(a => new DocentesCusroDto
                     {
                         Nombre = $"{a.Docente!.Nombres} {a.Docente!.Apellidos}",
                     }).ToList(),
-                    NombreAula = $"{matricula.Grado!.Nombre}{matricula.Seccion!.Nombre}"
+                    NombreAula = $"{matricula.Grado!.Nombre}{matricula.Seccion!.Nombre}",
                 };
             }).ToList();
             return dashboard;
@@ -308,10 +309,25 @@ namespace SchoolSystem.Infrastructure.Respositories
                              Dni = alumno.Dni,
                              Sexo = alumno.Sexo,
                              Email = usuario.Email!,
-                             GradoId = matricula.GradoId,
+                             GradoId = matricula.GradoId ,
                              SeccionId = matricula.SeccionId,
                          };
             return await datos.FirstOrDefaultAsync();
+        }
+
+        public async Task<AlumnoDto?> UltimaMatricula(int id)
+        {
+            var ultimaMatricula = await _context.Matriculas
+                .Where(m => m.AlumnoId == id)
+                .OrderByDescending(m => m.PeriodoAcademicoId)
+                .Select(m => new AlumnoDto
+                {
+                    Id = m.Id,
+                    GradoId = m.GradoId,
+                    SeccionId= m.SeccionId,
+                }).FirstOrDefaultAsync();
+
+            return ultimaMatricula;
         }
     }
 }

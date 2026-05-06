@@ -11,6 +11,7 @@ using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Application.Services;
 using SchoolSystem.Api.BackgroundService;
 using SchoolSystem.Infrastructure.Repositories;
+using SchoolSystem.BackgroundService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddScoped<IAsignacionDocenteRepository, AsignacionDocenteReposi
 builder.Services.AddScoped<ITrimestreRepository, TrimestreRepository>();
 builder.Services.AddScoped<ITrimestreService, TrimestreService>();
 builder.Services.AddHostedService<CierreTrimestreService>();
+builder.Services.AddHostedService<CierreCronogramaService>();
 builder.Services.AddScoped<IAsignacionDocenteRepository, AsignacionDocenteRepository>();
 builder.Services.AddScoped<IAsignacionDocenteService, AsignacionDocenteService>();
 builder.Services.AddScoped<ICalificacionRepository, CalificacionRepository>();
