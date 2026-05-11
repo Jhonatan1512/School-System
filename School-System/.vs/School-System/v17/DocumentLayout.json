@@ -49,8 +49,7 @@
               "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\DashboardDocenteDto.cs",
               "ViewState": "AgIAABYAAAAAAAAAAADwvygAAAA/AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-11T16:56:02.735Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-11T16:56:02.735Z"
             },
             {
               "$type": "Document",
@@ -62,8 +61,7 @@
               "RelativeToolTip": "Controllers\\DocenteController.cs",
               "ViewState": "AgIAAFkBAAAAAAAAAAAAAGEBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-08T21:48:31.59Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-08T21:48:31.59Z"
             },
             {
               "$type": "Document",
@@ -73,7 +71,7 @@
               "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
               "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
               "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
-              "ViewState": "AgIAACsBAAAAAAAAAAAjwDIBAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAACsBAAAAAAAAAAAjwEMBAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-08T21:25:07.497Z",
               "EditorCaption": ""
@@ -88,8 +86,7 @@
               "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\IDocenteService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-08T21:09:28.147Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-08T21:09:28.147Z"
             },
             {
               "$type": "Document",
@@ -101,8 +98,7 @@
               "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteRepository.cs",
               "ViewState": "AgIAADsAAAAAAAAAAAAmwFAAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-08T20:03:02.368Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-08T20:03:02.368Z"
             },
             {
               "$type": "Document",
