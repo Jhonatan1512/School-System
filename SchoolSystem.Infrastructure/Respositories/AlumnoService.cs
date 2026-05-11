@@ -158,6 +158,8 @@ namespace SchoolSystem.Infrastructure.Respositories
             var alumno = await _alumnoRepository.ObtenerPorUsuarioAsync(usuarioId);
             if (alumno == null) throw new Exception("Perfil de Alumno no encontrado");
 
+            var usuario = await _context.Users.Where(u => u.Id == usuarioId).FirstOrDefaultAsync();
+
             var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
             if (periodoActivo == null) throw new Exception("No hay Periodo activo");
 
@@ -177,6 +179,9 @@ namespace SchoolSystem.Infrastructure.Respositories
                 return new DashboardAlumnoDto
                 {
                     AlumnoId = alumno.Id,
+                    NombreAlumno = $"{alumno.Nombre} {alumno.Apellidos}",
+                    DniAlumno = alumno.Dni,
+                    Email = usuario!.Email!,
                     cursoId = d.CursoId,
                     NombreCurso = d.Curso!.Nombre,
                     Docentes = asignacionDocente.Select(a => new DocentesCusroDto
@@ -184,6 +189,7 @@ namespace SchoolSystem.Infrastructure.Respositories
                         Nombre = $"{a.Docente!.Nombres} {a.Docente!.Apellidos}",
                     }).ToList(),
                     NombreAula = $"{matricula.Grado!.Nombre}{matricula.Seccion!.Nombre}",
+                    NombrePeriodo = periodoActivo.Nombre,
                 };
             }).ToList();
             return dashboard;

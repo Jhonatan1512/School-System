@@ -10,6 +10,9 @@ namespace SchoolSystem.Application.DTOs
     public class DashboardAlumnoDto
     {
         public int AlumnoId { get; set; }
+        public string NombreAlumno { get; set; } = string.Empty;
+        public string DniAlumno { get; set; } = string.Empty;
+        public string Email { get; set; } = string.Empty ;
         public int cursoId { get; set; } 
         public string NombreCurso { get; set; } = string.Empty;
         public List<DocentesCusroDto> Docentes { get; set; } = [];
@@ -17,6 +20,7 @@ namespace SchoolSystem.Application.DTOs
         public int seccionId { get; set; }
         public int matriculaId { get; set; }
         public string NombreAula { get; set; } = string.Empty; 
+        public string NombrePeriodo { get; set; } = string.Empty;
     }
 
     public class DocentesCusroDto
@@ -38,5 +42,23 @@ namespace SchoolSystem.Application.DTOs
         public string NombreCurso { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;
         public List<CompetenciasNotaDto> Competencias { get; set; } = new List<CompetenciasNotaDto>();
+    }
+
+    public class LibretaResponseDto
+    {
+        public List<string> ColumnaTrimestres { get; set; } = [];
+        public List<CursoLibretaDto> Cursos { get; set; } = [];
+    }
+
+    public class CursoLibretaDto
+    {
+        public string Nombrecurso {  get; set; } = string.Empty;
+        public List<CompetenciaLibretaDto> Competencias { get; set; } = [];
+    }
+
+    public class CompetenciaLibretaDto
+    {
+        public string NombreCompetencia {  get; set; } = string.Empty;
+        public List<string> NotasPorTrimestre { get; set; } = [];
     }
 }

@@ -1538,6 +1538,41 @@
         }
       }
     },
+    "/api/Docente/libretas/{alumnoId}": {
+      "get": {
+        "tags": [
+          "Docente"
+        ],
+        "parameters": [
+          {
+            "name": "alumnoId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Docente/alumnos-tutoria": {
+      "get": {
+        "tags": [
+          "Docente"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Grado/{id}": {
       "get": {
         "tags": [

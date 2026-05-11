@@ -16,6 +16,9 @@ namespace SchoolSystem.Domain.Interfaces
         Task<Docente?> ObtenerPorId(int id);
         Task<Docente?> ObtenerActivoAsync(int id); 
         Task<Docente?> PerfilDocenteAsync(string usuarioId);
-        
+        Task<AsignacionDocente?> ObtenerAsignacionTutoriaAsync(int docenteId, int periodoId);
+        Task<List<Matricula>> ObtenerAlumnosSeccionAsync(int gradoId, int seccionId, int periodoId);
+        Task<bool> ValidarTutoriaAlumnoAsync(int docenteId, int alumnoId, int periodoId);
+        Task<List<Calificacion>> ObtenerNotasCompletasAsync(int alumnoId, int periodoId);
     }
 }

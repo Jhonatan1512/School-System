@@ -14,7 +14,9 @@ namespace SchoolSystem.Application.Interfaces
         Task<List<DashboardDocenteDto>> ObtenerMiDashboardAsync(string usuarioId);
         Task<DetalleCursoDto> ObtenerDetalleCursoAsync(int docenteId, int cursoId, int seccionId, int periodoId);
         Task ActualizarEstadoAsync(int id, ActualizarEstadoDocenteDto dto);
-        Task<DocenteDto?> GetPerfilAsyn(string usuarioId); 
+        Task<DocenteDto?> GetPerfilAsyn(string usuarioId);
+        Task<LibretaResponseDto> ObtenerCalificaciones(int docenteId, int alumnoId, int periodoId);
+        Task<List<AlumnoLibretaDto>> ObtenerAlumnosTutoria(int docenteId, int periodoId);
     }
 }
  

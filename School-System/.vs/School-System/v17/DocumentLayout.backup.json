@@ -1,7 +1,27 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\.NET-API\\School-System\\School-System\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\docenteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|d:\\.net-api\\school-system\\school-system\\controllers\\docentecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{314F3FFB-38FF-4BC0-803B-11572D3236DA}|SchoolSystem.Api.csproj|solutionrelative:controllers\\docentecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\dtos\\dashboarddocentedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{115D09D9-8487-44A5-9411-8889714990D8}|..\\SchoolSystem.Application\\SchoolSystem.Application.csproj|d:\\.net-api\\school-system\\schoolsystem.application\\interfaces\\idocenteservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A8E7445B-2135-445A-A491-9FDA1B18BAF6}|..\\SchoolSystem.Infrastructure\\SchoolSystem.Infrastructure.csproj|d:\\.net-api\\school-system\\schoolsystem.infrastructure\\respositories\\docenterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{631D54F1-B712-42C2-8790-BE7ACA562737}|..\\SchoolSystem.Domain\\SchoolSystem.Domain.csproj|d:\\.net-api\\school-system\\schoolsystem.domain\\interfaces\\idocenterepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +29,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Bookmark",
@@ -18,6 +38,83 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DashboardDocenteDto.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\DashboardDocenteDto.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\DTOs\\DashboardDocenteDto.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\DTOs\\DashboardDocenteDto.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\DTOs\\DashboardDocenteDto.cs",
+              "ViewState": "AgIAABYAAAAAAAAAAADwvygAAAA/AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-11T16:56:02.735Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "DocenteController.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\School-System\\Controllers\\DocenteController.cs",
+              "RelativeDocumentMoniker": "Controllers\\DocenteController.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\School-System\\Controllers\\DocenteController.cs",
+              "RelativeToolTip": "Controllers\\DocenteController.cs",
+              "ViewState": "AgIAAFkBAAAAAAAAAAAAAGEBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T21:48:31.59Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DocenteService.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteService.cs",
+              "ViewState": "AgIAACsBAAAAAAAAAAAjwEEBAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T21:25:07.497Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "IDocenteService.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IDocenteService.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Application\\Interfaces\\IDocenteService.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Application\\Interfaces\\IDocenteService.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Application\\Interfaces\\IDocenteService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T21:09:28.147Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "DocenteRepository.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\DocenteRepository.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteRepository.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Infrastructure\\Respositories\\DocenteRepository.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Infrastructure\\Respositories\\DocenteRepository.cs",
+              "ViewState": "AgIAADsAAAAAAAAAAAAmwFAAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T20:03:02.368Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IDocenteRepository.cs",
+              "DocumentMoniker": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IDocenteRepository.cs",
+              "RelativeDocumentMoniker": "..\\SchoolSystem.Domain\\Interfaces\\IDocenteRepository.cs",
+              "ToolTip": "D:\\.NET-API\\School-System\\SchoolSystem.Domain\\Interfaces\\IDocenteRepository.cs",
+              "RelativeToolTip": "..\\SchoolSystem.Domain\\Interfaces\\IDocenteRepository.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAfAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-05-08T20:00:59.025Z"
             }
           ]
         }

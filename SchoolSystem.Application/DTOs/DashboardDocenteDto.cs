@@ -12,9 +12,10 @@ namespace SchoolSystem.Application.DTOs
         public int SeccionId { get; set; }
         public string NombreCurso { get; set; } = string.Empty;
         public string Aula {  get; set; } = string.Empty;
-        public string PeriodoTrimestre {  get; set; } = string.Empty ;
+        public string PeriodoTrimestre { get; set; } = string.Empty;
+        public bool EsTutor { get; set; }
         public List<CompetenciaDto> Competencias { get; set; } = new List<CompetenciaDto>();
-        public List<AlumnoBasicoDto> AlumnosMatriculados = new List<AlumnoBasicoDto>();
+        public List<AlumnoBasicoDto> AlumnosMatriculados = new List<AlumnoBasicoDto>(); 
     }
      
     public class CompetenciaDto  
@@ -28,7 +29,16 @@ namespace SchoolSystem.Application.DTOs
     {
         public int AlumnoId { get; set; } 
         public string NombreCompelto { get; set; } = string.Empty;
+        public string Dni { get; set; } = string.Empty;
         public int DetalleMatriculaId { get; set; }
+    }
+
+    public class AlumnoLibretaDto
+    {
+        public int AlumnoId { get; set; }
+        public string NombreCompelto { get; set; } = string.Empty;
+        public string NombreDocente { get; set; } = string.Empty;
+        public string NombreAula {  get; set; } = string.Empty;
     }
 
     public class NotasRegistradasDto 

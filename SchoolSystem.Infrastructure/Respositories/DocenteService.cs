@@ -189,6 +189,8 @@ namespace SchoolSystem.Infrastructure.Respositories
 
             var matriculas = await _matriculaRepository.ObtenerAlumnosPorSeccionPeriodoAsync(seccionesIds, periodActivo.Id);
 
+            bool esTutor = asignaciones.Any(a => a.PlanEstudio?.Curso?.Nombre.Contains("Tutoría", StringComparison.OrdinalIgnoreCase) == true);
+
             var dashboard = asignaciones.Select(asignacion =>
             {
                 var cursoId = asignacion.PlanEstudio!.CursoId;
@@ -209,18 +211,19 @@ namespace SchoolSystem.Infrastructure.Respositories
                 }).ToList();
 
                 return new DashboardDocenteDto
-                { 
+                {
                     CursoId = cursoId,
                     NombreCurso = curso.Nombre,
                     SeccionId = asignacion.SeccionId,
                     Aula = $"{curso.Grado?.Nombre ?? "Sin Grado"} {asignacion.Seccion?.Nombre ?? "Sin Sección"}",
                     PeriodoTrimestre = periodActivo.Nombre,
+                    EsTutor = esTutor,
                     Competencias = curso.Competencias.Select(c => new CompetenciaDto
                     {
                         Id = c.Id,
                         Nombre = c.Nombre,
                     }).ToList(),
-                    AlumnosMatriculados = alumnosCurso
+                    AlumnosMatriculados = alumnosCurso,                    
                 };
             }).ToList();
             return dashboard;
@@ -254,6 +257,68 @@ namespace SchoolSystem.Infrastructure.Respositories
                             EsActivo = docente.EsActivo
                         };
             return await datos.FirstOrDefaultAsync();
+        }
+
+        public async Task<LibretaResponseDto> ObtenerCalificaciones(int docenteId, int alumnoId, int periodoId)
+        {
+            bool esSuTutor = await _docenteRepository.ValidarTutoriaAlumnoAsync(docenteId, alumnoId, periodoId);
+            if (!esSuTutor)
+            {
+                throw new UnauthorizedAccessException("No es tutor de esta sección");
+            }
+
+            var calificaciones = await _docenteRepository.ObtenerNotasCompletasAsync(alumnoId, periodoId);
+            if (!calificaciones.Any()) return new LibretaResponseDto();
+
+            var nombreTrimestres = calificaciones
+                .Where(c => c.Trimestre != null)
+                .Select(c => c.Trimestre!.Nombre)
+                .Distinct()
+                .OrderBy(nombre => nombre)
+                .ToList();
+
+            var libretaResponse = new LibretaResponseDto
+            {
+                ColumnaTrimestres = nombreTrimestres
+            };
+
+            libretaResponse.Cursos = calificaciones
+                .Where(c => c.Competencia != null && c.Competencia.Curso != null)
+                .GroupBy(c => c.Competencia!.Curso!.Nombre)
+                .Select(grupoCurso => new CursoLibretaDto
+                {
+                    Nombrecurso = grupoCurso.Key,
+                    Competencias = grupoCurso
+                        .GroupBy(c => c.Competencia!.Nombre)
+                        .Select(grupoComp => new CompetenciaLibretaDto
+                        {
+                            NombreCompetencia = grupoComp.Key,
+                            NotasPorTrimestre = nombreTrimestres.Select(trimestre =>
+                            {
+                                var calificacion = grupoComp.FirstOrDefault(c => c.Trimestre != null && c.Trimestre!.Nombre == trimestre);
+                                return calificacion != null ? calificacion.Nota.ToString() : "-";
+                            }).ToList()
+                        }).ToList()
+                })
+                .OrderBy(c => c.Nombrecurso)
+                .ToList();
+            return libretaResponse;
+        }
+
+        public async Task<List<AlumnoLibretaDto>> ObtenerAlumnosTutoria(int docenteId, int periodoId)
+        {
+            var asignacion = await _docenteRepository.ObtenerAsignacionTutoriaAsync(docenteId, periodoId);
+            if(asignacion == null) return new List<AlumnoLibretaDto>();
+
+            var alumnosTutoria = await _docenteRepository.ObtenerAlumnosSeccionAsync(asignacion.GradoId, asignacion.SeccionId,periodoId);
+
+            return alumnosTutoria.Select(m => new AlumnoLibretaDto
+            {
+                AlumnoId = m.AlumnoId,
+                NombreCompelto = $"{m.Alumno!.Nombre} {m.Alumno.Apellidos}",
+                NombreDocente = $"{asignacion.Docente!.Nombres} {asignacion.Docente.Apellidos}",
+                NombreAula = $"{asignacion.Grado!.Nombre}{asignacion.Seccion!.Nombre}"
+            }).ToList();
         }
     }
 }

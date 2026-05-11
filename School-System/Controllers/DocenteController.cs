@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SchoolSystem.Application.DTOs;
 using SchoolSystem.Application.Interfaces;
 using SchoolSystem.Domain.Entities;
@@ -349,6 +350,55 @@ namespace School_System.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpGet("libretas/{alumnoId}")]
+        [Authorize(Roles = "Docente")]
+        public async Task<ActionResult> ObtenerLibretas(int alumnoId)
+        {
+            try
+            {
+                var docenteId = ObtenerDocenteIdDesdeToken();
+                var docente = await _docenteRepository.ObtenerPorUsuarioAsync(docenteId);
+                var periodActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+
+                
+
+                var reulst = await _docenteService.ObtenerCalificaciones(docente!.Id, alumnoId,periodActivo!.Id);
+                return Ok(reulst);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        private string ObtenerDocenteIdDesdeToken()
+        {
+            var claimId = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (claimId == null)
+                throw new UnauthorizedAccessException("El token no contiene un ID de usuario válido.");
+
+            return string.Format(claimId.Value);
+        }
+
+        [HttpGet("alumnos-tutoria")]
+        [Authorize(Roles = "Docente")]
+        public async Task<IActionResult> ObtenerAlumnosTutoria()
+        {
+            try
+            {
+                var userId = ObtenerDocenteIdDesdeToken();
+                var docenteId = await _docenteRepository.ObtenerPorUsuarioAsync(userId);
+                var periodoActivo = await _periodoAcademicoRepository.ObtenerPeriodoAcademicoActivo();
+
+                var reult = await _docenteService.ObtenerAlumnosTutoria(docenteId!.Id, periodoActivo!.Id);
+                return Ok(reult);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
     }
 }

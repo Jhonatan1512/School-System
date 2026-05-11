@@ -764,6 +764,16 @@
   },
   {
     "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "ObtenerAlumnosTutoria",
+    "RelativePath": "api/Docente/alumnos-tutoria",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
     "Method": "ObtenerDetallesCurso",
     "RelativePath": "api/Docente/curso/{cursoId}/seccion/{seccionId}/detalle",
     "HttpMethod": "GET",
@@ -825,6 +835,22 @@
       {
         "Name": "dto",
         "Type": "SchoolSystem.Application.DTOs.ActualizarEstadoDocenteDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.DocenteController",
+    "Method": "ObtenerLibretas",
+    "RelativePath": "api/Docente/libretas/{alumnoId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "alumnoId",
+        "Type": "System.Int32",
         "IsRequired": true
       }
     ],
