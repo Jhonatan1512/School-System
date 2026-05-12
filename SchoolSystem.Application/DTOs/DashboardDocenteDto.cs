@@ -39,6 +39,9 @@ namespace SchoolSystem.Application.DTOs
         public string NombreCompelto { get; set; } = string.Empty;
         public string NombreDocente { get; set; } = string.Empty;
         public string NombreAula {  get; set; } = string.Empty;
+        public string Dni { get; set; } = string.Empty;
+        public string Grado {get; set; } = string.Empty;
+        public string Seccion { get; set; } = string.Empty;
     }
 
     public class NotasRegistradasDto 

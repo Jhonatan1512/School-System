@@ -317,7 +317,10 @@ namespace SchoolSystem.Infrastructure.Respositories
                 AlumnoId = m.AlumnoId,
                 NombreCompelto = $"{m.Alumno!.Nombre} {m.Alumno.Apellidos}",
                 NombreDocente = $"{asignacion.Docente!.Nombres} {asignacion.Docente.Apellidos}",
-                NombreAula = $"{asignacion.Grado!.Nombre}{asignacion.Seccion!.Nombre}"
+                NombreAula = $"{asignacion.Grado!.Nombre}{asignacion.Seccion!.Nombre}",
+                Dni = m.Alumno.Dni,
+                Grado = asignacion.Grado.Nombre,
+                Seccion = asignacion.Seccion.Nombre
             }).ToList();
         }
     }

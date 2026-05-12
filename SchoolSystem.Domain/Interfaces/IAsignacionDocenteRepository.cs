@@ -20,7 +20,7 @@ namespace SchoolSystem.Domain.Interfaces
         Task<IEnumerable<AsignacionDocente>> ObtenerPorGradoSeccion(int gradoId, int seccionId);
         Task<IEnumerable<AsignacionDocente>> ObtenerPorPeriodoAsync(int periodoId);
         Task<int> ObtenerHorasCubiertasPlanEstudioAsync(int planEstudioId, int gradoId, int seccionId, int periodoId, int excluirId);
-
         Task<int> ObtenerHorasTotalesDocenteAsync(int docenteId, int periodoId, int excluirId);
+        Task<List<AsignacionDocente>> ObtenerPorDniDocente(string dni);
     }
 }

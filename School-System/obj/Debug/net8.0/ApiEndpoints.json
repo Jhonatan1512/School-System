@@ -285,6 +285,22 @@
   },
   {
     "ContainingType": "School_System.Controllers.AsignacionDocenteController",
+    "Method": "obtenerPorDni",
+    "RelativePath": "api/AsignacionDocente/docente/{dni}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dni",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "School_System.Controllers.AsignacionDocenteController",
     "Method": "getByGradoSeccion",
     "RelativePath": "api/AsignacionDocente/gradoId/{gradoId}/seccionId/{seccionId}",
     "HttpMethod": "GET",

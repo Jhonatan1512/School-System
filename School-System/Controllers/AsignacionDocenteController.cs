@@ -106,5 +106,19 @@ namespace School_System.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("docente/{dni}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> obtenerPorDni(string dni)
+        {
+            try
+            {
+                var result = await _asignacionDocenteService.ObtenerPorDniDocenteAsync(dni);
+                return Ok(result);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace SchoolSystem.Application.Services
             _asignacionDocenteRepository = asignacionDocenteRepository;
             _docenteRepository = docenteRepository;
             _planEstudioRepository = planEstudioRepository;
-        }
+        } 
 
         public async Task ActualizarAsignacionAsync(int id, AsignacionDocenteDto dto)
         {
@@ -196,6 +196,23 @@ namespace SchoolSystem.Application.Services
                 PaginaActual = pagina,
                 TotalPaginas = totalPaginas,
             };
+        }
+
+        public async Task<IEnumerable<GetAsignación>> ObtenerPorDniDocenteAsync(string dniDocente)
+        {
+            var asignaciones = await _asignacionDocenteRepository.ObtenerPorDniDocente(dniDocente);
+
+            return asignaciones.Select(a => new GetAsignación
+            {
+                Id = a.Id,
+                NombreDocente = $"{a.Docente!.Nombres} {a.Docente.Apellidos}",
+                Dni = a.Docente.Dni,
+                NombreCurso = a.PlanEstudio!.Curso!.Nombre,
+                NombreAula = $"{a.Grado!.Nombre}{a.Seccion!.Nombre}",
+                HorasAsignadas = a.HorasAsignadas,
+                NombrePeriodo = a.PeriodoAcademico!.Nombre,
+                Estado = a.Docente.EsActivo.ToString()
+            });
         }
 
         public async Task<IEnumerable<GetAsignación>> ObtenerPorGradoSeccionAsync(int gradoId, int seccionId)

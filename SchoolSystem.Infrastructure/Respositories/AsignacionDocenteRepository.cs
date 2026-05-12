@@ -129,5 +129,18 @@ namespace SchoolSystem.Infrastructure.Respositories
                             a.Id != excluirId)
                 .SumAsync(a => a.HorasAsignadas);
         }
+
+        public async Task<List<AsignacionDocente>> ObtenerPorDniDocente(string dni)
+        {
+            return await _context.AsignacionDocentes
+                .Include(a => a.Docente)
+                .Include(a => a.PeriodoAcademico)
+                .Include(a => a.PlanEstudio!)
+                    .ThenInclude(p => p.Curso!)
+                        .ThenInclude(c => c.Grado)
+                .Include(a => a.Seccion)
+                .Where(a => a.Docente!.Dni == dni && a.PeriodoAcademico!.EstadoActivo)
+                .ToListAsync();
+        }
     }
 }

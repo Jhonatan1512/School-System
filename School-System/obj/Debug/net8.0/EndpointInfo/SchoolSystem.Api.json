@@ -544,6 +544,28 @@
         }
       }
     },
+    "/api/AsignacionDocente/docente/{dni}": {
+      "get": {
+        "tags": [
+          "AsignacionDocente"
+        ],
+        "parameters": [
+          {
+            "name": "dni",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Auth/registrar": {
       "post": {
         "tags": [
